@@ -7,7 +7,7 @@ FIRMWARE_DIR := $(PWD)/firmware
 KEYMAP_LINK := $(QMK_HOME)/keyboards/planck/keymaps/$(KEYMAP)
 
 # === Targets ===
-.PHONY: build flash save clean
+.PHONY: build flash save clean init-qmk qmk-status update-qmk
 
 # Ensure symlink exists before building
 $(KEYMAP_LINK):
@@ -31,3 +31,38 @@ save: build
 
 clean:
 	QMK_HOME="$(QMK_HOME)" qmk clean
+
+# === QMK submodule helpers ===
+
+# Initialize submodule (first time only)
+init-qmk:
+	@git submodule update --init --recursive qmk
+	@echo "✅ QMK submodule initialized."
+
+# Show current QMK submodule commit + status
+qmk-status:
+	@echo "📦 QMK @ $$(git -C qmk rev-parse --short HEAD) ($$(git -C qmk rev-parse --abbrev-ref HEAD))"
+	@git -C qmk status --short || true
+
+# Update submodule to latest upstream master/main and commit pointer
+update-qmk:
+	@set -e; \
+	if [ ! -d qmk/.git ] && [ ! -f qmk/.git ]; then \
+	  echo "❌ qmk submodule not initialized. Run: make init-qmk"; exit 1; \
+	fi; \
+	echo "⏩ Fetching upstream in submodule…"; \
+	git -C qmk fetch --all --tags; \
+	if git -C qmk show-ref --verify --quiet refs/remotes/origin/master; then \
+	  TARGET_BRANCH=master; \
+	elif git -C qmk show-ref --verify --quiet refs/remotes/origin/main; then \
+	  TARGET_BRANCH=main; \
+	else \
+	  echo "❌ Neither origin/master nor origin/main found."; exit 1; \
+	fi; \
+	git -C qmk checkout $$TARGET_BRANCH; \
+	git -C qmk pull --ff-only origin $$TARGET_BRANCH; \
+	NEW=$$(git -C qmk rev-parse --short HEAD); \
+	echo "✅ QMK now at $$NEW on $$TARGET_BRANCH"; \
+	echo "📝 Staging submodule pointer…"; \
+	git add qmk; \
+	git commit -m "chore: update QMK submodule to $$(git -C qmk rev-parse --short HEAD)" 2>/dev/null || echo "ℹ️ No changes to commit."

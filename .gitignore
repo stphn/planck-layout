@@ -1,0 +1,26 @@
+# macOS noise
+.DS_Store
+
+# QMK build artifacts
+qmk/.build/
+qmk/.qmk_cache/
+*.elf
+*.hex
+*.map
+*.uf2
+
+# Python / venv junk (if you ever use pipenv/venv here)
+__pycache__/
+*.pyc
+.venv/
+.env/
+
+# Logs / temp
+*.log
+
+# Ignore any accidental firmware copies at repo root
+/*.bin
+
+# --- Allowed ---
+# Keep built firmware binaries in a dedicated folder
+!/firmware/

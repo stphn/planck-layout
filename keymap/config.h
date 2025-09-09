@@ -56,7 +56,13 @@
 // Auto Shift
 // #define AUTO_SHIFT_TIMEOUT 200
 
-
+// --- Add this block near your other RGB defines ---
+#ifdef RGBLIGHT_ENABLE
+#    define RGBLIGHT_LAYERS          // allow per-layer lighting
+#    define RGBLIGHT_SLEEP           // auto-off on USB suspend
+#    define RGBLIGHT_LIMIT_VAL 200   // cap brightness a bit (tweak to taste)
+//  #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING  // optional
+#endif
 
 // Enable additional RGB effects
 #define RGBLIGHT_EFFECT_BREATHING

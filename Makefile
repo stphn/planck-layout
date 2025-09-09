@@ -4,15 +4,22 @@ KEYMAP   := stphn
 QMK_HOME := $(PWD)/qmk
 BUILD_DIR := $(QMK_HOME)/.build
 FIRMWARE_DIR := $(PWD)/firmware
+KEYMAP_LINK := $(QMK_HOME)/keyboards/planck/keymaps/$(KEYMAP)
 
 # === Targets ===
 .PHONY: build flash save clean
 
-build:
+# Ensure symlink exists before building
+$(KEYMAP_LINK):
+	@echo "🔗 Linking keymap $(KEYMAP) into QMK..."
+	@mkdir -p $(QMK_HOME)/keyboards/planck/keymaps
+	@ln -sfn "$(PWD)/keymap" "$(KEYMAP_LINK)"
+
+build: $(KEYMAP_LINK)
 	@echo "⚙️  Building $(KEYBOARD) with keymap $(KEYMAP)..."
 	QMK_HOME="$(QMK_HOME)" qmk compile -kb $(KEYBOARD) -km $(KEYMAP)
 
-flash:
+flash: $(KEYMAP_LINK)
 	@echo "⚡ Flashing $(KEYBOARD) with keymap $(KEYMAP)..."
 	QMK_HOME="$(QMK_HOME)" qmk flash -kb $(KEYBOARD) -km $(KEYMAP)
 

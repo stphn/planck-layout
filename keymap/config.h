@@ -1,74 +1,51 @@
 /* Copyright 2015-2023 Jack Humbert
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * GPL-2.0-or-later
  */
-
 #pragma once
 
+/* ---------------- Audio ---------------- */
 #ifdef AUDIO_ENABLE
 #    define STARTUP_SONG SONG(PLANCK_SOUND)
 // #define STARTUP_SONG SONG(NO_SOUND)
-
-#    define DEFAULT_LAYER_SONGS \
-        { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
+#    define DEFAULT_LAYER_SONGS { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
 #endif
 
-/*
- * MIDI options
- */
-
-/* enable basic MIDI features:
-   - MIDI notes can be sent when in Music mode is on
-*/
-
+/* ---------------- MIDI ----------------- */
+/* Basic MIDI (Music mode notes) */
 #define MIDI_BASIC
-
-/* enable advanced MIDI features:
-   - MIDI notes can be added to the keymap
-   - Octave shift and transpose
-   - Virtual sustain, portamento, and modulation wheel
-   - etc.
-*/
+/* Advanced MIDI features (octave/transpose/etc.) */
 // #define MIDI_ADVANCED
 
-// Set Unicode input method for mac.
+/* -------------- Unicode ---------------- */
 #define UNICODE_SELECTED_MODES UNICODE_MODE_MACOS
 
-/*
- * TAP DANCE options
- */
-
-// #define TAPPING_TERM 175
+/* ------------- Tap Dance --------------- */
 #define TAPPING_TERM 200
 #define TAPPING_TERM_PER_KEY
-
-// Auto Shift
+// Auto Shift example:
 // #define AUTO_SHIFT_TIMEOUT 200
 
-// --- Add this block near your other RGB defines ---
-#ifdef RGBLIGHT_ENABLE
-#    define RGBLIGHT_LAYERS          // allow per-layer lighting
-#    define RGBLIGHT_SLEEP           // auto-off on USB suspend
-#    define RGBLIGHT_LIMIT_VAL 200   // cap brightness a bit (tweak to taste)
-//  #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING  // optional
+/* ------------- RGB MATRIX -------------- */
+/* Planck Rev7 uses RGB_MATRIX (per-key), not RGBLIGHT. */
+#ifdef RGB_MATRIX_ENABLE
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120
+#    define RGB_DISABLE_WHEN_USB_SUSPENDED true
+#    define RGB_MATRIX_KEYPRESSES          // react to keypresses
+#    define RGB_MATRIX_FRAMEBUFFER_EFFECTS // fancy effects buffer
+#    define RGB_MATRIX_DEFAULT_HUE 128     // cyan-ish; set 0..255
+#    define RGB_MATRIX_DEFAULT_SAT 255     // full saturation
+#    define RGB_MATRIX_DEFAULT_VAL 180     // brightness cap (0..255)
+/* Enable a curated set of effects (add/remove to taste) */
+#    define ENABLE_RGB_MATRIX_ALPHAS_MODS
+#    define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+#    define ENABLE_RGB_MATRIX_BREATHING
+#    define ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
+#    define ENABLE_RGB_MATRIX_CYCLE_ALL
+#    define ENABLE_RGB_MATRIX_RAINBOW_BEACON
+#    define ENABLE_RGB_MATRIX_CYCLE_SPIRAL
+// Pick your preferred default effect:
+#    define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #endif
 
-// Enable additional RGB effects
-#define RGBLIGHT_EFFECT_BREATHING
-#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-#define RGBLIGHT_EFFECT_SNAKE
-#define RGBLIGHT_EFFECT_KNIGHT
-#define RGBLIGHT_EFFECT_STATIC_GRADIENT
-#define RGBLIGHT_EFFECT_RGB_TEST
+/* ----------- (No RGBLIGHT) ------------- */
+/* Intentionally no RGBLIGHT_* defines here. Planck Rev7 uses RGB_MATRIX. */

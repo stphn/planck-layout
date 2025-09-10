@@ -24,3 +24,5 @@ __pycache__/
 # --- Allowed ---
 # Keep built firmware binaries in a dedicated folder
 !/firmware/
+# remove agnts
+AGENTS.md

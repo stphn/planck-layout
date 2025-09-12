@@ -46,6 +46,3 @@
 // Pick your preferred default effect:
 #    define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #endif
-
-/* ----------- (No RGBLIGHT) ------------- */
-/* Intentionally no RGBLIGHT_* defines here. Planck Rev7 uses RGB_MATRIX. */

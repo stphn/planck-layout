@@ -49,12 +49,25 @@ enum planck_keycodes {
     BACKLIT,
     EXT_PLV,
     SAM,
+    /* Vim-style tap-hold: tap = letter, hold = arrow */
+    N_VIM, E_VIM, I_VIM, O_VIM,
 };
 
 #define NUM      MO(_NUM)
 #define SYM      MO(_SYM)
 #define NAV      MO(_NAV)
 #define CTRL_ESC LCTL_T(KC_ESC)
+
+/* ───────────────── Vim tap-hold state ───────────────── */
+typedef struct {
+    uint16_t tap_code;   // letter
+    uint16_t hold_code;  // arrow
+    uint16_t timer;
+    bool deciding;       // within TAPPING_TERM window
+    bool held;           // hold has been registered
+} vim_th_t;
+
+static vim_th_t vim[4] = {0};
 
 /* ───────────────────────────── Tap Dance ──────────────────────────────── */
 enum {
@@ -91,7 +104,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT ,
-    BACKLIT, KC_LCTL, KC_LALT, KC_LGUI, NUM,     KC_SPC,  KC_ENT,  SYM,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    BACKLIT, KC_LCTL, KC_LALT, KC_LGUI, NUM,     SFT_T(KC_SPC),  KC_ENT,  SYM,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Colemak (base)
@@ -107,22 +120,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_COLEMAK] = LAYOUT_planck_grid(
     KC_TAB,     KC_Q,   KC_W    ,KC_F,          KC_P,   KC_B,           KC_J,          KC_L,KC_U    , KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
-    CTRL_ESC,   KC_A,   KC_R    ,KC_S,          KC_T,   KC_G,           KC_M,          KC_N,KC_E    , KC_I      , KC_O            , TD(TD_QUOT_DQUOT),
+    CTRL_ESC,   KC_A,   KC_R    ,KC_S,          KC_T,   KC_G,           KC_M,          N_VIM, E_VIM , I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
     SC_LSPO,    KC_Z,   KC_X    ,TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,KC_COMM , KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,KC_LGUI ,NAV,           NUM,    KC_SPC,         LT(0, KC_ENT), SYM, NAV     , KC_RGUI   , KC_RALT         , KC_RBRC
+    KC_LBRC,    KC_LALT,KC_LGUI ,NAV,           NUM,    SFT_T(KC_SPC),  LT(0, KC_ENT), SYM, NAV     , KC_RGUI   , KC_RALT         , KC_RBRC
 ),
 
-/* Number
- * ,-----------------------------------------------------------------------------------.
- * |       |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  9   |  0   |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |  -   |  =   |  `   |  \   |      |      |      |      |      |      |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |      |      |      |      |      |      |      |      |      |      |       |
- * `-----------------------------------------------------------------------------------'
- */
+/* Number */
 [_NUM] = LAYOUT_planck_grid(
     _______ , KC_F1    , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6  , KC_F7   , KC_F8   , KC_F9   , KC_F10  , _______,
     _______ , KC_1     , KC_2    , KC_3    , KC_4    , KC_5    , KC_6   , KC_7    , KC_8    , KC_9    , KC_0    , _______,
@@ -130,17 +133,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______  , _______ , _______ , _______ , _______ , _______, _______ , _______ , _______ , _______ , _______
 ),
 
-/* Symbol
- * ,-----------------------------------------------------------------------------------.
- * |       | F11  | F12  | F13  | F14  | F15  | F16  | F17  | F18  | F19  | F20  |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |  !   |  @   |  #   |  $   |  %   |  ^   |  &   |  *   |  (   |  )   |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |  _   |  +   |  ~   |  |   |      |      |      |      |      |      |       |
- * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       |      |      |      |      |      |      |      |      |      |      |       |
- * `-----------------------------------------------------------------------------------'
- */
+/* Symbol */
 [_SYM] = LAYOUT_planck_grid(
     _______ , KC_F11  , KC_F12  , KC_F13  , KC_F14  , KC_F15  , KC_F16  , KC_F17  , KC_F18  , KC_F19  , KC_F20  , _______,
     _______ , KC_EXLM , KC_AT   , KC_HASH , KC_DLR  , KC_PERC , KC_CIRC , KC_AMPR , KC_ASTR , KC_LPRN , KC_RPRN , _______,
@@ -148,17 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
 
-/* Plover (steno)
- * ,-----------------------------------------------------------------------------------.
- * |  #   |  #   |  #   |  #   |  #   |  #   |  #   |  #   |  #   |  #   |  #   |  #    |
- * |------+------+------+------+------+------+------+------+------+------+------+-------|
- * |      |  S   |  T   |  P   |  H   |  *   |  *   |  F   |  P   |  L   |  T   |  D    |
- * |------+------+------+------+------+------+------+------+------+------+------+-------|
- * |      |  S   |  K   |  W   |  R   |  *   |  *   |  R   |  B   |  G   |  S   |  Z    |
- * |------+------+------+------+------+------+------+------+------+------+------+-------|
- * | Exit |      |      |  A   |  O   |      |      |  E   |  U   |      |      |       |
- * `-----------------------------------------------------------------------------------'
- */
+/* Plover (steno) */
 [_PLOVER] = LAYOUT_planck_grid(
     KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
     _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
@@ -166,17 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     EXT_PLV, _______, _______, KC_C,    KC_V,    _______, _______, KC_N,    KC_M,    _______, _______, _______
 ),
 
-/* Adjust (RGB Matrix controls, Boot, Audio, Default-layer switch)
- * ,-----------------------------------------------------------------------------------.
- * |       | Boot | Debug| RMtog| RMnext| Hue+ | Hue- | Sat+ | Sat- | Val+ | Val- |      |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       | EECL | MuNx | AudOn| AudOff| AG N | AG Sw|      |      |      | QWRT | COLM |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       | MuPr | MuNx | MusOn| MusOff| MidiOn|MidiOff|    |      |      |      |      |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       |      |      |      |      |      |      |      |      |      |      |      |
- * `-----------------------------------------------------------------------------------'
- */
+/* Adjust (RGB Matrix controls, Boot, Audio, Default-layer switch) */
 [_ADJUST] = LAYOUT_planck_grid(
     _______, QK_BOOT, DB_TOGG, RM_TOGG, RM_NEXT, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, RM_VALU, RM_VALD, _______,
     _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, _______, QWERTY,  COLEMAK,
@@ -184,20 +157,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* Navigate (arrows, media, brightness, macOS tab-switching)
- * ,-----------------------------------------------------------------------------------.
- * |       |      |  ☼-  |  ☼+  |      |      |      | Home | PgDn | PgUp | End  |      |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       | SAM  | C-↓  | C-↑  |      |      |      |  ←   |  ↓   |  ↑   |  →   |      |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       | Mute | Vol- | Vol+ |      |      |      | GUI-[|      |      | GUI-]|      |
- * |-------+------+------+------+------+------+------+------+------+------+------+------|
- * |       |      |      |      |      |      |      |      |      |      |      |      |
- * `-----------------------------------------------------------------------------------'
- */
+/* Navigate (arrows, media, brightness, macOS tab-switching) */
 [_NAV] = LAYOUT_planck_grid(
-    _______ , _______    , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , KC_HOME      , KC_PGDN , KC_PGUP , KC_END       , _______  ,
-    _______ , SAM        , LCTL(KC_DOWN) , LCTL(KC_UP) , _______ , _______ , _______ , KC_LEFT      , KC_DOWN , KC_UP   , KC_RGHT      , _______ ,
+    _______ , _______    , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , _______      , _______ , _______ , _______,       _______ ,
+    _______ , SAM        , LCTL(KC_DOWN) , LCTL(KC_UP) , _______ , _______ , _______ , KC_HOME      , KC_PGDN , KC_PGUP , KC_END       , _______ ,
     _______ , KC_MUTE    , KC_VOLD       , KC_VOLU     , _______ , _______ , _______ , LGUI(KC_LBRC), _______ , _______ , LGUI(KC_RBRC), _______ ,
     _______ , _______    , _______       , _______     , _______ , _______ , _______ , _______      , _______ , _______ , _______      , _______
 )
@@ -253,6 +216,31 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+    /* Vim tap-hold handling */
+    vim_th_t *st = NULL;
+    switch (keycode) {
+        case N_VIM: st = &vim[0]; st->tap_code = KC_N; st->hold_code = KC_LEFT;  break;
+        case E_VIM: st = &vim[1]; st->tap_code = KC_E; st->hold_code = KC_DOWN;  break;
+        case I_VIM: st = &vim[2]; st->tap_code = KC_I; st->hold_code = KC_UP;    break;
+        case O_VIM: st = &vim[3]; st->tap_code = KC_O; st->hold_code = KC_RIGHT; break;
+    }
+    if (st) {
+        if (record->event.pressed) {
+            st->timer    = timer_read();
+            st->deciding = true;
+            st->held     = false;
+        } else {
+            if (st->held) {
+                unregister_code16(st->hold_code);
+            } else if (timer_elapsed(st->timer) < TAPPING_TERM) {
+                tap_code16(st->tap_code);
+            }
+            st->deciding = false;
+        }
+        return false;
+    }
+
     switch (keycode) {
         case SAM:
             if (record->event.pressed) {
@@ -268,6 +256,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_M);
             }
             return false;
+
         case LT(0, KC_ENT):
             if (record->tap.count && record->event.pressed) {
                 tap_code(KC_ENT);  // Tap: Enter
@@ -277,6 +266,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_BSPC);  // Release hold
             }
             return false;
+
         case QWERTY:
             if (record->event.pressed) set_single_persistent_default_layer(_QWERTY);
             return false;
@@ -318,6 +308,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
     return true;
+}
+
+/* Re-register holds after TAPPING_TERM for auto-repeat */
+void matrix_scan_user(void) {
+    for (int i = 0; i < 4; i++) {
+        vim_th_t *st = &vim[i];
+        if (st->deciding && !st->held && timer_elapsed(st->timer) >= TAPPING_TERM) {
+            register_code16(st->hold_code);
+            st->held = true;
+            st->deciding = false; // decision made
+        }
+    }
 }
 
 /* ───────────────────────── Encoder fun (optional) ─────────────────────── */

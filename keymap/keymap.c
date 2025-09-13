@@ -119,10 +119,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_planck_grid(
-    KC_TAB,     KC_Q,   KC_W    ,KC_F,          KC_P,   KC_B,           KC_J,          KC_L,KC_U    , KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
-    CTRL_ESC,   KC_A,   KC_R    ,KC_S,          KC_T,   KC_G,           KC_M,          N_VIM, E_VIM , I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
-    SC_LSPO,    KC_Z,   KC_X    ,TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,KC_COMM , KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,KC_LGUI ,NAV,           NUM,    SFT_T(KC_SPC),  LT(0, KC_ENT), SYM, NAV     , KC_RGUI   , KC_RALT         , KC_RBRC
+    KC_TAB,     KC_Q,   KC_W, KC_F,          KC_P,   KC_B,           KC_J,          KC_L,   KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
+    CTRL_ESC,   KC_A,   KC_R, KC_S,          KC_T,   KC_G,           KC_M,          N_VIM,  E_VIM ,  I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
+    SC_LSPO,    KC_Z,   KC_X, TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
+    KC_LBRC,    KC_LALT,NAV , NUM,           KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
 ),
 
 /* Number */
@@ -159,10 +159,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Navigate (arrows, media, brightness, macOS tab-switching) */
 [_NAV] = LAYOUT_planck_grid(
-    _______ , _______    , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , _______      , _______ , _______ , _______,       _______ ,
-    _______ , SAM        , LCTL(KC_DOWN) , LCTL(KC_UP) , _______ , _______ , _______ , KC_HOME      , KC_PGDN , KC_PGUP , KC_END       , _______ ,
-    _______ , KC_MUTE    , KC_VOLD       , KC_VOLU     , _______ , _______ , _______ , LGUI(KC_LBRC), _______ , _______ , LGUI(KC_RBRC), _______ ,
-    _______ , _______    , _______       , _______     , _______ , _______ , _______ , _______      , _______ , _______ , _______      , _______
+    _______ , _______      , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , KC_HOME      , KC_PGDN , KC_PGUP , KC_END,        _______ ,
+    _______ , LALT(KC_TAB) , LCTL(KC_DOWN) , LCTL(KC_UP) , SAM     , _______ , _______ , KC_LEFT      , KC_DOWN , KC_UP ,   KC_RGHT      , _______ ,
+    _______ , KC_MUTE      , KC_VOLD       , KC_VOLU     , _______ , _______ , _______ , LGUI(KC_LBRC), _______ , _______ , LGUI(KC_RBRC), _______ ,
+    _______ , _______      , _______       , _______     , _______ , _______ , _______ , _______      , _______ , _______ , _______      , _______
 )
 };
 /* ============================ End Keymaps ============================== */

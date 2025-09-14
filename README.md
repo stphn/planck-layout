@@ -9,9 +9,8 @@ Below is a breakdown of how each part works.
 ---
 
 ### Colemak DH  
-Includes bracket/Hyper/Num/Sym/Nav keys for consistency.  
+Includes bracket/Hyper/Num/Sym/Nav keys.  
 Tap-dances: `;/:`, `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`.
-Hyper Key
 
 ![Colemak Layer](images/colemak-layer.png)
 
@@ -25,7 +24,8 @@ Same layer access and tap-dances as Colemak DH.
 
 
 ### NUM (Numbers + F-keys)
-Second layer with numbers, function keys, and extra symbols.
+Layer for numbers, F1–F10, and basic symbols like `- = \``.  
+Designed for quick numeric input and function key access.
 
 ![Number Layer](images/num-layer.png)
 

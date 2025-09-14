@@ -1,134 +1,111 @@
-# ⌨️ Planck Rev7 — stphn Layout
+# ⌨️ Planck Rev7 — stphn Layout (Detailed)
 
-[![QMK Firmware](https://img.shields.io/badge/Built%20with-QMK%20Firmware-blue.svg?logo=keyboard)](https://qmk.fm)
-[![Keyboard](https://img.shields.io/badge/Keyboard-Planck%20Rev7-orange.svg)](https://qmk.fm/keyboards/planck/)
-[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-green.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
-
-Personal QMK layout for my [Planck Rev7](https://qmk.fm/keyboards/planck/) keyboard.  
-Managed as a standalone repo with QMK as a git submodule.
+This firmware defines multiple layers and a few custom behaviors on top of QMK defaults.  
+Below is a breakdown of how each part works.
 
 ---
 
-## 📂 Repo structure
-
-```
-planck-layout/
-├── keymap/       # my custom layout files (keymap.c, config.h, rules.mk, etc.)
-├── qmk/          # QMK Firmware (as submodule)
-├── firmware/     # archived .bin builds with timestamp
-├── images/       # layout preview images (placeholders provided)
-├── Makefile      # build/flash/save shortcuts
-└── .gitignore    # keeps the repo clean
-```
-
+## 🎛 Layers
 ---
 
-## 🔧 Setup
-
-Clone with submodules:
-
-```bash
-git clone --recurse-submodules git@github.com:YOURNAME/planck-layout.git
-cd planck-layout
-```
-
-If you forgot `--recurse-submodules`:
-
-```bash
-git submodule update --init --recursive
-```
-
----
-
-## ⚙️ Commands
-
-### Build only
-
-```bash
-make build
-```
-
-Compiles the firmware into `qmk/.build/planck_rev7_stphn.bin`.
-
-### Build + Flash
-
-```bash
-make flash
-```
-
-Compiles and flashes directly to the Planck Rev7  
-(put the board in bootloader with RESET/BOOT or `QK_BOOT` key first).
-
-### Build + Save
-
-```bash
-make save
-```
-
-Compiles and copies a timestamped `.bin` into `firmware/`.
-
-Example:
-
-```
-firmware/planck_rev7_stphn-20240909-212055.bin
-```
-
-### Clean
-
-```bash
-make clean
-```
-
-Removes build cache to force a fresh build.
-
----
-
-## 📝 Notes
-
-- `qmk doctor` can be run to verify your environment.
-- To update QMK to the latest upstream:
-  ```bash
-  cd qmk
-  git fetch origin
-  git checkout master
-  git pull
-  cd ..
-  git add qmk
-  git commit -m "chore: update QMK submodule"
-  ```
-- Archived firmware in `firmware/` is safe to commit.  
-  Build junk inside `qmk/.build/` is ignored via `.gitignore`.
-
----
-
-## 🎹 Layout Preview
-
-Layer diagrams (placeholders provided in `images/`). Replace with screenshots from [KLE](http://www.keyboard-layout-editor.com/) or [QMK Configurator](https://config.qmk.fm/#/planck/rev7/stphn).
-
-### QWERTY
-
-![QWERTY Layer](images/qwerty-layer.png)
-
-### Colemak
+### Colemak DH  
+Includes bracket/Hyper/Num/Sym/Nav keys for consistency.  
+Tap-dances: `;/:`, `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`.
+Hyper Key
 
 ![Colemak Layer](images/colemak-layer.png)
 
-### Number
+---
+
+### QWERTY
+Alternative base using QWERTY.  
+Same layer access and tap-dances as Colemak DH.  
+
+![QWERTY Layer](images/qwerty-layer.png)
+
+
+### NUM (Numbers + F-keys)
+Second layer with numbers, function keys, and extra symbols.
 
 ![Number Layer](images/num-layer.png)
 
-### Symbols
+---
+
+### SYM (Symbols + shifted F-keys)  
+Third layer providing shifted symbols (`!@#$%^&*()` etc.) and F11–F20.  
+Includes an extended F-key range for potential system shortcuts or custom bindings.
 
 ![Symbols Layer](images/sym-layer.png)
 
-### Navigation
+---
+
+### NAV (Navigation, media, mouse — Vim-style NEIO consistency)
+Navigation + system control:  
+- Arrows, PgUp/PgDn, Home/End  
+- Volume, mute, brightness  
+- Alt+Tab, Ctrl+Arrow  
+- Optional mouse movement + buttons
 
 ![Nav Layer](images/nav-layer.png)
 
-### Adjust
+---
+
+### ADJUST (RGB, Audio, Boot, Layer toggles)
+Tri-layer (_NUM + _SYM).  
+Controls bootloader, debug, RGB Matrix, audio, and default layers.
 
 ![Adjust Layer](images/adjust-layer.png)
 
 ---
 
-✨ That’s it — edit your keymap in `keymap/`, run `make flash`, and enjoy your custom layout!
+### Plover (Steno)
+Stenography input for Plover software.  
+Activates NKRO automatically.
+
+![Plover Layer](images/plover-layer.png)
+
+---
+
+## 🩰 Tap-Dance Keys
+
+- `;` → `;` (tap) / `:` (double-tap)  
+- `'` → `'` (tap) / `"` (double-tap)  
+- `/` → `/` (tap) / `?` (double-tap)  
+- `C` → `C` (tap) / ⌘C (double-tap)  
+- `V` → `V` (tap) / ⌘V (double-tap)  
+
+![Tap Dance](images/tap-dance.png)
+
+---
+
+## 🅥 Vim Integration
+
+Using four Colemak keys (`N/E/I/O`) acted as:  
+- Tap → letter (`n/e/i/o`)  
+- Hold → arrow (`← ↓ ↑ →`)  
+
+Mimics Vim’s `hjkl` but adapted to Colemak home row.  
+In QWERTY cleanup, `H J K L` remain plain letters.
+
+---
+
+## 🔑 Special Behaviors
+
+- **CTRL_ESC** → Esc (tap) / Ctrl (hold)  
+- **Space / Enter dual roles**:  
+  - `SFT_T(SPC)` = Space (tap) / Shift (hold)  
+  - `LT(0, ENT)` = Enter (tap) / Backspace (hold)  
+- **Brackets `[ ]`** → quick outer pinky access  
+- **Hyper key** → Ctrl+Alt+Shift+GUI  
+- **RGB indicators** → layer-specific LED feedback
+
+---
+
+## 📖 Usage Summary
+
+- **Typing** → QWERTY or Colemak  
+- **Symbols/Numbers** → NUM/SYM  
+- **System/media/nav** → NAV  
+- **Config/RGB/boot/audio** → ADJUST  
+- **Steno** → Plover  
+- **Editing speedups** → tap-dance + Vim features

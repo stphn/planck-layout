@@ -5,16 +5,9 @@
 #include QMK_KEYBOARD_H
 #include "user_song_list.h"
 
-/* ────────────────────────────────────────────────────────────────────────────
-   RGB Matrix keycodes used on the Adjust layer (no-ops if RGB Matrix is off)
-
-   RM_TOGG  – toggle RGB Matrix on/off
-   RM_NEXT  – next animation mode
-   RM_HUEU  – hue up      | RM_HUED – hue down
-   RM_SATU  – saturation up | RM_SATD – saturation down
-   RM_VALU  – value/brightness up | RM_VALD – value/brightness down
-   (There is no built-in “reset to defaults” keycode for RGB Matrix.)
-   ──────────────────────────────────────────────────────────────────────────── */
+#ifdef CONSOLE_ENABLE
+#    include "print.h"
+#endif
 
 /* ----- Safe RGB fallbacks so it still compiles without RGB Matrix ----- */
 #if !defined(RGB_MATRIX_ENABLE)
@@ -26,6 +19,20 @@
 #    define RM_SATD KC_NO
 #    define RM_VALU KC_NO
 #    define RM_VALD KC_NO
+#endif
+
+#ifdef RGB_MATRIX_ENABLE
+// LED groups (left→right)
+static const uint8_t LED_TOP[]    = {6, 5, 4, 3};
+static const uint8_t LED_MID[]    = {0};
+static const uint8_t LED_BOTTOM[] = {7, 8, 1, 2};
+static const uint8_t LED_ALL[]    = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+static const uint8_t LED_LEFT[]   = {6, 7};
+static const uint8_t LED_RIGHT[]  = {3, 2};
+
+static inline void set_group_color(const uint8_t *grp, uint8_t cnt, uint8_t r, uint8_t g, uint8_t b) {
+    for (uint8_t i = 0; i < cnt; i++) rgb_matrix_set_color(grp[i], r, g, b);
+}
 #endif
 
 extern keymap_config_t keymap_config;
@@ -101,10 +108,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT ,
-    BACKLIT, KC_LCTL, KC_LALT, KC_LGUI, NUM,     SFT_T(KC_SPC),  KC_ENT,  SYM,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y, KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H, KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N, KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT ,
+    BACKLIT, KC_LCTL, KC_LALT, KC_LGUI, NUM,     SFT_T(KC_SPC), KC_ENT,  SYM,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Colemak (base)
@@ -115,32 +122,84 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
  * | Shift/( |    Z    |    X    |    C    |    D    |    V    |    K    |    H    |    ,    |    .    |    /    | Shift/) |
  * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
- * |    [    |   Alt   |   GUI   |   Nav   |   Num   |    󱁐    |  󰿄 :󰁮   |   SYM   |   NAV   |   GUI   |   Alt   |    ]    |
+ * |    [    |   Alt   |   HYPR  |   NUM   |   LGUI  |    󱁐    |  󰿄 :󰁮   |   SYM   |   NAV   |   RGUI  |   Alt   |    ]    |
  * `-----------------------------------------------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_planck_grid(
-    KC_TAB,     KC_Q,   KC_W, KC_F,          KC_P,   KC_B,           KC_J,          KC_L,   KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
-    CTRL_ESC,   KC_A,   KC_R, KC_S,          KC_T,   KC_G,           KC_M,          N_VIM,  E_VIM ,  I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
-    SC_LSPO,    KC_Z,   KC_X, TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,NAV , NUM,           KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
+    KC_TAB,     KC_Q,   KC_W,       KC_F,          KC_P,   KC_B,           KC_J,          KC_L,   KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
+    CTRL_ESC,   KC_A,   KC_R,       KC_S,          KC_T,   KC_G,           KC_M,          N_VIM,  E_VIM ,  I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
+    SC_LSPO,    KC_Z,   KC_X,       TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,           KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
 ),
-
-/* Number */
+/* Number
+ * ,-----------------------------------------------------------------------------------.
+ * |       |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  9   |  0   |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |  -   |  =   |  `   |  \   |      |      |      |      |      |      |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |      |      |      |      |      |      |      |      |      |      |       |
+ * `-----------------------------------------------------------------------------------'
+ */
 [_NUM] = LAYOUT_planck_grid(
     _______ , KC_F1    , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6  , KC_F7   , KC_F8   , KC_F9   , KC_F10  , _______,
     _______ , KC_1     , KC_2    , KC_3    , KC_4    , KC_5    , KC_6   , KC_7    , KC_8    , KC_9    , KC_0    , _______,
     _______ , KC_MINS  , KC_EQL  , KC_GRV  , KC_BSLS , _______ , _______, _______ , _______ , _______ , _______ , _______,
     _______ , _______  , _______ , _______ , _______ , _______ , _______, _______ , _______ , _______ , _______ , _______
 ),
-
-/* Symbol */
+/* Symbol
+ * ,-----------------------------------------------------------------------------------.
+ * |       | F11  | F12  | F13  | F14  | F15  | F16  | F17  | F18  | F19  | F20  |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |  !   |  @   |  #   |  $   |  %   |  ^   |  &   |  *   |  (   |  )   |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |  _   |  +   |  ~   |  |   |      |      |      |      |      |      |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |      |      |      |      |      |      |      |      |      |      |       |
+ * `-----------------------------------------------------------------------------------'
+ */
 [_SYM] = LAYOUT_planck_grid(
     _______ , KC_F11  , KC_F12  , KC_F13  , KC_F14  , KC_F15  , KC_F16  , KC_F17  , KC_F18  , KC_F19  , KC_F20  , _______,
     _______ , KC_EXLM , KC_AT   , KC_HASH , KC_DLR  , KC_PERC , KC_CIRC , KC_AMPR , KC_ASTR , KC_LPRN , KC_RPRN , _______,
     _______ , KC_UNDS , KC_PLUS , KC_TILD , KC_PIPE , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
-
+/* Adjust (RGB, Boot, Audio, Default layers)
+ * ,-----------------------------------------------------------------------------------.
+ * |       | Boot | Debug| RMtog| RMnext| Hue+ | Hue- | Sat+ | Sat- | Val+ | Val- |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       | EECL | MuNx | AudOn| AudOff| AG N | AG Sw|      |      |      | QWRT | COLM  |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       | MuPr | MuNx | MusOn| MusOff| MidiOn|MidiOff|    |      |      |      |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |      |      |      |      |      |      |      |      |      |      |       |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_ADJUST] = LAYOUT_planck_grid(
+    _______, QK_BOOT, DB_TOGG, RM_TOGG, RM_NEXT, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, RM_VALU, RM_VALD, _______,
+    _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, _______, QWERTY,  COLEMAK,
+    _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+),
+/* Navigate (arrows, media, brightness, app switch)
+ * ,-----------------------------------------------------------------------------------.
+ * |       |      |  ☼-  |  ☼+  |      |      |      | Home | PgDn | PgUp | End  |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       | Alt↹ | C-↓  | C-↑  |  SAM |      |      |  ←   |  ↓   |  ↑   |  →   |       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       | Mute | Vol- | Vol+ |      |      |      | GUI-[|      |      | GUI-]|       |
+ * |-------+------+------+------+------+------+------+------+------+------+------+-------|
+ * |       |      |      |      |      |      |      |      |      |      |      |       |
+ * `-----------------------------------------------------------------------------------'
+ * Legend: Alt↹ = LALT+Tab, C-↓/C-↑ = Ctrl+arrow, GUI-[/GUI-] = macOS tab switch.
+ */
+[_NAV] = LAYOUT_planck_grid(
+    _______ , _______      , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , KC_HOME, KC_PGDN , KC_PGUP , KC_END,  _______ ,
+    _______ , LALT(KC_TAB) , LCTL(KC_DOWN) , LCTL(KC_UP) , SAM     , _______ , _______ , KC_LEFT, KC_DOWN , KC_UP ,   KC_RGHT, _______ ,
+    _______ , KC_MUTE      , KC_VOLD       , KC_VOLU     , _______ , _______ , _______ , MS_LEFT, MS_DOWN , MS_UP ,   MS_RGHT, _______ ,
+    _______ , MS_BTN1      , MS_BTN2       , MS_BTN3     , _______ , _______ , _______ , _______, _______ , _______ , _______, _______
+),
 /* Plover (steno) */
 [_PLOVER] = LAYOUT_planck_grid(
     KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
@@ -148,58 +207,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     EXT_PLV, _______, _______, KC_C,    KC_V,    _______, _______, KC_N,    KC_M,    _______, _______, _______
 ),
-
-/* Adjust (RGB Matrix controls, Boot, Audio, Default-layer switch) */
-[_ADJUST] = LAYOUT_planck_grid(
-    _______, QK_BOOT, DB_TOGG, RM_TOGG, RM_NEXT, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, RM_VALU, RM_VALD, _______,
-    _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, _______, QWERTY,  COLEMAK,
-    _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-),
-
-/* Navigate (arrows, media, brightness, macOS tab-switching) */
-[_NAV] = LAYOUT_planck_grid(
-    _______ , _______      , KC_BRID       , KC_BRIU     , _______ , _______ , _______ , KC_HOME      , KC_PGDN , KC_PGUP , KC_END,        _______ ,
-    _______ , LALT(KC_TAB) , LCTL(KC_DOWN) , LCTL(KC_UP) , SAM     , _______ , _______ , KC_LEFT      , KC_DOWN , KC_UP ,   KC_RGHT      , _______ ,
-    _______ , KC_MUTE      , KC_VOLD       , KC_VOLU     , _______ , _______ , _______ , LGUI(KC_LBRC), _______ , _______ , LGUI(KC_RBRC), _______ ,
-    _______ , _______      , _______       , _______     , _______ , _______ , _______ , _______      , _______ , _______ , _______      , _______
-)
 };
 /* ============================ End Keymaps ============================== */
-
+// HSV helper defined once (above rgb_matrix_indicators_user)
+static inline void set_group_hsv(const uint8_t *grp, uint8_t cnt, uint8_t h, uint8_t s, uint8_t v) {
+    RGB c = hsv_to_rgb((HSV){h, s, v});
+    for (uint8_t i = 0; i < cnt; i++) {
+        rgb_matrix_set_color(grp[i], c.r, c.g, c.b);
+    }
+}
 #ifdef RGB_MATRIX_ENABLE
-/* Keep your chosen animation dynamic; only add subtle per-layer hints.
-   We color a tiny subset of LEDs so the effect keeps running elsewhere. */
 bool rgb_matrix_indicators_user(void) {
     uint8_t n = RGB_MATRIX_LED_COUNT;
-    if (n == 0) return false;
+    uint8_t mods = get_mods() | get_oneshot_mods();
+    if (!n) return false;
 
-    // Helper indices (bounds-safe)
-    uint8_t i0 = 0;
-    uint8_t i1 = (n > 1) ? 1 : 0;
-    uint8_t il = (n > 0) ? (n - 1) : 0;
-    uint8_t il2 = (n > 2) ? (n - 2) : il;
-    uint8_t mid = n / 2;
+    if (layer_state_is(_NUM)) set_group_hsv(LED_LEFT,  sizeof LED_LEFT,  213, 180, 220);
+    if (layer_state_is(_SYM)) set_group_hsv(LED_RIGHT, sizeof LED_RIGHT,   0, 200, 200);
+    if (layer_state_is(_NAV)) set_group_hsv(LED_TOP,   sizeof LED_TOP,    85, 130, 255);
 
-    // NUM layer: cyan on two opposite corners
-    if (layer_state_is(_NUM)) {
-        rgb_matrix_set_color(i0, 0, 255, 255);  // cyan
-        rgb_matrix_set_color(il, 0, 255, 255);
+    if ( (mods & MOD_MASK_GUI) &&
+         (mods & MOD_MASK_CTRL) &&
+         (mods & MOD_MASK_ALT)  &&
+         (mods & MOD_MASK_SHIFT) ) {
+        set_group_hsv(LED_MID, sizeof LED_MID, 200, 255, 255);   // Hyper
+    } else if ( (mods & MOD_MASK_GUI) &&
+               !(mods & (MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_SHIFT)) ) {
+        set_group_hsv(LED_MID, sizeof LED_MID,   4, 138, 250);   // GUI only
     }
 
-    // SYM layer: magenta on two other corners
-    if (layer_state_is(_SYM)) {
-        rgb_matrix_set_color(i1, 255, 0, 255);  // magenta
-        rgb_matrix_set_color(il2, 255, 0, 255);
-    }
-
-    // NAV layer: amber/yellow at center
-    if (layer_state_is(_NAV)) {
-        rgb_matrix_set_color(mid, 255, 180, 0); // warm yellow
-    }
-
-    // ADJUST layer: leave completely untouched so RM_* feedback stays global
-    return false;
+    return false; // keep animations
 }
 #endif
 
@@ -207,7 +244,7 @@ bool rgb_matrix_indicators_user(void) {
 float plover_song[][2]    = SONG(PLOVER_SOUND);
 float plover_gb_song[][2] = SONG(PLOVER_GOODBYE_SOUND);
 float coin_up[][2]        = SONG(AUDIO_ON_SOUND);
-float coin_down[][2]      = SONG(AUDIO_OFF_SOUND);
+float mario_game_over[][2] = SONG(MARIO_GAMEOVER);
 #endif
 
 // Keep animations dynamic: only tri-layer logic here.
@@ -216,7 +253,23 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef CONSOLE_ENABLE
+    if (record->event.pressed) {
+        uint8_t r = record->event.key.row;
+        uint8_t c = record->event.key.col;
 
+        if (r < MATRIX_ROWS && c < MATRIX_COLS) {
+            uint8_t led = g_led_config.matrix_co[r][c];   // key -> LED index
+            if (led != NO_LED) {
+                uprintf("Key r=%u c=%u -> led=%u\n", r, c, led);
+            } else {
+                uprintf("Key r=%u c=%u -> led=NO_LED\n", r, c);
+            }
+        } else {
+            uprintf("Key r=%u c=%u out of range\n", r, c);
+        }
+    }
+#endif
     /* Vim tap-hold handling */
     vim_th_t *st = NULL;
     switch (keycode) {
@@ -247,9 +300,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 register_code(KC_LSFT);
                 register_code(KC_LALT);
                 register_code(KC_M);
-                #ifdef AUDIO_ENABLE
-                    PLAY_SONG(coin_up);
-                #endif
             } else {
                 unregister_code(KC_LSFT);
                 unregister_code(KC_LALT);
@@ -350,23 +400,24 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 bool dip_switch_update_user(uint8_t index, bool active) {
     switch (index) {
         case 0: {
-#ifdef AUDIO_ENABLE
+            #ifdef AUDIO_ENABLE
             static bool play_sound = false;
-#endif
+            #endif
             if (active) {
-#ifdef AUDIO_ENABLE
+                #ifdef AUDIO_ENABLE
                 if (play_sound) PLAY_SONG(plover_song);
-#endif
+                #endif
                 layer_on(_ADJUST);
             } else {
-#ifdef AUDIO_ENABLE
+                #ifdef AUDIO_ENABLE
                 if (play_sound) PLAY_SONG(plover_gb_song);
-#endif
+                #endif
                 layer_off(_ADJUST);
             }
-#ifdef AUDIO_ENABLE
+            #ifdef AUDIO_ENABLE
             play_sound = true;
-#endif
+            #endif
+
             break;
         }
     }

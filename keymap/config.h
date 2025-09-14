@@ -13,6 +13,7 @@
 /* ---------------- MIDI ----------------- */
 /* Basic MIDI (Music mode notes) */
 #define MIDI_BASIC
+#define MUSIC_MAP
 /* Advanced MIDI features (octave/transpose/etc.) */
 // #define MIDI_ADVANCED
 

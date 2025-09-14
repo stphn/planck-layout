@@ -159,16 +159,7 @@
 #define COIN_UP Q__NOTE(_E5), Q__NOTE(_G5), Q__NOTE(_C6)
 #define COIN_DOWN Q__NOTE(_C6), Q__NOTE(_G5), Q__NOTE(_E5)
 
-/* Title:            Tetris Theme A (Korobeiniki)
- * Author/Composer:  Traditional Russian folk tune
- * License:          Public Domain
- */
-#define TETRIS_THEME_A \
-    Q__NOTE(_E5), Q__NOTE(_B4), Q__NOTE(_C5), Q__NOTE(_D5), \
-    Q__NOTE(_C5), Q__NOTE(_B4), H__NOTE(_A4), \
-    Q__NOTE(_A4), Q__NOTE(_C5), Q__NOTE(_E5), Q__NOTE(_D5), Q__NOTE(_C5), H__NOTE(_B4), \
-    H__NOTE(_C5), \
-    /* Phrase 2 */ \
-    Q__NOTE(_D5), Q__NOTE(_F5), Q__NOTE(_A5), Q__NOTE(_G5), Q__NOTE(_F5), Q__NOTE(_E5), H__NOTE(_C5), \
-    Q__NOTE(_E5), Q__NOTE(_G5), Q__NOTE(_B5), Q__NOTE(_A5), Q__NOTE(_G5), Q__NOTE(_F5), H__NOTE(_D5), \
-    H__NOTE(_E5)
+#define MARIO_GAMEOVER \
+    Q__NOTE(_E5), Q__NOTE(_E4), Q__NOTE(_C4), Q__NOTE(_D4), \
+    Q__NOTE(_C4), E__NOTE(_G3),
+  

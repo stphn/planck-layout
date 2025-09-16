@@ -317,9 +317,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->tap.count && record->event.pressed) {
                 tap_code(KC_ENT);  // Tap: Enter
             } else if (record->event.pressed) {
-                register_code(KC_BSPC);  // Hold: Backspace
+                register_code(KC_LALT);  // Hold: Backspace
             } else if (!record->tap.count) {
-                unregister_code(KC_BSPC);  // Release hold
+                unregister_code(KC_LALT);  // Release hold
             }
             return false;
 

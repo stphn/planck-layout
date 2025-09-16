@@ -26,3 +26,4 @@ __pycache__/
 !/firmware/
 # remove agnts
 AGENTS.md
+CLAUDE.md

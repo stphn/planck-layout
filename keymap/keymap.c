@@ -132,10 +132,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_planck_grid(
-    KC_TAB,     KC_Q,   KC_W,       KC_F,          KC_P,   KC_B,           KC_J,          KC_L,   KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
-    CTRL_ESC,   KC_A,   KC_R,       KC_S,          KC_T,   KC_G,           KC_M,          N_VIM,  E_VIM ,  I_VIM     , O_VIM           , TD(TD_QUOT_DQUOT),
-    SC_LSPO,    KC_Z,   KC_X,       TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,           KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
+    KC_TAB,     KC_Q,   KC_W,       KC_F,          KC_P,   KC_B,           KC_J,          KC_L,  KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
+    CTRL_ESC,   KC_A,   KC_R,       KC_S,          KC_T,   KC_G,           KC_M,          KC_N,  KC_E ,   KC_I      , KC_O            , TD(TD_QUOT_DQUOT),
+    SC_LSPO,    KC_Z,   KC_X,       TD(TD_C_COPY), KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,  KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,           KC_LGUI,LALT_T(KC_SPC), HYPR_T(KC_ENT),NAV,   SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
 ),
 /* Number
  * ,-----------------------------------------------------------------------------------.
@@ -201,10 +201,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Legend: Alt↹ = LALT+Tab, C-↓/C-↑ = Ctrl+arrow, M1/M2/M3 = Mouse buttons, MS = mouse move
  */
 [_NAV] = LAYOUT_planck_grid(
-    KC_MUTE , KC_VOLD,      KC_VOLU,        KC_BRID,    KC_BRIU, _______ , _______ , KC_HOME, KC_PGDN , KC_PGUP , KC_END,  _______ ,
-    _______ , LALT(KC_TAB), LCTL(KC_DOWN) , LCTL(KC_UP),SAM    , _______ , _______ , KC_LEFT, KC_DOWN , KC_UP ,   KC_RGHT, _______ ,
-    _______ , _______,      MS_BTN1       , MS_BTN2,    MS_BTN3, _______ , _______ , MS_LEFT, MS_DOWN , MS_UP ,   MS_RGHT, _______ ,
-    _______ , _______,      _______       , _______,    _______, _______ , _______ , _______, _______ , _______ , _______, _______
+    KC_MUTE , KC_VOLD,      KC_VOLU,        KC_BRID,    KC_BRIU,    _______ , _______ , KC_HOME, KC_PGDN , KC_PGUP , KC_END,  _______ ,
+    _______ , LALT(KC_SPC), LCTL(KC_DOWN) , LCTL(KC_UP),LALT(KC_M), _______ , _______ , KC_LEFT, KC_DOWN , KC_UP ,   KC_RGHT, _______ ,
+    _______ , _______,      MS_BTN1       , MS_BTN2,    MS_BTN3,    _______ , _______ , MS_LEFT, MS_DOWN , MS_UP ,   MS_RGHT, _______ ,
+    _______ , _______,      _______       , _______,    _______,    _______ , _______ , _______, _______ , _______ , _______, _______
 ),
 /* Plover (steno) */
 [_PLOVER] = LAYOUT_planck_grid(

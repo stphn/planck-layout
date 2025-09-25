@@ -1,20 +1,27 @@
 # ⌨️ Planck Rev7 — Personal Layout (Detailed)
 
-This firmware defines multiple layers and a few custom behaviors on top of QMK defaults.  
-Below is a breakdown of how each part works.
+This QMK firmware defines multiple layers and custom behaviors for efficient typing and navigation on the Planck Rev7 keyboard. The layout uses Colemak DH as the primary base layer with QWERTY as an alternative.
 
 ## 🎛 Layers
 
-### Colemak DH  
+### Colemak DH (Primary)
 
-Includes bracket/Hyper/Num/Sym/Nav keys.  
-Tap-dances: `;/:`, `'/"`, `V/⌘V`, `/ ?`.
+The main typing layer featuring:
+- Colemak DH key arrangement optimized for hand alternation
+- Tap-dances: `;/:`, `'/"`, `V/⌘V`, `/ ?`
+- Hyper key (Ctrl+Alt+Shift+GUI) on Enter hold
+- Alt on Space hold
+- F18 key integration for Hammerspoon automation
+- Bracket keys `[ ]` on outer corners
 
 ![Colemak Layer](images/colemak-layer.png)
 
-### QWERTY
-Alternative base using QWERTY.  
-Tap-dances: `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`.
+### QWERTY (Alternative)
+
+Traditional QWERTY layout with:
+- Tap-dances: `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`
+- Shift on Space hold
+- Enter with Alt hold for additional functionality
 
 ![QWERTY Layer](images/qwerty-layer.png)
 
@@ -61,25 +68,20 @@ Activates NKRO automatically.
 - `C` → `C` (tap) / ⌘C (double-tap) — QWERTY layer only
 - `V` → `V` (tap) / ⌘V (double-tap)  
 
-## 🅥 Vim Integration
-
-Using four Colemak keys (`N/E/I/O`) acted as:  
-- Tap → letter (`n/e/i/o`)  
-- Hold → arrow (`← ↓ ↑ →`)  
-
-Mimics Vim’s `hjkl` but adapted to Colemak home row.  
+  
 
 ## 🔑 Special Behaviors
 
-- **CTRL_ESC** → Esc (tap) / Ctrl (hold)  
-- **Space / Enter dual roles**:  
-  - QWERTY: `SFT_T(SPC)` = Space (tap) / Shift (hold)  
-  - Colemak: `LALT_T(SPC)` = Space (tap) / Alt (hold)  
-  - QWERTY: `LT(0, ENT)` = Enter (tap) / Backspace (hold)  
-  - Colemak: `HYPR_T(ENT)` = Enter (tap) / Hyper (hold)  
-- **Brackets `[ ]`** → quick outer pinky access  
-- **Hyper key** → Ctrl+Alt+Shift+GUI  
-- **RGB indicators** → layer-specific LED feedback
+- **CTRL_ESC** → Esc (tap) / Ctrl (hold)
+- **Space / Enter dual roles**:
+  - QWERTY: `SFT_T(SPC)` = Space (tap) / Shift (hold)
+  - Colemak: `LALT_T(SPC)` = Space (tap) / Alt (hold)
+  - QWERTY: `LT(0, ENT)` = Enter (tap) / Alt (hold)
+  - Colemak: `HYPR_T(ENT)` = Enter (tap) / Hyper (hold)
+- **F18 key** → Dedicated key for Hammerspoon automation and macOS shortcuts
+- **Brackets `[ ]`** → Quick outer pinky access
+- **Hyper key** → Ctrl+Alt+Shift+GUI for global shortcuts
+- **RGB indicators** → Layer-specific LED feedback with custom colors
 
 ## ⚙️ Build Commands
 

@@ -8,13 +8,13 @@ Below is a breakdown of how each part works.
 ### Colemak DH  
 
 Includes bracket/Hyper/Num/Sym/Nav keys.  
-Tap-dances: `;/:`, `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`.
+Tap-dances: `;/:`, `'/"`, `V/⌘V`, `/ ?`.
 
 ![Colemak Layer](images/colemak-layer.png)
 
 ### QWERTY
 Alternative base using QWERTY.  
-Same layer access and tap-dances as Colemak DH.  
+Tap-dances: `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`.
 
 ![QWERTY Layer](images/qwerty-layer.png)
 
@@ -37,8 +37,8 @@ Includes an extended F-key range for potential system shortcuts or custom bindin
 Navigation + system control:  
 - Arrows, PgUp/PgDn, Home/End  
 - Volume, mute, brightness  
-- Alt+Tab, Ctrl+Arrow  
-- Optional mouse movement + buttons
+- Alt+Space, Ctrl+Arrow, Shift+Alt+M  
+- Mouse movement + buttons
 
 ![Nav Layer](images/nav-layer.png)
 
@@ -55,10 +55,10 @@ Activates NKRO automatically.
 
 ## 🩰 Tap-Dance Keys
 
-- `;` → `;` (tap) / `:` (double-tap)  
+- `;` → `;` (tap) / `:` (double-tap) — Colemak layer only
 - `'` → `'` (tap) / `"` (double-tap)  
 - `/` → `/` (tap) / `?` (double-tap)  
-- `C` → `C` (tap) / ⌘C (double-tap)  
+- `C` → `C` (tap) / ⌘C (double-tap) — QWERTY layer only
 - `V` → `V` (tap) / ⌘V (double-tap)  
 
 ## 🅥 Vim Integration
@@ -73,8 +73,10 @@ Mimics Vim’s `hjkl` but adapted to Colemak home row.
 
 - **CTRL_ESC** → Esc (tap) / Ctrl (hold)  
 - **Space / Enter dual roles**:  
-  - `SFT_T(SPC)` = Space (tap) / Shift (hold)  
-  - `LT(0, ENT)` = Enter (tap) / Backspace (hold)  
+  - QWERTY: `SFT_T(SPC)` = Space (tap) / Shift (hold)  
+  - Colemak: `LALT_T(SPC)` = Space (tap) / Alt (hold)  
+  - QWERTY: `LT(0, ENT)` = Enter (tap) / Backspace (hold)  
+  - Colemak: `HYPR_T(ENT)` = Enter (tap) / Hyper (hold)  
 - **Brackets `[ ]`** → quick outer pinky access  
 - **Hyper key** → Ctrl+Alt+Shift+GUI  
 - **RGB indicators** → layer-specific LED feedback

@@ -56,8 +56,6 @@ enum planck_keycodes {
     BACKLIT,
     EXT_PLV,
     SAM,
-    /* Vim-style tap-hold: tap = letter, hold = arrow */
-    N_VIM, E_VIM, I_VIM, O_VIM,
 };
 
 #define NUM      MO(_NUM)
@@ -65,16 +63,6 @@ enum planck_keycodes {
 #define NAV      MO(_NAV)
 #define CTRL_ESC LCTL_T(KC_ESC)
 
-/* ───────────────── Vim tap-hold state ───────────────── */
-typedef struct {
-    uint16_t tap_code;   // letter
-    uint16_t hold_code;  // arrow
-    uint16_t timer;
-    bool deciding;       // within TAPPING_TERM window
-    bool held;           // hold has been registered
-} vim_th_t;
-
-static vim_th_t vim[4] = {0};
 
 /* ───────────────────────────── Tap Dance ──────────────────────────────── */
 enum {
@@ -135,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,     KC_Q,   KC_W,       KC_F,   KC_P,   KC_B,           KC_J,          KC_L,  KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
     CTRL_ESC,   KC_A,   KC_R,       KC_S,   KC_T,   KC_G,           KC_M,          KC_N,  KC_E ,   KC_I      , KC_O            , TD(TD_QUOT_DQUOT),
     SC_LSPO,    KC_Z,   KC_X,       KC_C,   KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,  KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,LALT_T(KC_SPC), HYPR_T(KC_ENT),NAV,   SYM,     KC_F18   , KC_RALT         , KC_RBRC
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,LALT_T(KC_SPC), HYPR_T(KC_ENT),LT(_NAV, KC_F18),   SYM,     KC_F18   , KC_RALT         , KC_RBRC
 ),
 /* Number
  * ,-----------------------------------------------------------------------------------.
@@ -276,29 +264,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 #endif
-    /* Vim tap-hold handling */
-    vim_th_t *st = NULL;
-    switch (keycode) {
-        case N_VIM: st = &vim[0]; st->tap_code = KC_N; st->hold_code = KC_LEFT;  break;
-        case E_VIM: st = &vim[1]; st->tap_code = KC_E; st->hold_code = KC_DOWN;  break;
-        case I_VIM: st = &vim[2]; st->tap_code = KC_I; st->hold_code = KC_UP;    break;
-        case O_VIM: st = &vim[3]; st->tap_code = KC_O; st->hold_code = KC_RIGHT; break;
-    }
-    if (st) {
-        if (record->event.pressed) {
-            st->timer    = timer_read();
-            st->deciding = true;
-            st->held     = false;
-        } else {
-            if (st->held) {
-                unregister_code16(st->hold_code);
-            } else if (timer_elapsed(st->timer) < TAPPING_TERM) {
-                tap_code16(st->tap_code);
-            }
-            st->deciding = false;
-        }
-        return false;
-    }
 
     switch (keycode) {
         case SAM:
@@ -366,17 +331,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-/* Re-register holds after TAPPING_TERM for auto-repeat */
-void matrix_scan_user(void) {
-    for (int i = 0; i < 4; i++) {
-        vim_th_t *st = &vim[i];
-        if (st->deciding && !st->held && timer_elapsed(st->timer) >= TAPPING_TERM) {
-            register_code16(st->hold_code);
-            st->held = true;
-            st->deciding = false; // decision made
-        }
-    }
-}
 
 /* ───────────────────────── Encoder fun (optional) ─────────────────────── */
 deferred_token tokens[8];

@@ -4,6 +4,7 @@
 
 #include QMK_KEYBOARD_H
 #include "user_song_list.h"
+#include "../password.h"
 
 #ifdef CONSOLE_ENABLE
 #    include "print.h"
@@ -56,6 +57,7 @@ enum planck_keycodes {
     BACKLIT,
     EXT_PLV,
     SAM,
+    PSWD,
 };
 
 #define NUM      MO(_NUM)
@@ -192,7 +194,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_MUTE , KC_VOLD,      KC_VOLU,        KC_BRID,    KC_BRIU,    _______ , _______ , KC_HOME, KC_PGDN , KC_PGUP , KC_END,  _______ ,
     _______ , LALT(KC_SPC), LCTL(KC_DOWN) , LCTL(KC_UP),LALT(KC_M), _______ , _______ , KC_LEFT, KC_DOWN , KC_UP ,   KC_RGHT, _______ ,
     _______ , _______,      MS_BTN1       , MS_BTN2,    MS_BTN3,    _______ , _______ , MS_LEFT, MS_DOWN , MS_UP ,   MS_RGHT, _______ ,
-    _______ , _______,      _______       , _______,    _______,    _______ , _______ , _______, _______ , _______ , _______, _______
+    PSWD    , _______,      _______       , _______,    _______,    _______ , _______ , _______, _______ , _______ , _______, _______
 ),
 /* Plover (steno) */
 [_PLOVER] = LAYOUT_planck_grid(
@@ -325,6 +327,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     PLAY_SONG(plover_gb_song);
                 #endif
                 layer_off(_PLOVER);
+            }
+            return false;
+
+        case PSWD:
+            if (record->event.pressed) {
+                SEND_STRING(PASSWORD_STRING);
             }
             return false;
     }

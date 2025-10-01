@@ -27,3 +27,6 @@ __pycache__/
 # remove agnts
 AGENTS.md
 CLAUDE.md
+
+# Password file - never commit this!
+password.h

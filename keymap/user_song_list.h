@@ -162,4 +162,7 @@
 #define MARIO_GAMEOVER \
     Q__NOTE(_E5), Q__NOTE(_E4), Q__NOTE(_C4), Q__NOTE(_D4), \
     Q__NOTE(_C4), E__NOTE(_G3),
-  
+
+#define MIDI_ON_SOUND E__NOTE(_C5), E__NOTE(_E5), E__NOTE(_G5)
+#define MIDI_OFF_SOUND E__NOTE(_G5), E__NOTE(_E5), E__NOTE(_C5)
+

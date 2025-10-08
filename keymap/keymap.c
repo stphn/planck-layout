@@ -40,13 +40,14 @@ extern keymap_config_t keymap_config;
 
 /* Layers */
 enum planck_layers {
-    _QWERTY,
     _COLEMAK,
+    _QWERTY,
     _NUM,
     _SYM,
     _PLOVER,
     _ADJUST,
-    _NAV
+    _NAV,
+    _MIDI
 };
 
 /* Custom keycodes */
@@ -63,6 +64,7 @@ enum planck_keycodes {
 #define NUM      MO(_NUM)
 #define SYM      MO(_SYM)
 #define NAV      MO(_NAV)
+#define MIDI     TG(_MIDI)
 #define CTRL_ESC LCTL_T(KC_ESC)
 
 
@@ -86,31 +88,7 @@ tap_dance_action_t tap_dance_actions[] = {
 /* ============================== Keymaps ================================ */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-/* QWERTY 
- * ,-----------------------------------------------------------------------------------------------------------------------.
- * |   Tab   |    Q    |    W    |    E    |    R    |    T    |    Y    |    U    |    I    |    O    |    P    |  Bksp   |
- * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
- * | Ctr/Esc |    A    |    S    |    D    |    F    |    G    |    H    |    J    |    K    |    L    |    ;    |   '     |
- * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
- * | Shift/( |    Z    |    X    |   C/⎘   |    C    |   V/⎘   |    V    |    B    |    ,    |    .    |   / ?   | Shift/) |
- * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
- * |    [    |   Alt   |   HYPR  |   NUM   |   LGUI  |   Space |  Ent/⌫  |   NAV   |   SYM   |   RGUI  |   Alt   |    ]    |
- * `-----------------------------------------------------------------------------------------------------------------------'
- * Notes:
- *  - Tap-dance:
- *      ; → ; / :      ' → ' / "
- *      C → C / ⌘C     V → V / ⌘V
- *      / → / / ?
- *  - Outer brackets [ ] mirror Colemak layer for symmetry.
- */
-[_QWERTY] = LAYOUT_planck_grid(
-    KC_TAB,     KC_Q,   KC_W,       KC_E,          KC_R,   KC_T,           KC_Y,          KC_U,   KC_I,    KC_O      , KC_P            , KC_BSPC,
-    CTRL_ESC,   KC_A,   KC_S,       KC_D,          KC_F,   KC_G,           KC_H,          KC_J,   KC_K,    KC_L,     KC_SCLN          , TD(TD_QUOT_DQUOT),
-    SC_LSPO,    KC_Z,   KC_X,       TD(TD_C_COPY), KC_C,   TD(TD_V_PASTE), KC_V,          KC_B,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,           KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
-),
-
-/* Colemak (base)
+/* Colemak (base - default)
  * ,-----------------------------------------------------------------------------------------------------------------------.
  * |   Tab   |    Q    |    W    |    F    |    P    |    B    |    J    |    L    |    U    |    Y    |    ;    |  Bksp   |
  * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
@@ -126,6 +104,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CTRL_ESC,   KC_A,   KC_R,       KC_S,   KC_T,   KC_G,           KC_M,          KC_N,  KC_E ,   KC_I      , KC_O            , TD(TD_QUOT_DQUOT),
     SC_LSPO,    KC_Z,   KC_X,       KC_C,   KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,  KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
     KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,LALT_T(KC_SPC), HYPR_T(KC_ENT),LT(_NAV, KC_F18),   SYM,     KC_F18   , KC_RALT         , KC_RBRC
+),
+
+/* QWERTY (using Colemak physical positions)
+ * ,-----------------------------------------------------------------------------------------------------------------------.
+ * |   Tab   |    Q    |    W    |    E    |    R    |    T    |    Y    |    U    |    I    |    O    |    P    |  Bksp   |
+ * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
+ * | Ctr/Esc |    A    |    S    |    D    |    F    |    G    |    H    |    J    |    K    |    L    |    ;    |   '     |
+ * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
+ * | Shift/( |    Z    |    X    |    C    |    V    |    B    |    N    |    M    |    ,    |    .    |   / ?   | Shift/) |
+ * |---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------|
+ * |    [    |   Alt   |   HYPR  |   NUM   |   LGUI  |   Space |  Ent/⌫  |   NAV   |   SYM   |   RGUI  |   Alt   |    ]    |
+ * `-----------------------------------------------------------------------------------------------------------------------'
+ * Notes:
+ *  - Uses same physical key positions as Colemak layer
+ *  - Outputs QWERTY letters (Q in position 1, W in position 2, E in Colemak's F position, etc.)
+ */
+[_QWERTY] = LAYOUT_planck_grid(
+    KC_TAB,     KC_Q,   KC_W,       KC_E,   KC_R,   KC_T,           KC_Y,          KC_U,   KC_I,    KC_O      , KC_P            , KC_BSPC,
+    CTRL_ESC,   KC_A,   KC_S,       KC_D,   KC_F,   KC_G,           KC_H,          KC_J,   KC_K,    KC_L,     KC_SCLN          , TD(TD_QUOT_DQUOT),
+    SC_LSPO,    KC_Z,   KC_X,       KC_C,   KC_V,   KC_B,           KC_N,          KC_M,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
 ),
 /* Number
  * ,-----------------------------------------------------------------------------------.
@@ -165,7 +164,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |       | Boot | Debug| RMtog| RMnext| Hue+ | Hue- | Sat+ | Sat- | Val+ | Val- |       |
  * |-------+------+------+------+------+------+------+------+------+------+------+-------|
- * |       | EECL | MuNx | AudOn| AudOff| AG N | AG Sw|      |      |      | QWRT | COLM  |
+ * |       | EECL | MuNx | AudOn| AudOff| AG N | AG Sw|      |      | MIDI | QWRT | COLM  |
  * |-------+------+------+------+------+------+------+------+------+------+------+-------|
  * |       | MuPr | MuNx | MusOn| MusOff| MidiOn|MidiOff|    |      |      |      |       |
  * |-------+------+------+------+------+------+------+------+------+------+------+-------|
@@ -174,7 +173,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_planck_grid(
     _______, QK_BOOT, DB_TOGG, RM_TOGG, RM_NEXT, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, RM_VALU, RM_VALD, _______,
-    _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, _______, QWERTY,  COLEMAK,
+    _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, MIDI,    QWERTY,  COLEMAK,
     _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
@@ -202,6 +201,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
     _______, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     EXT_PLV, _______, _______, KC_C,    KC_V,    _______, _______, KC_N,    KC_M,    _______, _______, _______
+),
+/* MIDI - Piano-style layout (2 octaves)
+ * ,-----------------------------------------------------------------------------------.
+ * | Oct-2 | Oct-1 | Oct+1 | Oct+2 | Vel-  | Vel+  | Trns- | Trns+ | SusOn |SusOff |Panic | Exit |
+ * |-------+------+------+------+------+------+------+------+------+------+------+------|
+ * |  C#   |  D#  |      |  F#  |  G#  |  A#  |      |  C#  |  D#  |      |  F#  |  G#  |
+ * |-------+------+------+------+------+------+------+------+------+------+------+------|
+ * |  C    |  D   |  E   |  F   |  G   |  A   |  B   |  C   |  D   |  E   |  F   |  G   |
+ * |-------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Exit  |      |      |      |      |      |      |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ * Piano layout: Row 3 = white keys (naturals), Row 2 = black keys (sharps) above
+ */
+[_MIDI] = LAYOUT_planck_grid(
+    MI_OCN2,   MI_OCN1,   MI_OC1,  MI_OC2,   MI_VELD, MI_VELU, MI_TRSD, MI_TRSU, MI_SUST, MI_SOFT, MI_AOFF, MIDI,
+    MI_Cs,     MI_Ds,     _______, MI_Fs,    MI_Gs,   MI_As,   _______, MI_Cs,   MI_Ds,   _______,  MI_Fs,   MI_Gs,
+    MI_C,      MI_D,      MI_E,    MI_F,     MI_G,    MI_A,    MI_B,    MI_C,    MI_D,    MI_E,     MI_F,    MI_G,
+    MIDI,      _______,   _______, _______,  _______, _______, _______, _______, _______, _______,  _______, _______
 ),
 };
 /* ============================ End Keymaps ============================== */
@@ -241,11 +258,37 @@ float plover_song[][2]    = SONG(PLOVER_SOUND);
 float plover_gb_song[][2] = SONG(PLOVER_GOODBYE_SOUND);
 float coin_up[][2]        = SONG(AUDIO_ON_SOUND);
 float mario_game_over[][2] = SONG(MARIO_GAMEOVER);
+float midi_layer_on[][2]  = SONG(MIDI_ON_SOUND);
+float midi_layer_off[][2] = SONG(MIDI_OFF_SOUND);
 #endif
 
 // Keep animations dynamic: only tri-layer logic here.
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _NUM, _SYM, _ADJUST);
+    state = update_tri_layer_state(state, _NUM, _SYM, _ADJUST);
+
+    static bool midi_was_on = false;
+    bool midi_is_on = layer_state_cmp(state, _MIDI);
+
+    if (midi_is_on && !midi_was_on) {
+        // Entering MIDI layer - enable MIDI
+#ifdef MIDI_ENABLE
+        midi_on();
+#endif
+#ifdef AUDIO_ENABLE
+        PLAY_SONG(midi_layer_on);
+#endif
+    } else if (!midi_is_on && midi_was_on) {
+        // Exiting MIDI layer - disable MIDI
+#ifdef MIDI_ENABLE
+        midi_off();
+#endif
+#ifdef AUDIO_ENABLE
+        PLAY_SONG(midi_layer_off);
+#endif
+    }
+    midi_was_on = midi_is_on;
+
+    return state;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {

@@ -103,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,     KC_Q,   KC_W,       KC_F,   KC_P,   KC_B,           KC_J,          KC_L,  KC_U,    KC_Y      , TD(TD_SCLN_COLN), KC_BSPC,
     CTRL_ESC,   KC_A,   KC_R,       KC_S,   KC_T,   KC_G,           KC_M,          KC_N,  KC_E ,   KC_I      , KC_O            , TD(TD_QUOT_DQUOT),
     SC_LSPO,    KC_Z,   KC_X,       KC_C,   KC_D,   TD(TD_V_PASTE), KC_K,          KC_H,  KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,LALT_T(KC_SPC), HYPR_T(KC_ENT),LT(_NAV, KC_F18),   SYM,     KC_F18   , KC_RALT         , KC_RBRC
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    MT(MOD_LGUI, KC_SPC),LALT_T(KC_SPC), HYPR_T(KC_ENT),LT(_NAV, KC_ENT),   SYM,     KC_F18   , KC_RALT         , KC_RBRC
 ),
 
 /* QWERTY (using Colemak physical positions)
@@ -124,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,     KC_Q,   KC_W,       KC_E,   KC_R,   KC_T,           KC_Y,          KC_U,   KC_I,    KC_O      , KC_P            , KC_BSPC,
     CTRL_ESC,   KC_A,   KC_S,       KC_D,   KC_F,   KC_G,           KC_H,          KC_J,   KC_K,    KC_L,     KC_SCLN          , TD(TD_QUOT_DQUOT),
     SC_LSPO,    KC_Z,   KC_X,       KC_C,   KC_V,   KC_B,           KC_N,          KC_M,   KC_COMM, KC_DOT    , TD(TD_SLSH_QUES), SC_RSPC,
-    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    KC_LGUI,SFT_T(KC_SPC),  LT(0, KC_ENT), NAV,    SYM,     KC_RGUI   , KC_RALT         , KC_RBRC
+    KC_LBRC,    KC_LALT,HYPR(KC_NO),NUM,    MT(MOD_LGUI, KC_SPC),LALT_T(KC_SPC), HYPR_T(KC_ENT),LT(_NAV, KC_ENT),   SYM,     KC_F18   , KC_RALT         , KC_RBRC
 ),
 /* Number
  * ,-----------------------------------------------------------------------------------.

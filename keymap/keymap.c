@@ -90,22 +90,22 @@ static uint16_t leader_timer = 0;
 #define HRM_L_Q RALT_T(KC_L)  // L = Alt
 #define HRM_SCLN_Q RGUI_T(KC_SCLN) // ; = Cmd
 
-/* Layers */
+/* Layers - urob's naming convention */
 enum planck_layers {
-    _COLEMAK,
-    _QWERTY,
-    _NUM,
-    _SYM,
-    _FN,
-    _ADJUST,
-    _NAV,
-    _MIDI
+    _DEF,      // Default layer (Colemak)
+    _QWERTY,   // Alternative base layer
+    _NUM,      // Numeric layer
+    _SYM,      // Symbol layer (keep for now)
+    _FN,       // Function layer
+    _SYS,      // System layer (was ADJUST)
+    _NAV,      // Navigation layer
+    _MIDI      // MIDI layer (keep as is)
 };
 
 /* Custom keycodes */
 enum planck_keycodes {
     QWERTY = SAFE_RANGE,
-    COLEMAK,
+    DEF,
     BACKLIT,
     SAM,
     PSWD,
@@ -114,6 +114,11 @@ enum planck_keycodes {
     NAV_BSPC,     // urob's smart backspace
     NAV_DEL,      // urob's smart delete
     LEADER,       // Leader key for umlauts and special chars
+    DSK_PREV,     // Previous desktop
+    DSK_NEXT,     // Next desktop
+    PIN_WIN,      // Pin window across desktops
+    PIN_APP,      // Pin application across desktops
+    DSK_MGR,      // Desktop manager
 };
 
 #define NUM      MO(_NUM)
@@ -320,7 +325,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * │  [  │ Alt │HYPR │ NUM │⌘/Spc│⌥/Spc│⇧/Ent│NAV/E│ SYM │ F18 │ Alt │  ]  │
  * └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
  */
-[_COLEMAK] = LAYOUT_planck_grid(
+[_DEF] = LAYOUT_planck_grid(
     KC_TAB,        KC_Q,  KC_W,       KC_F,   KC_P,    KC_B,            KC_J,           KC_L,  KC_U,    KC_Y,         TD(TD_SCLN_COLN), KC_BSPC,
     KC_ESC,        HRM_A, HRM_R,      HRM_S,  HRM_T,   KC_G,            KC_M,           HRM_N, HRM_E,   HRM_I,        HRM_O,            TD(TD_QUOT_DQUOT),
     OSM(MOD_LSFT), KC_Z,  KC_X,       KC_C,   KC_D,    TD(TD_V_PASTE),  KC_K,           KC_H,  KC_COMM, KC_DOT,       TD(TD_SLSH_QUES), OSM(MOD_RSFT),
@@ -361,28 +366,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
 
-/* Function Layer - urob's FN layer with media controls and function keys */
+/* Function Layer - urob's exact FN layer corrected */
 [_FN] = LAYOUT_planck_grid(
     _______ , KC_F12  , KC_F7   , KC_F8   , KC_F9   , _______ , _______ , KC_MPRV , KC_VOLU , KC_MNXT , _______ , _______,
-    _______ , LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , _______ , KC_MUTE , KC_MPLY , _______ , _______,
-    _______ , KC_F10  , KC_F1   , KC_F2   , KC_F3   , _______ , _______ , _______ , KC_VOLD , _______ , _______ , _______,
-    _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
+    _______ , LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______ , _______,
+    _______ , KC_F10  , KC_F1   , KC_F2   , KC_F3   , _______ , _______ , PIN_APP , PIN_WIN , DSK_MGR , _______ , _______,
+    _______ , _______ , _______ , _______ , _______ , _______ , _______ ,  KC_MPLY ,_______, _______ , _______ , _______
 ),
 
-/* Adjust Layer (unchanged from original) */
-[_ADJUST] = LAYOUT_planck_grid(
-    _______, QK_BOOT, DB_TOGG, RM_TOGG, RM_NEXT, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, RM_VALU, RM_VALD, _______,
-    _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, MIDI,    QWERTY,  COLEMAK,
-    _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+/* System Layer - urob's Sys layer equivalent */
+[_SYS] = LAYOUT_planck_grid(
+    DEF    , AU_ON  , AU_OFF , _______, _______, RM_TOGG, _______, RM_NEXT, RM_HUEU, RM_SATU, RM_VALU, _______,
+    QWERTY , MU_ON  , MU_OFF , _______, _______, QK_BOOT, QK_BOOT, RM_PREV, RM_HUED, RM_SATD, RM_VALD, _______,
+    MIDI   , MI_ON  , MI_OFF , _______, _______, EE_CLR , EE_CLR , _______, _______, _______, _______, _______,
+    _______, AU_PREV, AU_NEXT, _______, _______, _______, _______, _______, _______, _______, _______, DB_TOGG
 ),
-
 /* Navigation Layer - urob's exact layout */
 [_NAV] = LAYOUT_planck_grid(
     _______ , LALT(KC_F4), _______ , LSFT(KC_TAB), LALT(KC_TAB), _______ , KC_PGUP, NAV_BSPC, KC_UP   , NAV_DEL , _______ , _______,
     _______ , OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , KC_PGDN, KC_LEFT , KC_DOWN , KC_RGHT , KC_ENT  , _______,
     _______ , _______, _______, _______, _______, _______ , KC_INS , KC_TAB  , _______ , _______ , _______ , _______,
-    _______ , _______, _______, _______, _______, _______ , _______, _______ , _______ , _______ , _______ , _______
+    _______ , _______, _______, _______, _______, _______ , KC_CNCL, _______ , _______ , _______ , _______ , _______
 ),
 
 /* MIDI Layer (unchanged from original) */
@@ -462,29 +466,13 @@ static inline void set_group_hsv(const uint8_t *grp, uint8_t cnt, uint8_t h, uin
 
 #ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_user(void) {
-    uint8_t n = RGB_MATRIX_LED_COUNT;
-    uint8_t mods = get_mods() | get_oneshot_mods();
-    if (!n) return false;
-
-    if (layer_state_is(_NUM)) set_group_hsv(LED_LEFT,  sizeof LED_LEFT,  213, 180, 220);
-    if (layer_state_is(_SYM)) set_group_hsv(LED_RIGHT, sizeof LED_RIGHT,   0, 200, 200);
-    if (layer_state_is(_NAV)) set_group_hsv(LED_TOP,   sizeof LED_TOP,    85, 130, 255);
-
-    // Show bilateral homerow mod status
-    if ( (mods & MOD_MASK_GUI) &&
-         (mods & MOD_MASK_CTRL) &&
-         (mods & MOD_MASK_ALT)  &&
-         (mods & MOD_MASK_SHIFT) ) {
-        set_group_hsv(LED_MID, sizeof LED_MID, 200, 255, 255);   // Hyper (all mods)
-    } else if ( (mods & MOD_MASK_GUI) &&
-               !(mods & (MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_SHIFT)) ) {
-        set_group_hsv(LED_MID, sizeof LED_MID,   4, 138, 250);   // GUI only
-    } else if (mods & (MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_SHIFT)) {
-        set_group_hsv(LED_MID, sizeof LED_MID, 120, 200, 200);   // Other bilateral mods active
-    }
-
+    // Layer-specific lighting disabled as requested
+    // RGB matrix effects (RM_NEXT, etc.) still work
     return false; // keep animations
 }
+
+// Built-in RGB matrix effects are enabled and will be accessible via RM_NEXT
+// Custom effects removed due to QMK compilation complexity
 #endif
 
 #ifdef AUDIO_ENABLE
@@ -498,7 +486,7 @@ float midi_layer_off[][2] = SONG(MIDI_OFF_SOUND);
 
 // Keep animations dynamic: only tri-layer logic here.
 layer_state_t layer_state_set_user(layer_state_t state) {
-    state = update_tri_layer_state(state, _NUM, _SYM, _ADJUST);
+    state = update_tri_layer_state(state, _FN, _NUM, _SYS);
 
     static bool midi_was_on = false;
     bool midi_is_on = layer_state_cmp(state, _MIDI);
@@ -648,8 +636,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) set_single_persistent_default_layer(_QWERTY);
             return false;
 
-        case COLEMAK:
-            if (record->event.pressed) set_single_persistent_default_layer(_COLEMAK);
+        case DEF:
+            if (record->event.pressed) set_single_persistent_default_layer(_DEF);
             return false;
 
         case BACKLIT:
@@ -747,6 +735,46 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 leader_timer = timer_read();
             }
             return false;
+
+        case DSK_PREV:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+                tap_code(KC_LEFT);
+                unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            }
+            return false;
+
+        case DSK_NEXT:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+                tap_code(KC_RIGHT);
+                unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            }
+            return false;
+
+        case PIN_WIN:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+                tap_code(KC_Q);
+                unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+            }
+            return false;
+
+        case PIN_APP:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+                tap_code(KC_A);
+                unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+            }
+            return false;
+
+        case DSK_MGR:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LALT));
+                tap_code(KC_GRAVE);
+                unregister_mods(MOD_BIT(KC_LALT));
+            }
+            return false;
     }
 
     // Handle leader key sequences
@@ -831,12 +859,12 @@ bool dip_switch_update_user(uint8_t index, bool active) {
                 #ifdef AUDIO_ENABLE
                 if (play_sound) PLAY_SONG(plover_song);
                 #endif
-                layer_on(_ADJUST);
+                layer_on(_SYS);
             } else {
                 #ifdef AUDIO_ENABLE
                 if (play_sound) PLAY_SONG(plover_gb_song);
                 #endif
-                layer_off(_ADJUST);
+                layer_off(_SYS);
             }
             #ifdef AUDIO_ENABLE
             play_sound = true;

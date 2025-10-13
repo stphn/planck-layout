@@ -84,4 +84,46 @@
     #define RGB_MATRIX_KEYPRESSES
     #define RGB_MATRIX_KEYRELEASES
     #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+
+    // Enable specific effects for RM_NEXT to cycle through
+    #define ENABLE_RGB_MATRIX_SOLID_COLOR
+    #define ENABLE_RGB_MATRIX_BREATHING
+    #define ENABLE_RGB_MATRIX_CYCLE_ALL
+    #define ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+    #define ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
+    #define ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
+    #define ENABLE_RGB_MATRIX_CYCLE_OUT_IN
+    #define ENABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
+    #define ENABLE_RGB_MATRIX_CYCLE_PINWHEEL
+    #define ENABLE_RGB_MATRIX_CYCLE_SPIRAL
+    #define ENABLE_RGB_MATRIX_DUAL_BEACON
+    #define ENABLE_RGB_MATRIX_RAINBOW_BEACON
+    #define ENABLE_RGB_MATRIX_RAINBOW_PINWHEELS
+
+    // Static gradient effects (no animation)
+    #define ENABLE_RGB_MATRIX_BAND_SAT          // Horizontal saturation gradient
+    #define ENABLE_RGB_MATRIX_BAND_VAL          // Horizontal brightness gradient
+    #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN  // Vertical gradient (static)
+    #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT // Horizontal gradient (static)
+
+    // Additional gradient effects
+    #define ENABLE_RGB_MATRIX_BAND_PINWHEEL_SAT
+    #define ENABLE_RGB_MATRIX_BAND_PINWHEEL_VAL
+    #define ENABLE_RGB_MATRIX_BAND_SPIRAL_SAT
+    #define ENABLE_RGB_MATRIX_BAND_SPIRAL_VAL
+
+    // Special gradient configurations
+    #define RGB_MATRIX_HUE_STEP 8           // Smaller hue steps for finer gradient control
+    #define RGB_MATRIX_SAT_STEP 17          // Saturation steps
+    #define RGB_MATRIX_VAL_STEP 17          // Brightness steps
+    #define RGB_MATRIX_SPD_STEP 10          // Animation speed steps
+
+    // Default colors for gradients (hue values)
+    #define RGB_MATRIX_STARTUP_HUE 0x39     // Starting hue (57 decimal = orange/red)
+    #define RGB_MATRIX_STARTUP_SAT 255      // Full saturation
+    #define RGB_MATRIX_STARTUP_VAL 128      // Medium brightness
+    #define RGB_MATRIX_STARTUP_SPD 127      // Medium speed
+
+    // Custom effect support disabled - using built-in effects only
+    // #define RGB_MATRIX_CUSTOM_USER          // Enable user-defined custom effects
 #endif

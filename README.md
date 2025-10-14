@@ -1,6 +1,22 @@
 # ⌨️ Planck Rev7 — Personal Layout (Detailed)
 
-This QMK firmware defines multiple layers and custom behaviors for efficient typing and navigation on the Planck Rev7 keyboard. The layout uses Colemak DH as the primary base layer with QWERTY as an alternative.
+This QMK firmware defines multiple layers and custom behaviors for efficient typing and navigation on the Planck Rev7 keyboard. The layout uses Colemak DH as the primary base layer with bilateral homerow mods and smart behaviors.
+
+## 📊 Visual Layout
+
+**Complete keymap:** [All layers SVG](images/keymap.svg) | **Individual layers:** [DEF](images/def-layer.svg) | [NUM](images/num-layer-new.svg) | [GAMING](images/gaming-layer.svg) | [FN](images/fn-layer.svg) | [NAV](images/nav-layer-new.svg) | [SYS](images/sys-layer.svg) | [MIDI](images/midi-layer.svg)
+
+*Generated with [keymap-drawer](https://github.com/caksoylar/keymap-drawer) from [keymap.yaml](keymap.yaml)*
+
+## 🏗 Modular Architecture
+
+The keymap is organized into focused, maintainable modules:
+- **[keymap.c](keymap/keymap.c)** (282 lines) - Main keymaps and essential logic
+- **[smart_behaviors.h](keymap/smart_behaviors.h)** - SMART_NUM, MAGIC_SHIFT, leader sequences, desktop management
+- **[combo_system.h](keymap/combo_system.h)** - Complete urob-style positional combo system
+- **[bilateral_mods.h](keymap/bilateral_mods.h)** - Bilateral homerow mod timing configuration
+- **[rgb_effects.h](keymap/rgb_effects.h)** - LED group control and layer indicators
+- **[custom_keycodes.h](keymap/custom_keycodes.h)** - Layer definitions and keycode enums
 
 ## 🎛 Layers
 

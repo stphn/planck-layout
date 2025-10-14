@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:docs.qmk.fm)"
+      "WebFetch(domain:docs.qmk.fm)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

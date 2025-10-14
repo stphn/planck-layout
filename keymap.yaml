@@ -1,0 +1,72 @@
+layout:
+  qmk_keyboard: planck/rev7
+  layout_name: LAYOUT_ortho_4x12
+
+layers:
+  _DEF:
+    - [Tab, Q, W, F, P, B, J, L, U, Y, ;, Bspc]
+    - [Esc, A⌘, R⌥, S⌃, T⇧, G, M, N⇧, E⌃, I⌥, O⌘, "'"]
+    - [OSM⇧, Z, X, C, D, V, K, H, ",", ".", "?", OSM⇧]
+    - [PSWD, Alt, Hyper, NUM, "␣/NAV", "↵/FN", "#", "⇧", F18, GAME, Alt, "]"]
+
+  _NUM:
+    - ["", "", "7", "8", "9", "", "", "", "", "", "", ""]
+    - ["", "0", "4", "5", "6", "", "", "", "", "", "", ""]
+    - ["", "", "1", "2", "3", "", "", "", "", "", "", ""]
+    - ["", "", "", "", "", "", "", "", "", "", "", ""]
+
+  _GAMING:
+    - [Tab, Q, W, E, R, T, Y, U, I, O, P, Bspc]
+    - [Esc, A, S, D, F, G, H, J, K, L, ;, "'"]
+    - [Shift, Z, X, C, V, B, N, M, ",", ".", /, Shift]
+    - [Ctrl, Alt, Cmd, NUM, Space, Enter, Space, NUM, SYS, DEF, Alt, Ctrl]
+
+  _FN:
+    - ["", F12, F7, F8, F9, "", "", "⏮", "🔊+", "⏭", "", ""]
+    - ["", F11⌘, F4⌥, F5⇧, F6⌃, "", "", "◀Desk", "🔊-⇧", "▶Desk", "", ""]
+    - ["", F10, F1, F2, F3, "", "", "Pin📱", "📌Win", "DeskMgr", "", ""]
+    - ["", "", "", "", "", "", "", "⏯", "", "", "", ""]
+
+  _SYS:
+    - [DEF, "♪ON", "♪OFF", "", "", "RGB⚡", "", "RGB▶", "🌈+", "💡+", "💡+", ""]
+    - ["", "🎵ON", "🎵OFF", "", "", BOOT, BOOT, "RGB◀", "🌈-", "💡-", "💡-", ""]
+    - [MIDI, "🎹ON", "🎹OFF", "", "", CLEAR, CLEAR, "", "", "", "", ""]
+    - [GAME, "♪◀", "♪▶", "", "", "", "", "", "", "", "", DEBUG]
+
+  _NAV:
+    - ["", "Alt+F4", "", "⇧Tab", "⌥Tab", "", PgUp, "⌫", "↑", Del, "", ""]
+    - ["", Cmd, Alt, Shift, Ctrl, "", PgDn, "←", "↓", "→", Enter, ""]
+    - ["", "", "", "", "", "", Ins, Tab, "", "", "", ""]
+    - ["", "", "", "", "", "", Cancel, "", "", "", "", ""]
+
+  _MIDI:
+    - ["♪-2", "♪-1", "♪+1", "♪+2", "Vel-", "Vel+", "♪-", "♪+", Sus, Soft, "♪OFF", MIDI]
+    - ["C#", "D#", "", "F#", "G#", "A#", "", "C#", "D#", "", "F#", "G#"]
+    - [C, D, E, F, G, A, B, C, D, E, F, G]
+    - [MIDI, "", "", "", "", "", "", "", "", "", "", ""]
+
+combos:
+  - {p: [1, 2], k: Esc, l: [_DEF]}
+  - {p: [7, 8], k: Bspc, l: [_DEF]}
+  - {p: [17, 19], k: "🔗", l: [_DEF]}
+  - {p: [16, 17], k: Tab, l: [_DEF]}
+  - {p: [13, 14], k: "✂", l: [_DEF]}
+  - {p: [13, 15], k: "📋", l: [_DEF]}
+  - {p: [14, 15], k: "📝", l: [_DEF]}
+
+config:
+  draw_config:
+    key_w: 60.0
+    key_h: 56.0
+    combo_w: 28.0
+    combo_h: 26.0
+    key_rx: 6.0
+    key_ry: 6.0
+    inner_pad_w: 2.0
+    inner_pad_h: 2.0
+    outer_pad_w: 30.0
+    outer_pad_h: 56.0
+    line_spacing: 1.2
+    arc_radius: 6.0
+    append_colon_to_layer_header: true
+    small_text: 9.0

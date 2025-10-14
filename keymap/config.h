@@ -35,7 +35,7 @@
 // Tap dance settings
 #define TAPPING_TOGGLE 2
 
-// Smart Combos - urob's symbol system (16 combos) - using urob's fast timing
+// Smart Combos - urob's symbol system (Colemak optimized) - using urob's fast timing
 #define COMBO_COUNT 27
 #define COMBO_TERM 18           // 18ms like urob's fast combos
 #define COMBO_MUST_HOLD_MODS    // Don't interfere with homerow mods
@@ -70,6 +70,7 @@
 // Firmware size optimization
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
+
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
  * EXPERIMENTAL FEATURES

@@ -6,8 +6,16 @@
 #pragma once
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
+ * MIDI CONFIGURATION FOR FURNACE TRACKER INTEGRATION
+ * Enhanced MIDI settings for optimal Furnace workflow
+ * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+// Enable advanced MIDI features
+#define MIDI_ADVANCED
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════════
  * BILATERAL HOMEROW MODS CONFIGURATION
- * Key insight: Use opposite hands to eliminate timing conflicts
+ * Based on urob's timeless homerow mod concepts
  * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 // Urob's timing approach - 280ms base, same as ZMK config

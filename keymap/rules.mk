@@ -11,3 +11,6 @@ RGBLIGHT_ENABLE = no
 CONSOLE_ENABLE = yes
 COMBO_ENABLE = yes
 KEY_OVERRIDE_ENABLE = yes
+
+# Include MIDI enhanced functionality
+SRC += midi_enhanced.c

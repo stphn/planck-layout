@@ -16,6 +16,13 @@
 #include "combo_system.h"
 #include "rgb_effects.h"
 #include "layer_layouts.h"
+#include "midi_enhanced.h"
+
+#ifdef MIDI_ENABLE
+    #include "process_midi.h"
+    extern MidiDevice midi_device;
+    extern midi_config_t midi_config;
+#endif
 
 #ifdef CONSOLE_ENABLE
 #    include "print.h"
@@ -36,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,        KC_Q,  KC_W,       KC_F,   KC_P,    KC_B,            KC_J,           KC_L,  KC_U,    KC_Y,         KC_SCLN,          KC_BSPC,
     KC_ESC,        HRM_A, HRM_R,      HRM_S,  HRM_T,   KC_G,            KC_M,           HRM_N, HRM_E,   HRM_I,        HRM_O,            KC_QUOT,
     OSM(MOD_LSFT), KC_Z,  KC_X,       KC_C,   KC_D,    KC_V,            KC_K,           KC_H,  KC_COMM, KC_DOT,       KC_QUES,          OSM(MOD_RSFT),
-    PSWD, KC_LALT, HYPR(KC_NO), NUM, LT(_NAV, KC_SPC), LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, KC_F18, GAMING, KC_RALT, KC_RBRC
+    PSWD, KC_LALT, HYPR(KC_NO), NUM, LT(_NAV, KC_SPC), LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, MIDI, GAMING, KC_RALT, KC_RBRC
 ),
 
 [_NUM] = LAYOUT_planck_grid(
@@ -62,9 +69,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_SYS] = LAYOUT_planck_grid(
     DEF    , AU_ON  , AU_OFF , _______, _______, RM_TOGG, _______, RM_NEXT, RM_HUEU, RM_SATU, RM_VALU, _______,
-    _______ , MU_ON  , MU_OFF , _______, _______, QK_BOOT, QK_BOOT, RM_PREV, RM_HUED, RM_SATD, RM_VALD, _______,
+    GAMING , MU_ON  , MU_OFF , _______, _______, QK_BOOT, QK_BOOT, RM_PREV, RM_HUED, RM_SATD, RM_VALD, _______,
     MIDI   , MI_ON  , MI_OFF , _______, _______, EE_CLR , EE_CLR , _______, _______, _______, _______, _______,
-    GAMING , AU_PREV, AU_NEXT, _______, _______, _______, _______, _______, _______, _______, _______, DB_TOGG
+    _______, AU_PREV, AU_NEXT, _______, _______, _______, _______, _______, _______, _______, _______, DB_TOGG
 ),
 
 [_NAV] = LAYOUT_planck_grid(
@@ -75,10 +82,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_MIDI] = LAYOUT_planck_grid(
-    MI_OCN2,   MI_OCN1,   MI_OC1,  MI_OC2,   MI_VELD, MI_VELU, MI_TRSD, MI_TRSU, MI_SUST, MI_SOFT, MI_AOFF, MIDI,
-    MI_Cs,     MI_Ds,     _______, MI_Fs,    MI_Gs,   MI_As,   _______, MI_Cs,   MI_Ds,   _______,  MI_Fs,   MI_Gs,
-    MI_C,      MI_D,      MI_E,    MI_F,     MI_G,    MI_A,    MI_B,    MI_C,    MI_D,    MI_E,     MI_F,    MI_G,
-    MIDI,      _______,   _______, _______,  _______, _______, _______, _______, _______, _______,  _______, _______
+    // Enhanced MIDI layer for Furnace tracker - see layer_layouts.h for visual documentation
+    MIDI_PANIC,    MIDI_OCT_DN2,  MIDI_OCT_DN1,  MIDI_OCT_UP1,  MIDI_OCT_UP2,  MIDI_REC_TOGGLE, MIDI_PLAY_PAUSE, MIDI_INST_PREV, MIDI_INST_NEXT, MIDI_CHAN_PREV, MIDI_CHAN_NEXT, MIDI,
+    MIDI_VEL_1,    MI_Cs,         MI_Ds,         MIDI_EFF_ARPEG, MI_Fs,         MI_Gs,         MI_As,         MI_Cs,         MI_Ds,         MIDI_EFF_VIBR, MI_Fs,         MIDI_VEL_7,
+    MIDI_SUST_TOG, MI_C,          MI_D,          MI_E,          MI_F,          MI_G,          MI_A,          MI_B,          MI_C,          MI_D,          MI_E,          MIDI_CHORD_TOG,
+    MIDI_OCT_RESET, MIDI_EFF_VOL,  MIDI_EFF_PAN,  MIDI_NOTE_OFF,  MIDI_NOTE_REL,  MIDI_TRNS_DN,   MIDI_TRNS_UP,   MIDI_VEL_DN,    MIDI_VEL_UP,    MIDI_PAT_PREV,  MIDI_PAT_NEXT,  MIDI_LEARN
 ),
 };
 
@@ -103,6 +111,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         // Entering MIDI layer - enable MIDI
         #ifdef MIDI_ENABLE
             midi_on();
+            midi_state_init();  // Initialize enhanced MIDI state
         #endif
         #ifdef AUDIO_ENABLE
             PLAY_SONG(midi_layer_on);
@@ -110,6 +119,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     } else if (!midi_is_on && midi_was_on) {
         // Exiting MIDI layer - disable MIDI
         #ifdef MIDI_ENABLE
+            midi_panic_all_notes_off();  // Clean exit with panic
             midi_off();
         #endif
         #ifdef AUDIO_ENABLE
@@ -144,6 +154,119 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
     #endif
+
+        // Handle enhanced MIDI keycodes
+    if (keycode >= MIDI_OCT_DN2 && keycode <= MIDI_CONFIG) {
+        if (!record->event.pressed) return false;  // Only process on press
+        
+        switch (keycode) {
+            // Octave controls
+            case MIDI_OCT_DN2: midi_update_octave(-2); return false;
+            case MIDI_OCT_DN1: midi_update_octave(-1); return false;
+            case MIDI_OCT_UP1: midi_update_octave(1); return false;
+            case MIDI_OCT_UP2: midi_update_octave(2); return false;
+            case MIDI_OCT_RESET: 
+                midi_state.current_octave = MIDI_OCT_DEFAULT; 
+                return false;
+                
+            // Velocity controls
+            case MIDI_VEL_DN: midi_update_velocity(-1); return false;
+            case MIDI_VEL_UP: midi_update_velocity(1); return false;
+            case MIDI_VEL_1: midi_set_velocity_level(MIDI_VEL_PPP); return false;
+            case MIDI_VEL_2: midi_set_velocity_level(MIDI_VEL_PP); return false;
+            case MIDI_VEL_3: midi_set_velocity_level(MIDI_VEL_P); return false;
+            case MIDI_VEL_4: midi_set_velocity_level(MIDI_VEL_MP); return false;
+            case MIDI_VEL_5: midi_set_velocity_level(MIDI_VEL_MF); return false;
+            case MIDI_VEL_6: midi_set_velocity_level(MIDI_VEL_F); return false;
+            case MIDI_VEL_7: midi_set_velocity_level(MIDI_VEL_FF); return false;
+            
+            // Transpose controls
+            case MIDI_TRNS_DN: 
+                if (midi_state.transpose_offset > -12) midi_state.transpose_offset--;
+                return false;
+            case MIDI_TRNS_UP: 
+                if (midi_state.transpose_offset < 12) midi_state.transpose_offset++;
+                return false;
+            case MIDI_TRNS_RST: 
+                midi_state.transpose_offset = 0;
+                return false;
+                
+            // Instrument controls
+            case MIDI_INST_PREV:
+                if (midi_state.instrument_id > 0) {
+                    midi_send_instrument_change(midi_state.instrument_id - 1);
+                }
+                return false;
+            case MIDI_INST_NEXT:
+                if (midi_state.instrument_id < MIDI_MAX_INSTRUMENTS - 1) {
+                    midi_send_instrument_change(midi_state.instrument_id + 1);
+                }
+                return false;
+                
+            // Channel controls
+            case MIDI_CHAN_PREV:
+                if (midi_state.channel_focus > 0) {
+                    midi_send_channel_focus(midi_state.channel_focus - 1);
+                }
+                return false;
+            case MIDI_CHAN_NEXT:
+                if (midi_state.channel_focus < MIDI_MAX_CHANNELS - 1) {
+                    midi_send_channel_focus(midi_state.channel_focus + 1);
+                }
+                return false;
+                
+            // Transport controls
+            case MIDI_REC_TOGGLE: midi_transport_record_toggle(); return false;
+            case MIDI_PLAY_PAUSE: midi_transport_play_pause(); return false;
+            case MIDI_TRANSPORT_STOP: midi_transport_stop(); return false;
+            
+            // Pattern controls
+            case MIDI_PAT_PREV: 
+                #ifdef MIDI_ENABLE
+                    midi_send_cc(&midi_device, midi_config.channel, 0x79, 0);
+                #endif
+                return false;
+            case MIDI_PAT_NEXT: 
+                #ifdef MIDI_ENABLE
+                    midi_send_cc(&midi_device, midi_config.channel, 0x79, 1);
+                #endif
+                return false;
+            case MIDI_NOTE_OFF: midi_pattern_insert_note_off(); return false;
+            case MIDI_NOTE_REL: midi_pattern_insert_note_release(); return false;
+            
+            // Effect controls
+            case MIDI_EFF_VOL: midi_send_effect(0, midi_state.effect_param); return false;
+            case MIDI_EFF_PAN: midi_send_effect(1, midi_state.effect_param); return false;
+            case MIDI_EFF_PITCH: midi_send_effect(2, midi_state.effect_param); return false;
+            case MIDI_EFF_ARPEG: midi_send_effect(3, midi_state.effect_param); return false;
+            case MIDI_EFF_VIBR: midi_send_effect(4, midi_state.effect_param); return false;
+            case MIDI_EFF_TREM: midi_send_effect(5, midi_state.effect_param); return false;
+            
+            // Mode toggles
+            case MIDI_CHORD_TOG: 
+                midi_state.chord_mode = !midi_state.chord_mode;
+                return false;
+            case MIDI_SUST_TOG: 
+                midi_state.sustain_active = !midi_state.sustain_active;
+                #ifdef MIDI_ENABLE
+                    midi_send_cc(&midi_device, midi_config.channel, 0x40, 
+                                midi_state.sustain_active ? 127 : 0);
+                #endif
+                #ifdef CONSOLE_ENABLE
+                    uprintf("MIDI Sustain: %s\n", midi_state.sustain_active ? "ON" : "OFF");
+                #endif
+                return false;
+                
+            // Utility
+            case MIDI_PANIC: midi_panic_all_notes_off(); return false;
+            case MIDI_LEARN: midi_enter_learn_mode(); return false;
+            case MIDI_CONFIG: 
+                #ifdef CONSOLE_ENABLE
+                    uprintf("MIDI Config requested\n");
+                #endif
+                return false;
+        }
+    }
 
     switch (keycode) {
         case LT(0, KC_ENT):

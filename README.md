@@ -20,61 +20,83 @@ The keymap is organized into focused, maintainable modules:
 
 ## 🎛 Layers
 
-### Colemak DH (Primary)
+### DEF (Colemak DH - Primary)
 
 The main typing layer featuring:
 - Colemak DH key arrangement optimized for hand alternation
-- Tap-dances: `;/:`, `'/"`, `V/⌘V`, `/ ?`
-- Hyper key (Ctrl+Alt+Shift+GUI) on Enter hold
+- Bilateral homerow mods (Cmd, Alt, Shift, Ctrl)
 - Alt on Space hold
+- Hyper key (Ctrl+Alt+Shift+GUI) on Enter hold
 - F18 key integration for Hammerspoon automation
 - Bracket keys `[ ]` on outer corners
 
-![Colemak Layer](images/colemak-layer.png)
+![DEF Layer](images/def-layer.png)
 
-### QWERTY (Alternative)
+### NUM (Numbers)
 
-Traditional QWERTY layout with:
-- Tap-dances: `'/"`, `C/⌘C`, `V/⌘V`, `/ ?`
-- Shift on Space hold
-- Enter with Alt hold for additional functionality
+Number pad layout with 0-9 arranged in a traditional grid pattern.
+Designed for quick numeric input.
 
-![QWERTY Layer](images/qwerty-layer.png)
+![NUM Layer](images/num-layer.png)
 
-### NUM (Numbers + F-keys)
+### GAMING (QWERTY)
 
-Layer for numbers, F1–F10, and basic symbols like `- = \``.  
-Designed for quick numeric input and function key access.
+Traditional QWERTY layout for gaming compatibility:
+- Standard QWERTY key arrangement
+- Regular modifiers (no bilateral homerow mods)
+- Toggle between DEF and GAMING with dedicated key
 
-![Number Layer](images/num-layer.png)
+![GAMING Layer](images/gaming-layer.png)
 
-### SYM (Symbols + shifted F-keys)  
+### FN (Function Keys + Media)
 
-Third layer providing shifted symbols (`!@#$%^&*()` etc.) and F11–F20.  
-Includes an extended F-key range for potential system shortcuts or custom bindings.
+Function keys and media controls:
+- F1-F12 arranged for easy access
+- Media controls (play/pause, prev/next, volume)
+- Desktop management shortcuts
+- Window pinning utilities
 
-![Symbols Layer](images/sym-layer.png)
+![FN Layer](images/fn-layer.png)
 
-### NAV (Navigation, media, mouse — Vim-style NEIO consistency)
+### NAV (Navigation)
 
-Navigation + system control:  
-- Arrows, PgUp/PgDn, Home/End  
-- Volume, mute, brightness  
-- Alt+Space, Ctrl+Arrow, Shift+Alt+M  
-- Mouse movement + buttons
+Navigation and window management:
+- Arrow keys (hjkl-style on home row)
+- Page Up/Down, Home/End, Insert
+- One-shot modifiers for easy combinations
+- Tab navigation (Alt+Tab, Shift+Tab)
+- Delete and Backspace
 
-![Nav Layer](images/nav-layer.png)
+![NAV Layer](images/nav-layer.png)
 
-### ADJUST (RGB, Audio, Boot, Layer toggles)
+### SYS (System Controls)
 
-Tri-layer (_NUM + _SYM).  
-Controls bootloader, debug, RGB Matrix, audio, and default layers.
+Tri-layer (_FN + _NUM) for system configuration:
+- RGB Matrix controls (toggle, modes, hue, saturation, brightness)
+- Audio controls (on/off, music mode)
+- MIDI controls (on/off)
+- Bootloader access (QK_BOOT)
+- EEPROM clear
+- Debug toggle
+- Layer switching (DEF/GAMING/MIDI)
 
-![Adjust Layer](images/adjust-layer.png)
+![SYS Layer](images/sys-layer.png)
 
-### Plover (Steno)
-Stenography input for Plover software.  
-Activates NKRO automatically.
+### MIDI (Enhanced MIDI Controller)
+
+Comprehensive MIDI control layer for Furnace tracker and DAWs:
+- Two-octave chromatic keyboard layout
+- Octave controls (±1, ±2, reset)
+- Velocity controls (PPP to FF, ±adjustments)
+- Transpose controls
+- Transport controls (play/pause, record, stop)
+- Pattern navigation (prev/next)
+- Instrument and channel switching
+- Effect controls (volume, pan, arpeggio, vibrato, etc.)
+- Sustain and chord mode toggles
+- MIDI panic and learn mode
+
+![MIDI Layer](images/midi-layer.png)
 
 ## 🩰 Tap-Dance Keys
 

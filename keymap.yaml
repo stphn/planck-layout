@@ -70,3 +70,4 @@ config:
     arc_radius: 6.0
     append_colon_to_layer_header: true
     small_text: 9.0
+    dark_mode: true

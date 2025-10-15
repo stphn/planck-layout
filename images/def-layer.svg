@@ -1,4 +1,5 @@
 <svg width="732" height="336" viewBox="0 0 732 336" class="keymap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="100%" height="100%" fill="#ffffff"/>
 <style>/* inherit to force styles through use tags */
 svg path {
     fill: inherit;

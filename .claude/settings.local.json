@@ -4,7 +4,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:docs.qmk.fm)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(sips:*)"
     ],
     "deny": [],
     "ask": []

@@ -5,7 +5,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:docs.qmk.fm)",
       "WebSearch",
-      "Bash(sips:*)"
+      "Bash(sips:*)",
+      "Bash(rsvg-convert:*)"
     ],
     "deny": [],
     "ask": []

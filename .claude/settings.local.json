@@ -6,7 +6,8 @@
       "WebFetch(domain:docs.qmk.fm)",
       "WebSearch",
       "Bash(sips:*)",
-      "Bash(rsvg-convert:*)"
+      "Bash(rsvg-convert:*)",
+      "Bash(keymap draw:*)"
     ],
     "deny": [],
     "ask": []

@@ -26,6 +26,8 @@ uint16_t smart_num_tap_timer = 0;
 bool sticky_num_active = false;
 bool leader_active = false;
 uint16_t leader_timer = 0;
+bool smart_mouse_active = false;
+uint16_t smart_mouse_tap_timer = 0;
 
 // SOCD cleaning variables for gaming layer
 bool socd_w_pressed = false;
@@ -335,6 +337,46 @@ static bool handle_leader_sequences(uint16_t keycode, keyrecord_t *record) {
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║  SMART_MOUSE KEY BEHAVIOR (UROB-STYLE)                                                            ║
+ * ║  Activates mouse layer with auto-exit on key press outside ignored positions                       ║
+ * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+static bool handle_smart_mouse_key(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == SMART_MOUSE) {
+        if (record->event.pressed) {
+            if (smart_mouse_active) {
+                // Already active, turn it off
+                smart_mouse_active = false;
+                layer_off(_MOUSE);
+            } else {
+                // Activate mouse layer
+                smart_mouse_active = true;
+                layer_on(_MOUSE);
+            }
+        }
+        return false;
+    }
+
+    // Auto-exit mouse layer on key press (except movement/scroll/button keys and modifiers)
+    if (smart_mouse_active && record->event.pressed) {
+        bool is_mouse_key = (keycode >= MS_UP && keycode <= MS_RGHT) ||
+                           (keycode >= MS_BTN1 && keycode <= MS_BTN8) ||
+                           (keycode >= MS_WHLU && keycode <= MS_WHLR) ||
+                           (keycode == KC_PGUP || keycode == KC_PGDN) ||
+                           (keycode == KC_LGUI || keycode == KC_LALT ||
+                            keycode == KC_LSFT || keycode == KC_LCTL ||
+                            keycode == SMART_MOUSE || keycode == MOUSE);
+
+        if (!is_mouse_key) {
+            smart_mouse_active = false;
+            layer_off(_MOUSE);
+        }
+    }
+
+    return true;
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  DESKTOP MANAGEMENT KEYS                                                                           ║
  * ║  macOS desktop switching and window pinning functions                                              ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
@@ -390,6 +432,9 @@ static bool handle_desktop_keys(uint16_t keycode, keyrecord_t *record) {
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 bool process_smart_behaviors(uint16_t keycode, keyrecord_t *record) {
+    // Handle smart mouse first (may affect layer state)
+    if (!handle_smart_mouse_key(keycode, record)) return false;
+
     // Handle num-word logic first (affects layer state)
     handle_num_word_logic(keycode, record);
 

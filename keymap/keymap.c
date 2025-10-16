@@ -81,6 +81,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______ , _______, _______, _______, _______, _______ , KC_CNCL, _______ , _______ , _______ , _______ , _______
 ),
 
+[_MOUSE] = LAYOUT_planck_grid(
+    // Mouse layer - urob-style with movement, scrolling, and buttons
+    _______, _______, _______, _______, _______, _______, _______, KC_PGUP, MS_UP,   KC_PGDN, _______, _______,
+    _______, _______, _______, _______, _______, _______, MS_WHLL, MS_LEFT, MS_DOWN, MS_RGHT, MS_WHLR, _______,
+    _______, _______, _______, _______, _______, _______, _______, MS_BTN1, MS_BTN3, MS_BTN2, _______, _______,
+    _______, _______, _______, _______, _______, _______, MS_WHLU, MS_WHLD, _______, _______, _______, _______
+),
+
 [_MIDI] = LAYOUT_planck_grid(
     // Enhanced MIDI layer for Furnace tracker - see layer_layouts.h for visual documentation
     MIDI_PANIC,    MIDI_OCT_DN2,  MIDI_OCT_DN1,  MIDI_OCT_UP1,  MIDI_OCT_UP2,  MIDI_REC_TOGGLE, MIDI_PLAY_PAUSE, MIDI_INST_PREV, MIDI_INST_NEXT, MIDI_CHAN_PREV, MIDI_CHAN_NEXT, MIDI,

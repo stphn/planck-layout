@@ -3,11 +3,17 @@ layout:
   layout_name: LAYOUT_ortho_4x12
 
 layers:
+  _COMBOS:
+    - ["", "", W, F, P, "", "", "", L, U, Y, ""]
+    - ["", "", R, S, "", "", "", "", E, I, O, ""]
+    - ["", Z, X, C, "", "", "", H, ",", ".", "", ""]
+    - ["", "", "", "", "", "", "", "", "", "", "", ""]
+
   _DEF:
     - [Tab, Q, W, F, P, B, J, L, U, Y, ;, Bspc]
     - [Esc, A⌘, R⌥, S⌃, T⇧, G, M, N⇧, E⌃, I⌥, O⌘, "'"]
     - [OSM⇧, Z, X, C, D, V, K, H, ",", ".", "?", OSM⇧]
-    - [PSWD, Alt, Hyper, NUM, "␣/NAV", "↵/FN", "#", "⇧", F18, GAME, Alt, "]"]
+    - [PSWD, Alt, Hyper, NUM, "␣/NAV", "↵/FN", "#", "⇧", MIDI, GAME, Alt, "]"]
 
   _NUM:
     - ["", "", "7", "8", "9", "", "", "", "", "", "", ""]
@@ -28,8 +34,34 @@ layers:
     - ["", "", "", "", "", "", "", "⏯", "", "", "", ""]
 
   _SYS:
-    - [DEF, "♪ON", "♪OFF", "", "", "RGB⚡", "", "RGB▶", "🌈+", "💡+", "💡+", ""]
-    - ["", "🎵ON", "🎵OFF", "", "", BOOT, BOOT, "RGB◀", "🌈-", "💡-", "💡-", ""]
+    - [
+        DEF,
+        "♪ON",
+        "♪OFF",
+        "",
+        "",
+        "RGB⚡",
+        "",
+        "RGB▶",
+        "🌈+",
+        "💡+",
+        "💡+",
+        "",
+      ]
+    - [
+        "",
+        "🎵ON",
+        "🎵OFF",
+        "",
+        "",
+        BOOT,
+        BOOT,
+        "RGB◀",
+        "🌈-",
+        "💡-",
+        "💡-",
+        "",
+      ]
     - [MIDI, "🎹ON", "🎹OFF", "", "", CLEAR, CLEAR, "", "", "", "", ""]
     - [GAME, "♪◀", "♪▶", "", "", "", "", "", "", "", "", DEBUG]
 
@@ -39,35 +71,55 @@ layers:
     - ["", "", "", "", "", "", Ins, Tab, "", "", "", ""]
     - ["", "", "", "", "", "", Cancel, "", "", "", "", ""]
 
+  _MOUSE:
+    - ["", "", "", "", "", "", "🖱↑", "🖱←", "⬆", "🖱→", "", "🖱"]
+    - ["", Cmd, Alt, Shift, Ctrl, "", "🖱↓", "←", "↓", "→", "Btn2", ""]
+    - ["", "", "", "", "", "", Btn3, Btn1, Btn2, Btn3, "", ""]
+    - ["", "", "", "", "", "", "", Btn1, "", "", "", ""]
+
   _MIDI:
-    - ["♪-2", "♪-1", "♪+1", "♪+2", "Vel-", "Vel+", "♪-", "♪+", Sus, Soft, "♪OFF", MIDI]
+    - [
+        "♪-2",
+        "♪-1",
+        "♪+1",
+        "♪+2",
+        "Vel-",
+        "Vel+",
+        "♪-",
+        "♪+",
+        Sus,
+        Soft,
+        "♪OFF",
+        MIDI,
+      ]
     - ["C#", "D#", "", "F#", "G#", "A#", "", "C#", "D#", "", "F#", "G#"]
     - [C, D, E, F, G, A, B, C, D, E, F, G]
     - [MIDI, "", "", "", "", "", "", "", "", "", "", ""]
 
 combos:
-  - {p: [1, 2], k: Esc, l: [_DEF]}
-  - {p: [7, 8], k: Bspc, l: [_DEF]}
-  - {p: [17, 19], k: "🔗", l: [_DEF]}
-  - {p: [16, 17], k: Tab, l: [_DEF]}
-  - {p: [13, 14], k: "✂", l: [_DEF]}
-  - {p: [13, 15], k: "📋", l: [_DEF]}
-  - {p: [14, 15], k: "📝", l: [_DEF]}
+  # Navigation combos
+  - { p: [2, 3], k: Esc, l: [_DEF] }        # W+F = Escape
+  - { p: [8, 9], k: Bspc, l: [_DEF] }       # L+U = Backspace
+  - { p: [9, 10], k: Del, l: [_DEF] }       # U+Y = Delete
 
-config:
-  draw_config:
-    key_w: 60.0
-    key_h: 56.0
-    combo_w: 28.0
-    combo_h: 26.0
-    key_rx: 6.0
-    key_ry: 6.0
-    inner_pad_w: 2.0
-    inner_pad_h: 2.0
-    outer_pad_w: 30.0
-    outer_pad_h: 56.0
-    line_spacing: 1.2
-    arc_radius: 6.0
-    append_colon_to_layer_header: true
-    small_text: 9.0
-    dark_mode: true
+  # Layer activation
+  - { p: [3, 4], k: "🖱", l: [_DEF] }       # F+P = Mouse layer
+  - { p: [14, 15], k: "🔗", l: [_DEF] }     # R+S = Leader (urob position)
+
+  # Horizontal combos
+  - { p: [13, 14], k: Tab, l: [_DEF] }      # A+R = Tab
+  - { p: [25, 27], k: "✂", l: [_DEF], a: "bottom" }  # Z+C = Cut
+  - { p: [25, 26], k: "📋", l: [_DEF] }     # Z+X = Copy
+  - { p: [26, 27], k: "📝", l: [_DEF] }     # X+C = Paste
+
+  # Brackets and parentheses (homerow)
+  - { p: [20, 21], k: "(", l: [_DEF] }      # E+I = ( on DEF/NUM
+  - { p: [21, 22], k: ")", l: [_DEF] }      # I+O = ) on DEF/NUM
+  - { p: [20, 21], k: "<", l: [_NAV] }      # E+I = < on NAV
+  - { p: [21, 22], k: ">", l: [_NAV] }      # I+O = > on NAV
+
+  # Brackets (bottom row)
+  - { p: [31, 32], k: "[", l: [_DEF] }      # H+, = [ on DEF/NUM
+  - { p: [32, 33], k: "]", l: [_DEF] }      # ,+. = ] on DEF/NUM
+  - { p: [31, 32], k: "{", l: [_NAV] }      # H+, = { on NAV
+  - { p: [32, 33], k: "}", l: [_NAV] }      # ,+. = } on NAV

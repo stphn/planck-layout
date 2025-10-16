@@ -44,7 +44,7 @@
 #define TAPPING_TOGGLE 2
 
 // Smart Combos - urob's symbol system (Colemak optimized) - using urob's fast timing
-#define COMBO_COUNT 27
+#define COMBO_COUNT 30
 #define COMBO_TERM 18           // 18ms like urob's fast combos
 #define COMBO_MUST_HOLD_MODS    // Don't interfere with homerow mods
 #define COMBO_HOLD_TERM 150     // Hold time for combo holds
@@ -56,13 +56,22 @@
 #define ONESHOT_TIMEOUT 3000
 
 
-// Mouse key settings (if using)
+// Mouse key settings - tuned for urob-style mouse control
+// Based on urob's ZMK config (3840x2160 display, 600 move val, 20 scroll val)
 #ifdef MOUSEKEY_ENABLE
-    #define MOUSEKEY_DELAY 0
-    #define MOUSEKEY_INTERVAL 16
-    #define MOUSEKEY_WHEEL_DELAY 0
-    #define MOUSEKEY_MAX_SPEED 6
-    #define MOUSEKEY_TIME_TO_MAX 64
+    // Movement settings
+    #define MOUSEKEY_DELAY 0                    // No delay before cursor movement starts
+    #define MOUSEKEY_INTERVAL 16                // Time between cursor movements (60 FPS)
+    #define MOUSEKEY_MOVE_DELTA 8               // Default pixels per movement (higher for 4K)
+    #define MOUSEKEY_MAX_SPEED 10               // Maximum cursor speed (increased for 4K)
+    #define MOUSEKEY_TIME_TO_MAX 60             // Time to reach max speed (~500ms at 16ms interval)
+
+    // Wheel/scroll settings
+    #define MOUSEKEY_WHEEL_DELAY 0              // No delay before wheel starts
+    #define MOUSEKEY_WHEEL_INTERVAL 50          // Time between wheel scrolls
+    #define MOUSEKEY_WHEEL_DELTA 1              // Lines scrolled per tick
+    #define MOUSEKEY_WHEEL_MAX_SPEED 8          // Maximum scroll speed
+    #define MOUSEKEY_WHEEL_TIME_TO_MAX 40       // Time to reach max scroll speed
 #endif
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════

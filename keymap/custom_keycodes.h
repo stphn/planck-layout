@@ -21,6 +21,7 @@ enum planck_layers {
     _FN,       // Function layer
     _SYS,      // System layer (was ADJUST)
     _NAV,      // Navigation layer
+    _MOUSE,    // Mouse layer (urob-style)
     _MIDI      // MIDI layer (keep as is)
 };
 
@@ -38,6 +39,7 @@ enum planck_keycodes {
     MAGIC_SHIFT,  // urob's magic shift behavior
     NAV_BSPC,     // urob's smart backspace
     NAV_DEL,      // urob's smart delete
+    SMART_MOUSE,  // urob's smart mouse toggle
     LEADER,       // Leader key for umlauts and special chars
     DSK_PREV,     // Previous desktop
     DSK_NEXT,     // Next desktop
@@ -54,6 +56,7 @@ enum planck_keycodes {
 #define SYM      MO(_GAMING)  // SYM key now accesses gaming layer
 #define FN       MO(_FN)
 #define NAV      MO(_NAV)
+#define MOUSE    TG(_MOUSE)   // Mouse layer toggle
 #define MIDI     TG(_MIDI)
 #define CTRL_ESC LCTL_T(KC_ESC)
 #define GAME_ESC LT(_SYS, KC_ESC)  // Gaming layer escape with system access

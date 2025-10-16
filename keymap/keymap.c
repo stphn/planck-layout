@@ -40,16 +40,16 @@ const key_override_t *key_overrides[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_DEF] = LAYOUT_planck_grid(
-    KC_TAB,        KC_Q,  KC_W,       KC_F,   KC_P,    KC_B,            KC_J,           KC_L,  KC_U,    KC_Y,         KC_SCLN,          KC_BSPC,
-    KC_ESC,        HRM_A, HRM_R,      HRM_S,  HRM_T,   KC_G,            KC_M,           HRM_N, HRM_E,   HRM_I,        HRM_O,            KC_QUOT,
-    OSM(MOD_LSFT), KC_Z,  KC_X,       KC_C,   KC_D,    KC_V,            KC_K,           KC_H,  KC_COMM, KC_DOT,       KC_QUES,          OSM(MOD_RSFT),
-    PSWD, KC_LALT, HYPR(KC_NO), NUM, LT(_NAV, KC_SPC), LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, MIDI, GAMING, KC_RALT, KC_RBRC
+    KC_Q, KC_W,   KC_F,    KC_P,   KC_B,    KC_TAB  ,  KC_BSPC      , KC_J, KC_L,    KC_U,    KC_Y,    KC_SCLN,
+    HRM_A,HRM_R,  HRM_S,   HRM_T,  KC_G,    KC_ESC  ,  KC_QUOT      , KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
+    KC_Z, KC_X,   KC_C,    KC_D,   KC_V,    _______ , _______, KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
+    PSWD, HYPR(KC_NO), _______, KC_LGUI, LT(_NAV, KC_SPC), LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
 ),
 
 [_NUM] = LAYOUT_planck_grid(
-    _______ , _______ , KC_7    , KC_8    , KC_9    , _______ , _______ , _______ , _______ , _______ , _______ , _______,
-    _______ , KC_0    , KC_4    , KC_5    , KC_6    , _______ , _______ , _______ , _______ , _______ , _______ , _______,
-    _______ , _______ , KC_1    , KC_2    , KC_3    , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    _______ , KC_7    , KC_8    , KC_9    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    KC_0    , KC_4    , KC_5    , KC_6    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    _______ , KC_1    , KC_2    , KC_3    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
 
@@ -57,44 +57,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
     GAME_ESC,KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_LCTL, KC_LALT, KC_LGUI, NUM,     KC_SPC,  KC_ENT,  KC_SPC,  NUM,     MO(_SYS),DEF,     KC_RALT, KC_RCTL
+    KC_LCTL, KC_LALT, KC_LGUI, NUM,     KC_SPC,  KC_ENT,  KC_SPC,  NUM,     MO(_SYS),_______, _______, DEF
 ),
 
 [_FN] = LAYOUT_planck_grid(
-    _______ , KC_F12  , KC_F7   , KC_F8   , KC_F9   , _______ , _______ , KC_MPRV , KC_VOLU , KC_MNXT , _______ , _______,
-    _______ , LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______ , _______,
-    _______ , KC_F10  , KC_F1   , KC_F2   , KC_F3   , _______ , _______ , PIN_APP , PIN_WIN , DSK_MGR , _______ , _______,
-    _______ , _______ , _______ , _______ , _______ , _______ , _______ ,  KC_MPLY ,_______, _______ , _______ , _______
+    KC_F12        , KC_F7        , KC_F8        , KC_F9        , _______ , _______ , _______ , _______ , KC_MPRV , KC_VOLU        , KC_MNXT , _______,
+    LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______,
+    KC_F10        , KC_F1        , KC_F2        , KC_F3        , _______ , _______ , _______ , _______ , PIN_APP , PIN_WIN        , DSK_MGR , _______,
+    _______       , _______      , _______      , _______      , _______ , _______ , _______ , KC_MPLY , _______ , _______        , _______ , _______
 ),
 
 [_SYS] = LAYOUT_planck_grid(
-    DEF    , AU_ON  , AU_OFF , _______, _______, RM_TOGG, _______, RM_NEXT, RM_HUEU, RM_SATU, RM_VALU, _______,
-    GAMING , MU_ON  , MU_OFF , _______, _______, QK_BOOT, QK_BOOT, RM_PREV, RM_HUED, RM_SATD, RM_VALD, _______,
-    MIDI   , MI_ON  , MI_OFF , _______, _______, EE_CLR , EE_CLR , _______, _______, _______, _______, _______,
-    _______, AU_PREV, AU_NEXT, _______, _______, _______, _______, _______, _______, _______, _______, DB_TOGG
+    AU_ON  , AU_OFF , _______ , _______ , _______ , RM_TOGG , _______ , _______ , RM_NEXT , RM_HUEU , RM_SATU , RM_VALU,
+    MU_ON  , MU_OFF , _______ , _______ , _______ , QK_BOOT , QK_BOOT , _______ , RM_PREV , RM_HUED , RM_SATD , RM_VALD,
+    MI_ON  , MI_OFF , _______ , _______ , _______ , EE_CLR  , EE_CLR  , _______ , _______ , _______ , _______ , _______,
+    AU_PREV, AU_NEXT, _______ , _______ , _______ , DEF     , GAMING  , MIDI    , _______ , _______ , _______ , DB_TOGG
 ),
 
 [_NAV] = LAYOUT_planck_grid(
-    _______ , LALT(KC_F4), _______ , LSFT(KC_TAB), LALT(KC_TAB), _______ , KC_PGUP, NAV_BSPC, KC_UP   , NAV_DEL , _______ , _______,
-    _______ , OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , KC_PGDN, KC_LEFT , KC_DOWN , KC_RGHT , KC_ENT  , _______,
-    _______ , _______, _______, _______, _______, _______ , KC_INS , KC_TAB  , _______ , _______ , _______ , _______,
-    _______ , _______, _______, _______, _______, _______ , KC_CNCL, _______ , _______ , _______ , _______ , _______
+    LALT(KC_F4)  , _______      , LSFT(KC_TAB) , LALT(KC_TAB) , _______ , _______ , _______ , KC_PGUP , NAV_BSPC, KC_UP   , NAV_DEL , _______,
+    OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , _______ , _______ , KC_PGDN , KC_LEFT , KC_DOWN , KC_RGHT , KC_ENT,
+    _______      , _______      , _______      , _______      , _______ , _______ , _______ , KC_INS  , KC_TAB  , _______ , _______ , _______,
+    _______      , _______      , _______      , _______      , _______ , _______ , KC_CNCL , _______ , _______ , _______ , _______ , _______
 ),
 
 [_MOUSE] = LAYOUT_planck_grid(
     // Mouse layer - urob-style with movement, scrolling, and buttons
-    _______, _______, _______, _______, _______, _______, _______, KC_PGUP, MS_UP,   KC_PGDN, _______, _______,
-    _______, _______, _______, _______, _______, _______, MS_WHLL, MS_LEFT, MS_DOWN, MS_RGHT, MS_WHLR, _______,
-    _______, _______, _______, _______, _______, _______, _______, MS_BTN1, MS_BTN3, MS_BTN2, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_PGUP, MS_UP,   KC_PGDN, _______,
+    _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_LEFT, MS_DOWN, MS_RGHT, MS_WHLR,
+    _______, _______, _______, _______, _______, _______, _______, _______, MS_BTN1, MS_BTN3, MS_BTN2, _______,
     _______, _______, _______, _______, _______, _______, MS_WHLU, MS_WHLD, _______, _______, _______, _______
 ),
 
 [_MIDI] = LAYOUT_planck_grid(
-    // Enhanced MIDI layer for Furnace tracker - see layer_layouts.h for visual documentation
-    MIDI_PANIC,    MIDI_OCT_DN2,  MIDI_OCT_DN1,  MIDI_OCT_UP1,  MIDI_OCT_UP2,  MIDI_REC_TOGGLE, MIDI_PLAY_PAUSE, MIDI_INST_PREV, MIDI_INST_NEXT, MIDI_CHAN_PREV, MIDI_CHAN_NEXT, MIDI,
-    MIDI_VEL_1,    MI_Cs,         MI_Ds,         MIDI_EFF_ARPEG, MI_Fs,         MI_Gs,         MI_As,         MI_Cs,         MI_Ds,         MIDI_EFF_VIBR, MI_Fs,         MIDI_VEL_7,
-    MIDI_SUST_TOG, MI_C,          MI_D,          MI_E,          MI_F,          MI_G,          MI_A,          MI_B,          MI_C,          MI_D,          MI_E,          MIDI_CHORD_TOG,
-    MIDI_OCT_RESET, MIDI_EFF_VOL,  MIDI_EFF_PAN,  MIDI_NOTE_OFF,  MIDI_NOTE_REL,  MIDI_TRNS_DN,   MIDI_TRNS_UP,   MIDI_VEL_DN,    MIDI_VEL_UP,    MIDI_PAT_PREV,  MIDI_PAT_NEXT,  MIDI_LEARN
+    // Tracker Power User Layout - see layer_layouts.h for visual documentation
+    MIDI_PANIC,     MIDI_PLAY_PAUSE, MIDI_TRANSPORT_STOP, MIDI_REC_TOGGLE, MIDI_PAT_PREV, MIDI_PAT_NEXT, MIDI_OCT_DN2, MIDI_OCT_DN1, MIDI_OCT_UP1, MIDI_OCT_UP2, MIDI_OCT_RESET, MIDI,
+    MIDI_VEL_1,     MI_Cs,           MI_Ds,               _______,         MI_Fs,         MI_Gs,         MI_As,        _______,      MI_Cs,        MIDI_INST_PREV, MIDI_INST_NEXT, MIDI_VEL_7,
+    MIDI_SUST_TOG,  MI_C,            MI_D,                MI_E,            MI_F,          MI_G,          MI_A,         MI_B,         MI_C,         MIDI_NOTE_OFF,  MIDI_NOTE_REL,  MIDI_CHORD_TOG,
+    MIDI_CHAN_PREV, MIDI_CHAN_NEXT,  MIDI_EFF_ARPEG,      MIDI_EFF_PITCH,  MIDI_EFF_PAN,  MIDI_EFF_VIBR, MIDI_EFF_TREM,MIDI_EFF_VOL, MIDI_TRNS_DN, MIDI_TRNS_UP,   MIDI_VEL_DN,    MIDI_VEL_UP
 ),
 };
 

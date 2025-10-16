@@ -149,26 +149,39 @@
  *         S-Tab=Shift+Tab, A-Tab=Alt+Tab for window switching
  */
 
-/* ╔═══════════════════════════════════════════════════════════════════════╗
- * ║  MIDI LAYER - MUSICAL KEYBOARD INTERFACE                              ║
- * ╠═══════════════════════════════════════════════════════════════════════╣
- * ║  Two-octave piano layout with musical controls                        ║
- * ║  Velocity, transpose, sustain, and octave controls                    ║
- * ║  RGB lighting shows creative musical mode is active                   ║
- * ╚═══════════════════════════════════════════════════════════════════════╝
+/* ╔═══════════════════════════════════════════════════════════════════════════════╗
+ * ║  MIDI LAYER - TRACKER POWER USER LAYOUT                                       ║
+ * ╠═══════════════════════════════════════════════════════════════════════════════╣
+ * ║  Optimized for tracker workflow (Furnace, Renoise, etc.)                      ║
+ * ║  Chromatic octave + comprehensive tracker controls                            ║
+ * ║  Quick access to transport, effects, and pattern navigation                   ║
+ * ║  Balanced layout for fast note entry and powerful editing features            ║
+ * ╚═══════════════════════════════════════════════════════════════════════════════╝
  *
- * ╭───────────────────────────────────────────────────────────────────────╮
- * │                         MUSICAL KEYBOARD MODE                         │
- * ╞═════╤═════╤═════╤═════╤═════╤═════╦═════╤═════╤═════╤═════╤═════╤═════╡
- * │Oct-2│Oct-1│Oct+1│Oct+2│Vel- │Vel+ │Trns-│Trns+│Sust │Soft │AllOf│EXIT │
- * ╞═════╪═════╪═════╪═════╪═════╪═════╬═════╪═════╪═════╪═════╪═════╪═════╡
- * │ C#  │ D#  │     │ F#  │ G#  │ A#  ║     │ C#  │ D#  │     │ F#  │ G#  │
- * ╞═════╪═════╪═════╪═════╪═════╪═════╬═════╪═════╪═════╪═════╪═════╪═════╡
- * │ C   │ D   │ E   │ F   │ G   │ A   ║ B   │ C   │ D   │ E   │ F   │ G   │
- * ╞═════╪═════╪═════╪═════╪═════╪═════╬═════╪═════╪═════╪═════╪═════╪═════╡
- * │EXIT │     │     │     │     │     ║     │     │     │     │     │     │
- * ╰─────┴─────┴─────┴─────┴─────┴─────┺─────┴─────┴─────┴─────┴─────┴─────╯
+ * ╭────────────────────────────────────────────────────────────────────────────────╮
+ * │                         TRACKER POWER USER MODE                                │
+ * ╞══════╤══════╤══════╤══════╤══════╤══════╦══════╤══════╤══════╤══════╤══════╤══════╡
+ * │Panic │ Play │ Stop │ Rec  │ Pat- │ Pat+ ║Oct-2 │Oct-1 │Oct+1 │Oct+2 │OctRst│ Exit │
+ * │Reset │Pause │      │ Tog  │ Prev │ Next ║      │      │      │      │  0   │      │
+ * ╞══════╪══════╪══════╪══════╪══════╪══════╬══════╪══════╪══════╪══════╪══════╪══════╡
+ * │Vol 1 │  C#  │  D#  │      │  F#  │  G#  ║  A#  │      │  C#  │Inst- │Inst+ │Vol 7 │
+ * │ ppp  │      │      │      │      │      ║      │      │      │ Prev │ Next │  ff  │
+ * ╞══════╪══════╪══════╪══════╪══════╪══════╬══════╪══════╪══════╪══════╪══════╪══════╡
+ * │Sust  │  C   │  D   │  E   │  F   │  G   ║  A   │  B   │  C   │ ---  │ ===  │Chord │
+ * │ Tog  │      │      │      │      │      ║      │      │      │ Off  │ Rel  │ Tog  │
+ * ╞══════╪══════╪══════╪══════╪══════╪══════╬══════╪══════╪══════╪══════╪══════╪══════╡
+ * │Chan- │Chan+ │ 0xy  │ 1xx  │ 2xx  │ 4xy  ║ 7xx  │ Cxx  │Trns- │Trns+ │ Vol- │ Vol+ │
+ * │ Prev │ Next │Arpeg │Pitch │ Pan  │Vibr  ║ Trem │ Vol  │ Down │  Up  │ Down │  Up  │
+ * ╰──────┴──────┴──────┴──────┴──────┴──────┺──────┴──────┴──────┴──────┴──────┴──────╯
  *
- * Legend: Natural notes C-G, Sharp notes C#/D#/F#/G#/A#
- *         Oct=Octave shift, Vel=Velocity, Trns=Transpose, Sust=Sustain pedal
+ * Legend:
+ *   Notes: Chromatic octave (C C# D D# E F F# G G# A A# B C) with piano-style layout
+ *   ---/Off = Note Off, ===/Rel = Note Release (tracker-specific)
+ *   Oct±1/±2 = Octave shift, OctRst = Reset to octave 0
+ *   Vol 1-7 = Velocity presets (ppp to ff), Vol±/Trns± = Fine adjustments
+ *   Inst±/Chan± = Navigate instruments and channels
+ *   Pat± = Pattern navigation, Rec Tog = Toggle pattern recording
+ *   0xy-Cxx = Common tracker effect shortcuts (Arpeg, Pitch, Vibrato, etc.)
+ *   Sust/Chord Tog = Toggle sustain pedal and chord mode
+ *   Panic = All notes off + MIDI reset
  */

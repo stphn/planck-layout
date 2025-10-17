@@ -5,24 +5,36 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-KEYMAP_FILE="../keymap/keymap.c"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "🎨 Generating keyboard layout diagrams..."
 
 # Check if keymap-drawer is installed
 if ! command -v keymap &> /dev/null; then
-    echo "❌ keymap-drawer not found. Installing..."
-    echo "Run: pip install keymap-drawer"
+    echo "❌ keymap-drawer not found."
+    echo "Install with: pip install keymap-drawer"
     exit 1
 fi
 
-# Parse QMK keymap and generate YAML representation
+# Check if qmk CLI is available
+if ! command -v qmk &> /dev/null; then
+    echo "❌ qmk CLI not found."
+    echo "Install with: brew install qmk/qmk/qmk"
+    exit 1
+fi
+
+# Generate keymap.json from QMK
+echo "📝 Generating keymap.json from QMK..."
+cd "$PROJECT_ROOT"
+QMK_HOME="$PROJECT_ROOT/qmk" qmk c2json -km stphn -kb planck/rev7 keymap/keymap.c > "$SCRIPT_DIR/keymap.json"
+
+# Parse QMK keymap.json and generate YAML representation
 echo "📝 Parsing keymap..."
-keymap parse -c "$SCRIPT_DIR/config.yaml" -q "$KEYMAP_FILE" > "$SCRIPT_DIR/keymap.yaml"
+keymap parse -q "$SCRIPT_DIR/keymap.json" -c 12 > "$SCRIPT_DIR/keymap.yaml"
 
 # Generate SVG diagram
 echo "🖼️  Generating SVG..."
-keymap draw "$SCRIPT_DIR/keymap.yaml" -c "$SCRIPT_DIR/config.yaml" > "$SCRIPT_DIR/planck.svg"
+cat "$SCRIPT_DIR/config.yaml" "$SCRIPT_DIR/keymap.yaml" | keymap draw - > "$SCRIPT_DIR/planck.svg"
 
 # Generate PNG (requires cairosvg or inkscape)
 if command -v cairosvg &> /dev/null; then

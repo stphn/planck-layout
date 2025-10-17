@@ -1,13 +1,25 @@
 # Keyboard Layout Diagrams
 
-This directory contains tools and generated diagrams for visualizing the Planck keyboard layout.
+This directory contains tools for visualizing the Planck keyboard layout.
 
-## Tools Used
+## Quick Terminal View
 
-- **[keymap-drawer](https://github.com/caksoylar/keymap-drawer)** - Professional keyboard layout visualization tool
-- Inspired by [urob's ZMK config](https://github.com/urob/zmk-config/tree/main/draw)
+The fastest way to view your layouts:
 
-## Setup
+```bash
+# From project root
+make layout           # View all layers
+make layout _DEF      # View default layer
+make layout _NUM _FN  # View multiple layers
+```
+
+Uses the `draw_layout.py` script for colored ASCII art in terminal.
+
+## Professional Diagrams (WIP)
+
+**Note:** SVG/PNG generation using keymap-drawer is currently a work in progress due to QMK's complex keymap structure. The terminal visualization above is fully functional.
+
+### Future Setup
 
 Install keymap-drawer:
 
@@ -22,9 +34,7 @@ pip install cairosvg
 brew install inkscape
 ```
 
-## Usage
-
-Generate layout diagrams:
+### Future Usage
 
 ```bash
 # From project root
@@ -35,8 +45,9 @@ make draw
 ```
 
 This will create:
+- `keymap.json` - QMK JSON representation
 - `keymap.yaml` - Parsed keymap representation
-- `planck.svg` - Vector diagram (recommended)
+- `planck.svg` - Vector diagram
 - `planck.png` - Raster image (if cairosvg/inkscape installed)
 
 ## Configuration

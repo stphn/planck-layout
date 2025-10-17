@@ -1,8 +1,9 @@
-# Generated files - don't commit
-*.svg
+# Generated PNG files - don't commit (too large)
 *.png
 
-# Keep config, scripts, and manual keymap
+# Keep everything else (SVGs, config, scripts, keymap)
+!*.svg
 !config.yaml
 !generate.sh
 !README.md
+!keymap.yaml

@@ -1,0 +1,125 @@
+# Keymap-drawer configuration for Planck Rev7
+# Based on urob's setup adapted for QMK
+
+parse_config:
+  # QMK-specific parsing options
+  qmk_keyboard: planck/rev7
+  qmk_layout: LAYOUT_planck_grid
+
+  # Custom binding map for special keycodes
+  raw_binding_map:
+    # Smart behaviors (urob-inspired)
+    SMART_SPC: { t: "SPC", h: "NAV", type: "hold" }
+    SMART_NUM: { t: "NUM", type: "hold" }
+    MAGIC_SHIFT: { t: "SHFT", type: "magic" }
+    SMART_MOUSE: { t: "MOUS", type: "toggle" }
+
+    # Tap-dance
+    COPY_CUT: { t: "COPY", h: "CUT", type: "tap_dance" }
+
+    # Custom shortcuts
+    NAV_BSPC: { t: "BSPC", type: "nav" }
+    NAV_DEL: { t: "DEL", type: "nav" }
+
+    # Desktop management
+    DSK_PREV: { t: "DSK◄", type: "custom" }
+    DSK_NEXT: { t: "DSK►", type: "custom" }
+    PIN_WIN: { t: "PIN", type: "custom" }
+    PIN_APP: { t: "PIN", type: "custom" }
+    DSK_MGR: { t: "DSKM", type: "custom" }
+
+    # Alt-Tab swapper
+    ALT_TAB_FWD: { t: "TAB►", type: "custom" }
+    ALT_TAB_REV: { t: "TAB◄", type: "custom" }
+
+    # Layer switches
+    DEF: { t: "DEF", type: "layer" }
+    GAMING: { t: "GAME", type: "layer" }
+    MIDI: { t: "MIDI", type: "layer" }
+
+    # QMK specific
+    QK_BOOT: { t: "BOOT", type: "system" }
+    EE_CLR: { t: "ECLR", type: "system" }
+    DB_TOGG: { t: "DBUG", type: "system" }
+
+    # Audio
+    AU_ON: { t: "AU+", type: "audio" }
+    AU_OFF: { t: "AU-", type: "audio" }
+    AU_PREV: { t: "AU◄", type: "audio" }
+    AU_NEXT: { t: "AU►", type: "audio" }
+
+    # Music
+    MU_ON: { t: "MU+", type: "audio" }
+    MU_OFF: { t: "MU-", type: "audio" }
+
+    # MIDI
+    MI_ON: { t: "MI+", type: "midi" }
+    MI_OFF: { t: "MI-", type: "midi" }
+
+    # RGB
+    RM_TOGG: { t: "RGB", type: "rgb" }
+    RM_NEXT: { t: "EFF+", type: "rgb" }
+    RM_PREV: { t: "EFF-", type: "rgb" }
+    RM_HUEU: { t: "HUE+", type: "rgb" }
+    RM_HUED: { t: "HUE-", type: "rgb" }
+    RM_SATU: { t: "SAT+", type: "rgb" }
+    RM_SATD: { t: "SAT-", type: "rgb" }
+    RM_VALU: { t: "VAL+", type: "rgb" }
+    RM_VALD: { t: "VAL-", type: "rgb" }
+
+    # Media
+    KC_MPRV: { t: "⏮", type: "media" }
+    KC_MNXT: { t: "⏭", type: "media" }
+    KC_MPLY: { t: "⏯", type: "media" }
+    KC_MUTE: { t: "🔇", type: "media" }
+    KC_VOLU: { t: "VOL+", type: "media" }
+    KC_VOLD: { t: "VOL-", type: "media" }
+
+    # Mouse
+    MS_UP: { t: "↑", type: "mouse" }
+    MS_DOWN: { t: "↓", type: "mouse" }
+    MS_LEFT: { t: "←", type: "mouse" }
+    MS_RGHT: { t: "→", type: "mouse" }
+    MS_BTN1: { t: "BTN1", type: "mouse" }
+    MS_BTN2: { t: "BTN2", type: "mouse" }
+    MS_BTN3: { t: "BTN3", type: "mouse" }
+    MS_WHLU: { t: "WHL↑", type: "mouse" }
+    MS_WHLD: { t: "WHL↓", type: "mouse" }
+    MS_WHLL: { t: "WHL←", type: "mouse" }
+    MS_WHLR: { t: "WHL→", type: "mouse" }
+
+    # Utility
+    PSWD: { t: "PSWD", type: "custom" }
+    KC_CNCL: { t: "ESC", type: "cancel" }
+
+  # Transparent key legend
+  trans_legend: { t: "", type: "trans" }
+
+draw_config:
+  # General settings
+  append_colon_to_layer_header: false
+  dark_mode: auto
+  footer_text: "Planck Rev7 - urob-inspired layout"
+
+  # Key dimensions for Planck (ortholinear 48-key)
+  key_w: 60
+  key_h: 56
+  split_gap: 10
+
+  # Colors (matching urob's style)
+  svg_style: |
+    /* Homerow mods styling */
+    .hold { fill: #ffd700; }
+    .tap_dance { fill: #87ceeb; }
+    .trans { fill: #2a2a2a; opacity: 0.3; }
+
+  # Layer names
+  layer_names:
+    0: "DEF (Colemak)"
+    1: "NUM"
+    2: "GAMING"
+    3: "FN"
+    4: "SYS"
+    5: "NAV"
+    6: "MOUSE"
+    7: "MIDI"

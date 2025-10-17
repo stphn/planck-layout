@@ -28,6 +28,12 @@
 #define HRM_I RALT_T(KC_I)
 #define HRM_O RGUI_T(KC_O)
 
+// Number layer homerow mods (0, 4, 5, 6) - urob's layout
+#define NUM_0 LGUI_T(KC_0)
+#define NUM_4 LALT_T(KC_4)
+#define NUM_5 LSFT_T(KC_5)
+#define NUM_6 LCTL_T(KC_6)
+
 /* ╔═════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  BILATERAL HOMEROW MODS CONFIGURATION FUNCTIONS                                                     ║
  * ╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
@@ -35,7 +41,7 @@
 // Per-key tapping term - urob's approach uses consistent 280ms
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        // Homerow mods
+        // Homerow mods - base layer
         case HRM_A:
         case HRM_R:
         case HRM_S:
@@ -44,6 +50,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case HRM_E:
         case HRM_I:
         case HRM_O:
+        // Number layer homerow mods
+        case NUM_0:
+        case NUM_4:
+        case NUM_5:
+        case NUM_6:
             return TAPPING_TERM;  // Same 280ms as urob
         default:
             return TAPPING_TERM;
@@ -54,7 +65,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         // Apply permissive hold to all homerow mods for bilateral combinations
-        // Homerow mods
+        // Base layer homerow mods
         case HRM_A:
         case HRM_R:
         case HRM_S:
@@ -63,6 +74,11 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
         case HRM_E:
         case HRM_I:
         case HRM_O:
+        // Number layer homerow mods
+        case NUM_0:
+        case NUM_4:
+        case NUM_5:
+        case NUM_6:
             return true;
         default:
             return false;

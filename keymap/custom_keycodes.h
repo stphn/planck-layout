@@ -37,15 +37,26 @@ enum planck_keycodes {
     PSWD,
     SMART_NUM,    // urob's smart num behavior
     MAGIC_SHIFT,  // urob's magic shift behavior
+    SMART_SPC,    // urob's smart space behavior (lt_spc)
     NAV_BSPC,     // urob's smart backspace
     NAV_DEL,      // urob's smart delete
     SMART_MOUSE,  // urob's smart mouse toggle
     LEADER,       // Leader key for umlauts and special chars
+    ALT_TAB_FWD,  // Alt+Tab swapper (forward)
+    ALT_TAB_REV,  // Alt+Shift+Tab swapper (reverse)
     DSK_PREV,     // Previous desktop
     DSK_NEXT,     // Next desktop
     PIN_WIN,      // Pin window across desktops
     PIN_APP,      // Pin application across desktops
     DSK_MGR,      // Desktop manager
+};
+
+/* ╔══════════════════════════════════════════════════════════╗
+ * ║  TAP DANCE DEFINITIONS                                   ║
+ * ╚══════════════════════════════════════════════════════════╝ */
+
+enum {
+    TD_COPY_CUT,   // Tap: copy (Ctrl+C) | Double-tap: cut (Ctrl+X)
 };
 
 /* ╔══════════════════════════════════════════════════════════╗
@@ -60,6 +71,7 @@ enum planck_keycodes {
 #define MIDI     TG(_MIDI)
 #define CTRL_ESC LCTL_T(KC_ESC)
 #define GAME_ESC LT(_SYS, KC_ESC)  // Gaming layer escape with system access
+#define COPY_CUT TD(TD_COPY_CUT)   // Tap: copy | Double-tap: cut
 
 /* ╔══════════════════════════════════════════════════════════════════════╗
  * ║  MOD-MORPH - UROB'S LINGUISTIC ?/! APPROACH                          ║

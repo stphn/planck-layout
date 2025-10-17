@@ -28,6 +28,8 @@ bool leader_active = false;
 uint16_t leader_timer = 0;
 bool smart_mouse_active = false;
 uint16_t smart_mouse_tap_timer = 0;
+uint16_t smart_spc_timer = 0;
+bool alt_tab_active = false;
 
 // SOCD cleaning variables for gaming layer
 bool socd_w_pressed = false;
@@ -427,13 +429,93 @@ static bool handle_desktop_keys(uint16_t keycode, keyrecord_t *record) {
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║  ALT+TAB SWAPPER BEHAVIOR (UROB-STYLE)                                                            ║
+ * ║  Smart Alt+Tab that keeps the switcher open until explicitly cancelled                             ║
+ * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+static bool handle_alt_tab_swapper(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == ALT_TAB_FWD || keycode == ALT_TAB_REV) {
+        if (record->event.pressed) {
+            if (!alt_tab_active) {
+                // First press: register Alt and press Tab
+                alt_tab_active = true;
+                register_code(KC_LALT);
+            }
+            // Press Tab (with Shift for reverse)
+            if (keycode == ALT_TAB_REV) {
+                register_code(KC_LSFT);
+            }
+            tap_code(KC_TAB);
+            if (keycode == ALT_TAB_REV) {
+                unregister_code(KC_LSFT);
+            }
+        }
+        return false;
+    }
+
+    // Cancel swapper on any other key press (except ignored keys)
+    if (alt_tab_active && record->event.pressed) {
+        bool is_ignored_key = (keycode == ALT_TAB_FWD || keycode == ALT_TAB_REV ||
+                              keycode == KC_LSFT || keycode == KC_RSFT ||
+                              keycode == KC_LCTL || keycode == KC_RCTL ||
+                              keycode == KC_LGUI || keycode == KC_RGUI);
+
+        if (!is_ignored_key) {
+            alt_tab_active = false;
+            unregister_code(KC_LALT);
+        }
+    }
+
+    return true;
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║  SMART_SPC KEY BEHAVIOR (UROB'S LT_SPC)                                                           ║
+ * ║  Tap = space, Hold = NAV layer, Shift+Tap = . then space then sticky-shift                        ║
+ * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+static bool handle_smart_spc_key(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == SMART_SPC) {
+        if (record->event.pressed) {
+            smart_spc_timer = timer_read();
+            layer_on(_NAV);  // Activate NAV layer on hold
+        } else {
+            layer_off(_NAV);  // Deactivate NAV layer on release
+
+            // Check if it was a tap (not a hold)
+            if (timer_elapsed(smart_spc_timer) < TAPPING_TERM) {
+                // Check if shift is held
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    // Shift + tap: output . then space then activate sticky shift
+                    del_mods(MOD_MASK_SHIFT);  // Temporarily remove shift
+                    tap_code(KC_DOT);          // Type dot
+                    tap_code(KC_SPC);          // Type space
+                    set_oneshot_mods(MOD_BIT(KC_LSFT));  // Activate sticky shift for next char
+                } else {
+                    // Normal tap: just space
+                    tap_code(KC_SPC);
+                }
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  MAIN SMART BEHAVIOR PROCESSOR                                                                     ║
  * ║  Central dispatch function for all intelligent behaviors                                           ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 bool process_smart_behaviors(uint16_t keycode, keyrecord_t *record) {
+    // Handle Alt+Tab swapper first (affects global modifiers)
+    if (!handle_alt_tab_swapper(keycode, record)) return false;
+
     // Handle smart mouse first (may affect layer state)
     if (!handle_smart_mouse_key(keycode, record)) return false;
+
+    // Handle smart space key (lt_spc behavior)
+    if (!handle_smart_spc_key(keycode, record)) return false;
 
     // Handle num-word logic first (affects layer state)
     handle_num_word_logic(keycode, record);

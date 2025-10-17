@@ -7,7 +7,7 @@ FIRMWARE_DIR := $(PWD)/firmware
 KEYMAP_LINK := $(QMK_HOME)/keyboards/planck/keymaps/$(KEYMAP)
 
 # === Targets ===
-.PHONY: build flash save clean init-qmk qmk-status update-qmk
+.PHONY: build flash save clean init-qmk qmk-status update-qmk layout draw
 
 # Ensure symlink exists before building
 $(KEYMAP_LINK):
@@ -31,6 +31,18 @@ save: build
 
 clean:
 	QMK_HOME="$(QMK_HOME)" qmk clean
+
+# Visualize keyboard layouts (quick ASCII in terminal)
+layout:
+	@python3 draw_layout.py $(filter-out $@,$(MAKECMDGOALS))
+
+# Generate professional layout diagrams (SVG/PNG)
+draw:
+	@./draw/generate.sh
+
+# Allow passing layer names as targets
+%:
+	@:
 
 # === QMK submodule helpers ===
 

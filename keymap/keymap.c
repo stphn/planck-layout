@@ -30,25 +30,64 @@
 
 extern keymap_config_t keymap_config;
 
-// Urob's ?/! mod-morph (more linguistic than /?)
+// Urob's morphs - modifier-dependent key behaviors
+// ?/! morph (more linguistic than /?)
 const key_override_t qexcl_override = ko_make_basic(MOD_MASK_SHIFT, KC_QUES, KC_EXLM);
+
+// Comma morph: , -> Shift: ; -> Shift+Ctrl: <
+// NOTE: Inner morph MUST come before basic morph in array for proper priority
+const key_override_t comma_inner_morph = ko_make_with_layers_and_negmods(
+    MOD_MASK_CS, KC_COMM, KC_LT, ~0, MOD_MASK_ALT | MOD_MASK_GUI
+);
+const key_override_t comma_morph = ko_make_with_layers_and_negmods(
+    MOD_MASK_SHIFT, KC_COMM, KC_SCLN, ~0, MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_GUI
+);
+
+// Dot morph: . -> Shift: : -> Shift+Ctrl: >
+// NOTE: Inner morph MUST come before basic morph in array for proper priority
+const key_override_t dot_inner_morph = ko_make_with_layers_and_negmods(
+    MOD_MASK_CS, KC_DOT, KC_GT, ~0, MOD_MASK_ALT | MOD_MASK_GUI
+);
+const key_override_t dot_morph = ko_make_with_layers_and_negmods(
+    MOD_MASK_SHIFT, KC_DOT, KC_COLN, ~0, MOD_MASK_CTRL | MOD_MASK_ALT | MOD_MASK_GUI
+);
+
+// Backspace/Delete morph: BSPC -> Shift: DEL -> RShift: Shift+DEL
+const key_override_t bs_del_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
+
 const key_override_t *key_overrides[] = {
     &qexcl_override,
+    // NOTE: More specific overrides (Ctrl+Shift) MUST come before less specific ones (Shift only)
+    &comma_inner_morph,     // Shift+Ctrl+, → <  (MUST be first)
+    &comma_morph,           // Shift+, → ;
+    &dot_inner_morph,       // Shift+Ctrl+. → >  (MUST be first)
+    &dot_morph,             // Shift+. → :
+    &bs_del_override,
     NULL // Terminate the array
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════════
+ * TAP DANCE ACTIONS
+ * Based on urob's copy/cut tap-dance behavior
+ * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+// Tap: copy (Cmd+C) | Double-tap: cut (Cmd+X) - Mac shortcuts
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_COPY_CUT] = ACTION_TAP_DANCE_DOUBLE(LGUI(KC_C), LGUI(KC_X)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_DEF] = LAYOUT_planck_grid(
-    KC_Q, KC_W,   KC_F,    KC_P,   KC_B,    KC_TAB  ,  KC_BSPC      , KC_J, KC_L,    KC_U,    KC_Y,    KC_SCLN,
-    HRM_A,HRM_R,  HRM_S,   HRM_T,  KC_G,    KC_ESC  ,  KC_QUOT      , KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
-    KC_Z, KC_X,   KC_C,    KC_D,   KC_V,    _______ , _______, KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
-    PSWD, HYPR(KC_NO), _______, KC_LGUI, LT(_NAV, KC_SPC), LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
+    KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    COPY_CUT,       KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_SCLN,
+    HRM_A, HRM_R,  HRM_S,   HRM_T,  KC_G,    LGUI(KC_Z),     SGUI(KC_Z),        KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
+    KC_Z,  KC_X,   KC_C,    KC_D,   KC_V,    LGUI(KC_S),     LGUI(KC_F),        KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
+    PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
 ),
 
 [_NUM] = LAYOUT_planck_grid(
     _______ , KC_7    , KC_8    , KC_9    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
-    KC_0    , KC_4    , KC_5    , KC_6    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    NUM_0   , NUM_4   , NUM_5   , NUM_6   , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     _______ , KC_1    , KC_2    , KC_3    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
@@ -64,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F12        , KC_F7        , KC_F8        , KC_F9        , _______ , _______ , _______ , _______ , KC_MPRV , KC_VOLU        , KC_MNXT , _______,
     LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______,
     KC_F10        , KC_F1        , KC_F2        , KC_F3        , _______ , _______ , _______ , _______ , PIN_APP , PIN_WIN        , DSK_MGR , _______,
-    _______       , _______      , _______      , _______      , _______ , _______ , _______ , KC_MPLY , _______ , _______        , _______ , _______
+    _______       , _______      , _______      , _______      , _______ , _______ , KC_MUTE , KC_MPLY , _______ , _______        , _______ , _______
 ),
 
 [_SYS] = LAYOUT_planck_grid(
@@ -75,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_NAV] = LAYOUT_planck_grid(
-    LALT(KC_F4)  , _______      , LSFT(KC_TAB) , LALT(KC_TAB) , _______ , _______ , _______ , KC_PGUP , NAV_BSPC, KC_UP   , NAV_DEL , _______,
+    LALT(KC_F4)  , _______      , ALT_TAB_REV  , ALT_TAB_FWD  , _______ , _______ , _______ , KC_PGUP , NAV_BSPC, KC_UP   , NAV_DEL , _______,
     OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , _______ , _______ , KC_PGDN , KC_LEFT , KC_DOWN , KC_RGHT , KC_ENT,
     _______      , _______      , _______      , _______      , _______ , _______ , _______ , KC_INS  , KC_TAB  , _______ , _______ , _______,
     _______      , _______      , _______      , _______      , _______ , _______ , KC_CNCL , _______ , _______ , _______ , _______ , _______

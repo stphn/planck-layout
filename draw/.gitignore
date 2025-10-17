@@ -1,0 +1,11 @@
+# Generated files - don't commit
+keymap.yaml
+planck.svg
+planck.png
+*.svg
+*.png
+
+# Keep config and scripts
+!config.yaml
+!generate.sh
+!README.md

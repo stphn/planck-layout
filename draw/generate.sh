@@ -27,7 +27,7 @@ echo "🖼️  Generating individual layer SVGs..."
 for layer in DEF NUM GAMING FN SYS NAV MOUSE MIDI; do
     layer_lower=$(echo "$layer" | tr '[:upper:]' '[:lower:]')
     echo "   - ${layer_lower}-layer.svg"
-    keymap draw keymap.yaml -l $layer > ${layer_lower}-layer.svg
+    keymap draw keymap.yaml -s $layer > ${layer_lower}-layer.svg
 done
 
 # Generate PNG if cairosvg or inkscape available

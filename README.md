@@ -29,6 +29,10 @@ Adapted from [urob's ZMK config](https://github.com/urob/zmk-config) philosophy 
 
 ## 📊 Layout Overview
 
+**Visual diagrams:**
+- **[Complete keymap](draw/planck.svg)** - All 8 layers in one view
+- **Individual layers:** [DEF](draw/def-layer.svg) | [NUM](draw/num-layer.svg) | [GAMING](draw/gaming-layer.svg) | [FN](draw/fn-layer.svg) | [SYS](draw/sys-layer.svg) | [NAV](draw/nav-layer.svg) | [MOUSE](draw/mouse-layer.svg) | [MIDI](draw/midi-layer.svg)
+
 **Quick terminal view:**
 ```bash
 make layout          # View all layers in terminal
@@ -36,6 +40,11 @@ make layout _DEF     # View specific layer
 ```
 
 Generates colored ASCII art of keyboard layers - fully functional and fast!
+
+**Regenerate diagrams:**
+```bash
+make draw           # Generate fresh SVG diagrams
+```
 
 See [draw/README.md](draw/README.md) for visualization details.
 

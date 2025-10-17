@@ -1,0 +1,55 @@
+layout:
+  ortho_layout:
+    split: false
+    rows: 4
+    columns: 12
+    thumbs: 0
+
+layers:
+  DEF:
+    - [Q, W, F, P, B, "COPY\nCUT", BSPC, J, L, U, Y, ";"]
+    - ["A\nGUI", "R\nALT", "S\nSFT", "T\nCTL", G, "UNDO\nCmd+Z", "REDO\nCmd+⇧Z", M, "N\nCTL", "E\nSFT", "I\nALT", "O\nGUI"]
+    - [Z, X, C, D, V, "SAVE\nCmd+S", "FIND\nCmd+F", K, H, ",", ".", "?"]
+    - [PSWD, HYPR, "", GUI, "SPC\nNAV", "ENT\nFN", NUM, SHFT, MOUS, "", MIDI, GAME]
+
+  NUM:
+    - ["", "7", "8", "9", "", "", "", "", "", "", "", ""]
+    - ["0\nGUI", "4\nALT", "5\nSFT", "6\nCTL", "", "", "", "", "", "", "", ""]
+    - ["", "1", "2", "3", "", "", "", "", "", "", "", ""]
+    - ["", "", "", "", "", "", "", "", "", "", "", ""]
+
+  GAMING:
+    - [TAB, Q, W, E, R, T, Y, U, I, O, P, BSPC]
+    - ["ESC\nSYS", A, S, D, F, G, H, J, K, L, ";", "'"]
+    - [SHFT, Z, X, C, V, B, N, M, ",", ".", "/", SHFT]
+    - [CTRL, ALT, GUI, NUM, SPC, ENT, SPC, NUM, SYS, "", "", DEF]
+
+  FN:
+    - ["F12", "F7", "F8", "F9", "", "", "", "", PREV, "VOL+", NEXT, ""]
+    - ["F11\nGUI", "F4\nALT", "F5\nSFT", "F6\nCTL", "", "", "", "", "DSK◄", "VOL-\nSFT", "DSK►", ""]
+    - [F10, F1, F2, F3, "", "", "", "", PIN, PIN, DSKM, ""]
+    - ["", "", "", "", "", "", MUTE, PLAY, "", "", "", ""]
+
+  SYS:
+    - [AU_ON, AU_OFF, "", "", "", RGB, "", "", NEXT, "HUE+", "SAT+", "VAL+"]
+    - [MU_ON, MU_OFF, "", "", "", BOOT, BOOT, "", PREV, "HUE-", "SAT-", "VAL-"]
+    - [MI_ON, MI_OFF, "", "", "", ECLR, ECLR, "", "", "", "", ""]
+    - [AU_PR, AU_NX, "", "", "", DEF, GAME, MIDI, "", "", "", DBUG]
+
+  NAV:
+    - ["ALT\nF4", "", "TAB◄", "TAB►", "", "", "", PGUP, BSPC, "↑", DEL, ""]
+    - [oGUI, oALT, oSFT, oCTL, "", "", "", PGDN, "←", "↓", "→", ENT]
+    - ["", "", "", "", "", "", "", INS, TAB, "", "", ""]
+    - ["", "", "", "", "", "", ESC, "", "", "", "", ""]
+
+  MOUSE:
+    - ["", "", "", "", "", "", "", "", PGUP, "M↑", PGDN, ""]
+    - ["", "", "", "", "", "", "", "WHL←", "M←", "M↓", "M→", "WHL→"]
+    - ["", "", "", "", "", "", "", "", BTN1, BTN3, BTN2, ""]
+    - ["", "", "", "", "", "", "WHL↑", "WHL↓", "", "", "", ""]
+
+  MIDI:
+    - [PANIC, "⏯", "⏹", REC, "PAT◄", "PAT►", "OCT-2", "OCT-1", "OCT+1", "OCT+2", "OCT=", MIDI]
+    - [VEL1, "C♯", "D♯", "", "F♯", "G♯", "A♯", "", "C♯", "INS◄", "INS►", VEL7]
+    - [SUST, C, D, E, F, G, A, B, C, "OFF", "REL", CHORD]
+    - ["CH◄", "CH►", ARPEG, PITCH, PAN, VIBR, TREM, VOL, "TRN-", "TRN+", "VEL-", "VEL+"]

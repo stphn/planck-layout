@@ -15,11 +15,11 @@ make layout _NUM _FN  # View multiple layers
 
 Uses the `draw_layout.py` script for colored ASCII art in terminal.
 
-## Professional Diagrams (WIP)
+## Professional Diagrams
 
-**Note:** SVG/PNG generation using keymap-drawer is currently a work in progress due to QMK's complex keymap structure. The terminal visualization above is fully functional.
+Generate beautiful SVG diagrams of your keyboard layout:
 
-### Future Setup
+### Setup
 
 Install keymap-drawer:
 
@@ -34,7 +34,7 @@ pip install cairosvg
 brew install inkscape
 ```
 
-### Future Usage
+### Usage
 
 ```bash
 # From project root
@@ -45,10 +45,23 @@ make draw
 ```
 
 This will create:
-- `keymap.json` - QMK JSON representation
-- `keymap.yaml` - Parsed keymap representation
-- `planck.svg` - Vector diagram
-- `planck.png` - Raster image (if cairosvg/inkscape installed)
+- `planck.svg` - Complete keymap with all 8 layers
+- `def-layer.svg` - Default Colemak layer
+- `num-layer.svg` - Numbers with homerow mods
+- `gaming-layer.svg` - QWERTY gaming layer
+- `fn-layer.svg` - Function keys
+- `sys-layer.svg` - System controls
+- `nav-layer.svg` - Navigation
+- `mouse-layer.svg` - Mouse control
+- `midi-layer.svg` - MIDI controller
+- `*.png` - PNG versions (if cairosvg/inkscape installed)
+
+### Viewing
+
+```bash
+open draw/planck.svg           # View all layers
+open draw/def-layer.svg        # View individual layer
+```
 
 ## Configuration
 
@@ -74,9 +87,9 @@ python3 draw_layout.py _DEF _NUM
 
 - `config.yaml` - keymap-drawer configuration
 - `generate.sh` - Script to generate diagrams
-- `keymap.yaml` - Generated parsed keymap (git-ignored)
-- `planck.svg` - Generated SVG diagram (git-ignored)
-- `planck.png` - Generated PNG diagram (git-ignored)
+- `keymap.yaml` - Manual keymap definition (committed)
+- `*.svg` - Generated SVG diagrams (git-ignored)
+- `*.png` - Generated PNG diagrams (git-ignored)
 
 ## Tips
 

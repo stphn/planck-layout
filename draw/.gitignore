@@ -1,12 +1,8 @@
 # Generated files - don't commit
-keymap.json
-keymap.yaml
-planck.svg
-planck.png
 *.svg
 *.png
 
-# Keep config and scripts
+# Keep config, scripts, and manual keymap
 !config.yaml
 !generate.sh
 !README.md

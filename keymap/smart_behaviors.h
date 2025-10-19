@@ -26,6 +26,8 @@ uint16_t smart_num_tap_timer = 0;
 bool sticky_num_active = false;
 bool leader_active = false;
 uint16_t leader_timer = 0;
+uint16_t leader_sequence[3] = {KC_NO, KC_NO, KC_NO};  // Track up to 3 keys for OS switching
+uint8_t leader_sequence_count = 0;
 bool smart_mouse_active = false;
 uint16_t smart_mouse_tap_timer = 0;
 uint16_t smart_spc_timer = 0;
@@ -197,6 +199,10 @@ static bool handle_leader_key(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             leader_active = true;
             leader_timer = timer_read();
+            leader_sequence_count = 0;
+            for (int i = 0; i < 3; i++) {
+                leader_sequence[i] = KC_NO;
+            }
         }
         return false;
     }
@@ -208,131 +214,331 @@ static bool handle_leader_sequences(uint16_t keycode, keyrecord_t *record) {
         if (timer_elapsed(leader_timer) > 3000) {
             // Leader timeout
             leader_active = false;
+            leader_sequence_count = 0;
             return true;
+        }
+
+        // Add key to sequence
+        if (leader_sequence_count < 3) {
+            leader_sequence[leader_sequence_count++] = keycode;
         }
 
         // Check for shift state for uppercase variants (including one-shot mods)
         bool shift_held = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
-        switch (keycode) {
-            // A-umlaut: ä/Ä
-            case KC_A:
-            case HRM_A:     // Colemak A
+        // Check for 3-key sequences (MAC, WIN, LIN)
+        if (leader_sequence_count == 3) {
+            // MAC sequence: M A C
+            if (leader_sequence[0] == KC_M && leader_sequence[1] == KC_A && leader_sequence[2] == KC_C) {
+                set_unicode_input_mode(UNICODE_MODE_MACOS);
+                leader_active = false;
+                leader_sequence_count = 0;
+                return false;
+            }
+            // WIN sequence: W I N
+            if (leader_sequence[0] == KC_W && leader_sequence[1] == HRM_I && leader_sequence[2] == HRM_N) {
+                set_unicode_input_mode(UNICODE_MODE_WINCOMPOSE);
+                leader_active = false;
+                leader_sequence_count = 0;
+                return false;
+            }
+            // LIN sequence: L I N
+            if (leader_sequence[0] == KC_L && leader_sequence[1] == HRM_I && leader_sequence[2] == HRM_N) {
+                set_unicode_input_mode(UNICODE_MODE_LINUX);
+                leader_active = false;
+                leader_sequence_count = 0;
+                return false;
+            }
+            // If no match, cancel leader
+            leader_active = false;
+            leader_sequence_count = 0;
+            return true;
+        }
+
+        // Check for 2-key sequences (French accents, ligatures)
+        if (leader_sequence_count == 2) {
+            uint16_t first = leader_sequence[0];
+            uint16_t second = leader_sequence[1];
+
+            // French E accents: E + modifier
+            if (first == KC_E || first == HRM_E) {
+                if (second == KC_G) {  // E G → è/È (grave)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C8);  // È
+                    } else {
+                        register_unicode(0x00E8);  // è
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_C) {  // E C → ê/Ê (circumflex)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00CA);  // Ê
+                    } else {
+                        register_unicode(0x00EA);  // ê
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_D) {  // E D → ë/Ë (diaeresis)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00CB);  // Ë
+                    } else {
+                        register_unicode(0x00EB);  // ë
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                }
+            }
+
+            // French A accents: A + modifier
+            if (first == KC_A || first == HRM_A) {
+                if (second == KC_G) {  // A G → à/À (grave)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C0);  // À
+                    } else {
+                        register_unicode(0x00E0);  // à
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_C) {  // A C → â/Â (circumflex)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C2);  // Â
+                    } else {
+                        register_unicode(0x00E2);  // â
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_E || second == HRM_E) {  // A E → æ/Æ (ligature)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C6);  // Æ
+                    } else {
+                        register_unicode(0x00E6);  // æ
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                }
+            }
+
+            // French O accents: O + modifier
+            if (first == KC_O || first == HRM_O) {
+                if (second == KC_C) {  // O C → ô/Ô (circumflex)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00D4);  // Ô
+                    } else {
+                        register_unicode(0x00F4);  // ô
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_E || second == HRM_E) {  // O E → œ/Œ (ligature)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x0152);  // Œ
+                    } else {
+                        register_unicode(0x0153);  // œ
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                }
+            }
+
+            // French I accents: I + modifier
+            if (first == HRM_I) {
+                if (second == KC_C) {  // I C → î/Î (circumflex)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00CE);  // Î
+                    } else {
+                        register_unicode(0x00EE);  // î
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_D) {  // I D → ï/Ï (diaeresis)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00CF);  // Ï
+                    } else {
+                        register_unicode(0x00EF);  // ï
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                }
+            }
+
+            // French U accents: U + modifier
+            if (first == KC_U) {
+                if (second == KC_G) {  // U G → ù/Ù (grave)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00D9);  // Ù
+                    } else {
+                        register_unicode(0x00F9);  // ù
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_C) {  // U C → û/Û (circumflex)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00DB);  // Û
+                    } else {
+                        register_unicode(0x00FB);  // û
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                } else if (second == KC_D) {  // U D → ü/Ü (diaeresis)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00DC);  // Ü
+                    } else {
+                        register_unicode(0x00FC);  // ü
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
+                }
+            }
+
+            // French Y diaeresis: Y D → ÿ/Ÿ
+            if (first == KC_Y && second == KC_D) {
                 if (shift_held) {
                     del_mods(MOD_MASK_SHIFT);
                     del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("Ä");
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
+                    register_unicode(0x0178);  // Ÿ
                 } else {
-                    send_unicode_string("ä");
+                    register_unicode(0x00FF);  // ÿ
                 }
                 leader_active = false;
+                leader_sequence_count = 0;
                 return false;
+            }
 
-            // O-umlaut: ö/Ö
-            case KC_O:
-            case HRM_O:     // Colemak O
-                if (shift_held) {
-                    del_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("Ö");
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
-                } else {
-                    send_unicode_string("ö");
-                }
-                leader_active = false;
-                return false;
+            // If no 2-key match, might be part of 3-key sequence
+            // Don't cancel yet, wait for third key or timeout
+            return true;
+        }
 
-            // U-umlaut: ü/Ü
-            case KC_U:
-                if (shift_held) {
-                    del_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("Ü");
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
-                } else {
-                    send_unicode_string("ü");
-                }
-                leader_active = false;
-                return false;
+        // Single-key sequences (German umlauts, single French accents, currency)
+        if (leader_sequence_count == 1) {
+            switch (keycode) {
+                // German umlauts
+                case KC_A:
+                case HRM_A:  // A → ä/Ä
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C4);  // Ä
+                    } else {
+                        register_unicode(0x00E4);  // ä
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // S-eszett: ß
-            case KC_S:
-            case HRM_S:     // Colemak S
-                send_unicode_string("ß");
-                leader_active = false;
-                return false;
+                case KC_O:
+                case HRM_O:  // O → ö/Ö
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00D6);  // Ö
+                    } else {
+                        register_unicode(0x00F6);  // ö
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // E-acute: é/É
-            case KC_E:
-            case HRM_E:     // Colemak E
-                if (shift_held) {
-                    del_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("É");
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
-                } else {
-                    send_unicode_string("é");
-                }
-                leader_active = false;
-                return false;
+                case KC_U:  // U → ü/Ü
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00DC);  // Ü
+                    } else {
+                        register_unicode(0x00FC);  // ü
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // C-cedilla: ç
-            case KC_C:
-                send_unicode_string("ç");
-                leader_active = false;
-                return false;
+                case KC_S:
+                case HRM_S:  // S → ß
+                    register_unicode(0x00DF);  // ß
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // N-tilde: ñ
-            case KC_N:
-            case HRM_N:     // Colemak N
-                send_unicode_string("ñ");
-                leader_active = false;
-                return false;
+                // French accents (single-key)
+                case KC_E:
+                case HRM_E:  // E → é/É (acute)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C9);  // É
+                    } else {
+                        register_unicode(0x00E9);  // é
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // Grave accents: à/À (G for "grave")
-            case KC_G:
-                if (shift_held) {
-                    del_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("À");  // A-grave
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
-                } else {
-                    send_unicode_string("à");  // a-grave
-                }
-                leader_active = false;
-                return false;
+                case KC_C:  // C → ç/Ç (cedilla)
+                    if (shift_held) {
+                        del_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        register_unicode(0x00C7);  // Ç
+                    } else {
+                        register_unicode(0x00E7);  // ç
+                    }
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // Circumflex accents: â/Â (T for "tilde/circumflex")
-            case KC_T:
-            case HRM_T:     // Colemak T
-                if (shift_held) {
-                    del_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    send_unicode_string("Â");  // A-circumflex
-                    add_mods(get_mods() & MOD_MASK_SHIFT);  // Restore only if it was a held mod
-                } else {
-                    send_unicode_string("â");  // a-circumflex
-                }
-                leader_active = false;
-                return false;
+                // Currency symbols
+                case KC_4:  // 4 → € (euro)
+                    register_unicode(0x20AC);  // €
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // Euro symbol (4 key, like $)
-            case KC_4:
-                send_unicode_string("€");
-                leader_active = false;
-                return false;
+                case KC_3:  // 3 → £ (pound)
+                    register_unicode(0x00A3);  // £
+                    leader_active = false;
+                    leader_sequence_count = 0;
+                    return false;
 
-            // British Pound (3 key, like #)
-            case KC_3:
-                send_unicode_string("£");
-                leader_active = false;
-                return false;
-
-            default:
-                // Cancel leader on any other key
-                leader_active = false;
-                break;
+                default:
+                    // Don't cancel yet, might be multi-key sequence
+                    break;
+            }
         }
     }
     return true;

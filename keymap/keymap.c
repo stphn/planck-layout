@@ -123,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MOUSE] = LAYOUT_planck_grid(
     // Mouse layer - urob-style with movement, scrolling, and buttons
     _______, _______, _______, _______, _______, _______, _______, _______, KC_PGUP, MS_UP,   KC_PGDN, _______,
-    _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_LEFT, MS_DOWN, MS_RGHT, MS_WHLR,
+    _______, MS_BTN1, MS_BTN3, MS_BTN2, _______, _______, _______, MS_WHLL, MS_LEFT, MS_DOWN, MS_RGHT, MS_WHLR,
     _______, _______, _______, _______, _______, _______, _______, _______, MS_BTN1, MS_BTN3, MS_BTN2, _______,
     _______, _______, _______, _______, _______, _______, MS_WHLU, MS_WHLD, _______, _______, _______, _______
 ),

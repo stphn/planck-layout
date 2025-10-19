@@ -23,8 +23,8 @@ enum combo_events {
     // Navigation combos (existing)
     ESC_COMBO,       // W+F = Escape
     BSPC_COMBO,      // L+U = Backspace
-    LEADER_COMBO,    // R+S = Leader key (urob's position)
-    LEADER_SFT_COMBO, // A+R+S = Shifted leader (Shift+Ctrl+Alt mod)
+    LEADER_COMBO,    // S+T = Leader key (urob's position)
+    LEADER_SFT_COMBO, // R+S+T = Shifted leader (Shift+Ctrl+Alt mod)
 
     // urob's mouse layer activation
     MOUSE_COMBO,     // F+P = Smart Mouse toggle (LT1+LT0 in urob's notation)
@@ -115,8 +115,8 @@ extern combo_t key_combos[];
 // Navigation combos
 const uint16_t PROGMEM esc_combo[] = {KC_W, KC_F, COMBO_END};                    // W+F = Escape
 const uint16_t PROGMEM bspc_combo[] = {KC_L, KC_U, COMBO_END};                   // L+U = Backspace
-const uint16_t PROGMEM leader_combo[] = {HRM_R, HRM_S, COMBO_END};               // R+S = Leader key (urob)
-const uint16_t PROGMEM leader_sft_combo[] = {HRM_A, HRM_R, HRM_S, COMBO_END};    // A+R+S = Shifted leader
+const uint16_t PROGMEM leader_combo[] = {HRM_S, HRM_T, COMBO_END};               // S+T = Leader key (urob)
+const uint16_t PROGMEM leader_sft_combo[] = {HRM_R, HRM_S, HRM_T, COMBO_END};    // R+S+T = Shifted leader
 const uint16_t PROGMEM mouse_combo[] = {KC_F, KC_P, COMBO_END};                  // F+P = Smart Mouse toggle
 
 // urob's horizontal combos (left hand)

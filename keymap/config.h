@@ -37,6 +37,14 @@
 #define QUICK_TAP_TERM_PER_KEY
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
+ * UNICODE CONFIGURATION
+ * macOS requires 4-digit hex codes - QMK handles this automatically
+ * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+// Support macOS, Linux, Windows - can cycle with UC_NEXT
+#define UNICODE_SELECTED_MODES UNICODE_MODE_MACOS, UNICODE_MODE_LINUX, UNICODE_MODE_WINCOMPOSE
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════════
  * ADDITIONAL QMK FEATURES
  * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
 

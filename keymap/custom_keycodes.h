@@ -56,7 +56,7 @@ enum planck_keycodes {
  * ╚══════════════════════════════════════════════════════════╝ */
 
 enum {
-    TD_COPY_CUT,   // Tap: copy (Ctrl+C) | Double-tap: cut (Ctrl+X)
+    TD_PRINT,   // Tap: Print Screen | Double-tap: Shift+Print Screen
 };
 
 /* ╔══════════════════════════════════════════════════════════╗
@@ -71,7 +71,7 @@ enum {
 #define MIDI     TG(_MIDI)
 #define CTRL_ESC LCTL_T(KC_ESC)
 #define GAME_ESC LT(_SYS, KC_ESC)  // Gaming layer escape with system access
-#define COPY_CUT TD(TD_COPY_CUT)   // Tap: copy | Double-tap: cut
+#define PRINT TD(TD_PRINT)   // Tap: Print Screen | Double-tap: Shift+Print Screen
 
 /* ╔══════════════════════════════════════════════════════════════════════╗
  * ║  MOD-MORPH - UROB'S LINGUISTIC ?/! APPROACH                          ║

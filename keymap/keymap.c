@@ -74,18 +74,18 @@ const key_override_t *key_overrides[] = {
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
  * TAP DANCE ACTIONS
- * Based on urob's copy/cut tap-dance behavior
+ * Screenshot tap-dance behavior
  * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
 
-// Tap: copy (Cmd+C) | Double-tap: cut (Cmd+X) - Mac shortcuts
+// Tap: Print Screen | Double-tap: Shift+Print Screen
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_COPY_CUT] = ACTION_TAP_DANCE_DOUBLE(LGUI(KC_C), LGUI(KC_X)),
+    [TD_PRINT] = ACTION_TAP_DANCE_DOUBLE(KC_PSCR, LSFT(KC_PSCR)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_DEF] = LAYOUT_planck_grid(
-    KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    COPY_CUT,       KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_QUOT,
+    KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    PRINT,          KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_QUOT,
     HRM_A, HRM_R,  HRM_S,   HRM_T,  KC_G,    LGUI(KC_Z),     SGUI(KC_Z),        KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
     KC_Z,  KC_X,   KC_C,    KC_D,   KC_V,    LGUI(KC_S),     LGUI(KC_F),        KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
     PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING

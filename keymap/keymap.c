@@ -79,7 +79,7 @@ tap_dance_action_t tap_dance_actions[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_DEF] = LAYOUT_planck_grid(
-    KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    COPY_CUT,       KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_SCLN,
+    KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    COPY_CUT,       KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_QUOT,
     HRM_A, HRM_R,  HRM_S,   HRM_T,  KC_G,    LGUI(KC_Z),     SGUI(KC_Z),        KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
     KC_Z,  KC_X,   KC_C,    KC_D,   KC_V,    LGUI(KC_S),     LGUI(KC_F),        KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
     PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
@@ -107,10 +107,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_SYS] = LAYOUT_planck_grid(
-    AU_ON  , AU_OFF , _______ , _______ , _______ , RM_TOGG , _______ , _______ , RM_NEXT , RM_HUEU , RM_SATU , RM_VALU,
-    MU_ON  , MU_OFF , _______ , _______ , _______ , QK_BOOT , QK_BOOT , _______ , RM_PREV , RM_HUED , RM_SATD , RM_VALD,
-    MI_ON  , MI_OFF , _______ , _______ , _______ , EE_CLR  , EE_CLR  , _______ , _______ , _______ , _______ , _______,
-    AU_PREV, AU_NEXT, _______ , _______ , _______ , DEF     , GAMING  , MIDI    , _______ , _______ , _______ , DB_TOGG
+    AU_ON  , AU_OFF , _______ , DEF     , _______ , RM_TOGG , _______ , _______ , RM_NEXT , RM_HUEU , RM_SATU , RM_VALU,
+    MU_ON  , MU_OFF , _______ , GAMING  , _______ , QK_BOOT , QK_BOOT , _______ , RM_PREV , RM_HUED , RM_SATD , RM_VALD,
+    MI_ON  , MI_OFF , _______ , MIDI    , _______ , EE_CLR  , EE_CLR  , _______ , _______ , _______ , _______ , _______,
+    AU_PREV, AU_NEXT, _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , DB_TOGG
 ),
 
 [_NAV] = LAYOUT_planck_grid(

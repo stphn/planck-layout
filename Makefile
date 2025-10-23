@@ -7,7 +7,15 @@ FIRMWARE_DIR := $(PWD)/firmware
 KEYMAP_LINK := $(QMK_HOME)/keyboards/planck/keymaps/$(KEYMAP)
 
 # === Targets ===
-.PHONY: build flash save clean init-qmk qmk-status update-qmk layout draw
+.PHONY: all test build flash save clean init-qmk qmk-status update-qmk layout draw
+
+# Default target
+all: build
+
+# Run QMK tests
+test:
+	@echo "🧪 Running QMK tests..."
+	@cd qmk && make test:basic
 
 # Ensure symlink exists before building
 $(KEYMAP_LINK):

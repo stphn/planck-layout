@@ -23,7 +23,6 @@ bool last_key_was_alpha = false;
 uint16_t magic_shift_tap_timer = 0;
 bool caps_word_active = false;
 uint16_t smart_num_tap_timer = 0;
-bool sticky_num_active = false;
 bool leader_active = false;
 uint16_t leader_timer = 0;
 uint16_t leader_sequence[3] = {KC_NO, KC_NO, KC_NO};  // Track up to 3 keys for OS switching
@@ -42,35 +41,36 @@ uint16_t socd_last_horizontal = KC_NO;  // Last pressed: A or D
 uint16_t socd_last_vertical = KC_NO;    // Last pressed: W or S
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
- * ║  SMART NUM-WORD BEHAVIOR                                                                           ║
- * ║  Auto-exits from NUM layer on non-number key                                                       ║
+ * ║  SMART NUM-WORD BEHAVIOR (UROB'S AUTO-LAYER)                                                      ║
+ * ║  Automatically deactivates NUM layer when pressing non-number keys                                 ║
+ * ║  Allowed keys: 0-9, BSPC, DEL, and layer keys                                                      ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 static void handle_num_word_logic(uint16_t keycode, keyrecord_t *record) {
-    // Auto-activate num-word when typing numbers on base layer
-    if (record->event.pressed && !num_word_active && !sticky_num_active &&
-        keycode >= KC_1 && keycode <= KC_0 && get_highest_layer(layer_state) == 0) {
-        num_word_active = true;
-        layer_on(_NUM);
+    // Only process when Numword is active and a key is pressed
+    if (!num_word_active || !record->event.pressed) {
+        return;
     }
 
-    // Auto-exit num-word/sticky on non-number key
-    if ((num_word_active || sticky_num_active) && record->event.pressed) {
-        if (!(keycode >= KC_1 && keycode <= KC_0) && keycode != KC_BSPC && keycode != KC_DEL) {
-            if (num_word_active) {
-                num_word_active = false;
-                layer_off(_NUM);
-            }
-            // Sticky num stays active until manually cancelled with SMART_NUM tap
-        }
-    }
+    // Check if the keycode should keep Numword active
+    // Numword stays active for: numbers (0-9), homerow mod numbers, BSPC, DEL
+    bool is_numword_key = (keycode >= KC_1 && keycode <= KC_0) ||  // Number keys on base layer
+                          (keycode >= KC_7 && keycode <= KC_9) ||   // 7, 8, 9 on NUM layer
+                          (keycode == NUM_0) ||                      // Homerow mod 0 (Cmd/0)
+                          (keycode == NUM_4) ||                      // Homerow mod 4 (Alt/4)
+                          (keycode == NUM_5) ||                      // Homerow mod 5 (Shift/5)
+                          (keycode == NUM_6) ||                      // Homerow mod 6 (Ctrl/6)
+                          (keycode == KC_BSPC) ||                    // Backspace
+                          (keycode == KC_DEL) ||                     // Delete
+                          (keycode == NAV_BSPC) ||                   // NAV layer backspace
+                          (keycode == NAV_DEL) ||                    // NAV layer delete
+                          (keycode == SMART_NUM) ||                  // The trigger key itself
+                          (keycode == KC_NO) || (keycode == KC_TRNS);  // Layer passthroughs
 
-    // Cancel sticky num on SMART_NUM tap (not hold)
-    if (sticky_num_active && record->event.pressed && keycode == SMART_NUM) {
-        sticky_num_active = false;
-        if (!num_word_active) {
-            layer_off(_NUM);
-        }
+    // If non-numword key pressed, deactivate Numword
+    if (!is_numword_key) {
+        num_word_active = false;
+        layer_off(_NUM);
     }
 }
 
@@ -124,29 +124,24 @@ static void handle_keycode_tracking(uint16_t keycode, keyrecord_t *record) {
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
- * ║  SMART_NUM KEY BEHAVIOR                                                                            ║
- * ║  Single tap = num-word, Double tap = sticky num, Hold = momentary NUM                              ║
+ * ║  SMART_NUM KEY BEHAVIOR (UROB'S NUMWORD)                                                          ║
+ * ║  Tap = num-word (auto-exits on non-number keys), Hold = momentary NUM layer                        ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 static bool handle_smart_num_key(uint16_t keycode, keyrecord_t *record) {
     if (keycode == SMART_NUM) {
         if (record->event.pressed) {
-            magic_shift_timer = timer_read();
-            layer_on(_NUM);
+            smart_num_tap_timer = timer_read();
+            layer_on(_NUM);  // Activate layer immediately for hold behavior
         } else {
-            layer_off(_NUM);
-            if (timer_elapsed(magic_shift_timer) < TAPPING_TERM) {
-                // Check for double-tap (sticky NUM layer)
-                if (timer_elapsed(smart_num_tap_timer) < TAPPING_TERM) {
-                    sticky_num_active = true;
-                    layer_on(_NUM);
-                    smart_num_tap_timer = 0; // Reset timer
-                } else {
-                    // Single tap: activate num-word mode
-                    num_word_active = true;
-                    layer_on(_NUM);
-                    smart_num_tap_timer = timer_read(); // Start double-tap timer
-                }
+            // On release, check if it was a tap or hold
+            if (timer_elapsed(smart_num_tap_timer) < TAPPING_TERM) {
+                // TAP: Activate Numword mode
+                num_word_active = true;
+                // Layer stays on via num_word_active flag
+            } else {
+                // HOLD: Was acting as momentary layer, now release it
+                layer_off(_NUM);
             }
         }
         return false;

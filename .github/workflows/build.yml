@@ -1,0 +1,81 @@
+name: Build and Test Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install QMK CLI
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install qmk
+
+    - name: Install QMK dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi
+
+    - name: Set up QMK
+      run: |
+        qmk setup -y -H ./qmk
+
+    - name: Create keymap symlink
+      run: |
+        mkdir -p qmk/keyboards/planck/keymaps/stphn
+        ln -sfn "$(pwd)/keymap" "qmk/keyboards/planck/keymaps/stphn"
+
+    - name: Run tests
+      run: |
+        cd qmk && make test:basic
+      continue-on-error: true
+
+    - name: Build firmware
+      run: |
+        QMK_HOME="$(pwd)/qmk" qmk compile -kb planck/rev7 -km stphn
+
+    - name: Generate firmware filename
+      id: firmware
+      run: |
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        FILENAME="planck_rev7_stphn-${TIMESTAMP}.bin"
+        echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
+        echo "timestamp=${TIMESTAMP}" >> $GITHUB_OUTPUT
+
+    - name: Copy firmware with timestamp
+      run: |
+        mkdir -p firmware
+        cp qmk/.build/planck_rev7_stphn.bin firmware/${{ steps.firmware.outputs.filename }}
+
+    - name: Upload firmware artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: planck-firmware-${{ steps.firmware.outputs.timestamp }}
+        path: firmware/planck_rev7_stphn-${{ steps.firmware.outputs.timestamp }}.bin
+        retention-days: 90
+
+    - name: Commit firmware to repository
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add firmware/
+        git diff --staged --quiet || git commit -m "ci: add firmware build ${{ steps.firmware.outputs.timestamp }}"
+
+    - name: Push firmware
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

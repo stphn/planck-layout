@@ -7,7 +7,13 @@
 
 #include QMK_KEYBOARD_H
 #include "user_song_list.h"
-#include "../password.h"
+
+// Optional password support - create password.h with #define PASSWORD_STRING "your_password"
+#if __has_include("../password.h")
+#    include "../password.h"
+#else
+#    define PASSWORD_STRING ""
+#endif
 
 // Include our modular components
 #include "custom_keycodes.h"

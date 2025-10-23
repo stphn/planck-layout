@@ -33,7 +33,7 @@ jobs:
 
     - name: Create keymap symlink
       run: |
-        mkdir -p qmk/keyboards/planck/keymaps/stphn
+        mkdir -p qmk/keyboards/planck/keymaps
         ln -sfn "$(pwd)/keymap" "qmk/keyboards/planck/keymaps/stphn"
 
     - name: Run tests

@@ -23,17 +23,17 @@ enum combo_events {
     // Navigation combos (existing)
     ESC_COMBO,       // W+F = Escape
     BSPC_COMBO,      // L+U = Backspace
-    LEADER_COMBO,    // S+T = Leader key (urob's position)
-    LEADER_SFT_COMBO, // R+S+T = Shifted leader (Shift+Ctrl+Alt mod)
+    LEADER_COMBO,    // S+T = Leader key (urob's LM2+LM1)
+    LEADER_SFT_COMBO, // R+S+T = Shifted leader (urob's LM3+LM2+LM1)
 
     // urob's mouse layer activation
-    MOUSE_COMBO,     // F+P = Smart Mouse toggle (LT1+LT0 in urob's notation)
+    MOUSE_COMBO,     // F+P = Smart Mouse toggle (urob's LT2+LT1)
 
     // urob's horizontal combos (left hand)
-    TAB_COMBO,       // A+R = Tab
-    CUT_COMBO,       // Z+C = Cut
-    COPY_COMBO,      // Z+X = Copy
-    PASTE_COMBO,     // X+C = Paste
+    TAB_COMBO,       // R+S = Tab (urob's LM3+LM2)
+    CUT_COMBO,       // X+D = Cut (urob's LB3+LB1)
+    COPY_COMBO,      // X+C = Copy (urob's LB3+LB2)
+    PASTE_COMBO,     // C+D = Paste (urob's LB2+LB1)
 
     // urob's horizontal combos (right hand)
     DEL_COMBO,       // U+Y = Delete
@@ -43,14 +43,14 @@ enum combo_events {
     RBKT_RBRC_COMBO, // ,+. = ] on DEF/NUM, } on NAV (layer-specific)
 
     // urob's vertical symbol combos (left hand)
-    AT_COMBO,        // Q+A = @
-    HASH_COMBO,      // W+R = #
-    DOLLAR_COMBO,    // F+S = $
-    PERCENT_COMBO,   // P+T = %
-    GRAVE_COMBO,     // A+Z = `
-    BACKSLASH_COMBO, // R+X = backslash
-    EQUALS_COMBO,    // S+C = =
-    TILDE_COMBO,     // T+D = ~
+    AT_COMBO,        // W+R = @ (urob's LT3+LM3)
+    HASH_COMBO,      // F+S = # (urob's LT2+LM2)
+    DOLLAR_COMBO,    // P+T = $ (urob's LT1+LM1)
+    PERCENT_COMBO,   // B+G = % (urob's LT0+LM0)
+    GRAVE_COMBO,     // R+X = ` (urob's LM3+LB3)
+    BACKSLASH_COMBO, // S+C = \ (urob's LM2+LB2)
+    EQUALS_COMBO,    // T+D = = (urob's LM1+LB1)
+    TILDE_COMBO,     // G+V = ~ (urob's LM0+LB0)
 
     // urob's vertical symbol combos (right hand)
     CARET_COMBO,     // J+M = ^ (RT0+RM0)
@@ -113,87 +113,80 @@ extern combo_t key_combos[];
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 // Navigation combos
-const uint16_t PROGMEM esc_combo[] = {KC_W, KC_F, COMBO_END};                    // W+F = Escape
-const uint16_t PROGMEM bspc_combo[] = {KC_L, KC_U, COMBO_END};                   // L+U = Backspace
-const uint16_t PROGMEM leader_combo[] = {HRM_S, HRM_T, COMBO_END};               // S+T = Leader key (urob)
-const uint16_t PROGMEM leader_sft_combo[] = {HRM_R, HRM_S, HRM_T, COMBO_END};    // R+S+T = Shifted leader
-const uint16_t PROGMEM mouse_combo[] = {KC_F, KC_P, COMBO_END};                  // F+P = Smart Mouse toggle
+const uint16_t PROGMEM esc_combo[] = {KC_W, KC_F, COMBO_END};
+const uint16_t PROGMEM bspc_combo[] = {KC_L, KC_U, COMBO_END};
+const uint16_t PROGMEM leader_combo[] = {HRM_S, HRM_T, COMBO_END};
+const uint16_t PROGMEM leader_sft_combo[] = {HRM_R, HRM_S, HRM_T, COMBO_END};
+const uint16_t PROGMEM mouse_combo[] = {KC_F, KC_P, COMBO_END};
 
 // urob's horizontal combos (left hand)
-const uint16_t PROGMEM tab_combo[] = {HRM_A, HRM_R, COMBO_END};       // A+R = Tab
-const uint16_t PROGMEM cut_combo[] = {KC_Z, KC_C, COMBO_END};         // Z+C = Cut
-const uint16_t PROGMEM copy_combo[] = {KC_Z, KC_X, COMBO_END};        // Z+X = Copy
-const uint16_t PROGMEM paste_combo[] = {KC_X, KC_C, COMBO_END};       // X+C = Paste
+const uint16_t PROGMEM tab_combo[] = {HRM_R, HRM_S, COMBO_END};
+const uint16_t PROGMEM cut_combo[] = {KC_X, KC_D, COMBO_END};
+const uint16_t PROGMEM copy_combo[] = {KC_X, KC_C, COMBO_END};
+const uint16_t PROGMEM paste_combo[] = {KC_C, KC_D, COMBO_END};
 
 // urob's horizontal combos (right hand)
-const uint16_t PROGMEM del_combo[] = {KC_U, KC_Y, COMBO_END};              // U+Y = Delete
-const uint16_t PROGMEM lprn_lt_combo[] = {HRM_N, HRM_E, COMBO_END};        // N+E = ( or < (RM1+RM2, urob's lpar_lt)
-const uint16_t PROGMEM rprn_gt_combo[] = {HRM_E, HRM_I, COMBO_END};        // E+I = ) or > (RM2+RM3, urob's rpar_gt)
-const uint16_t PROGMEM lbkt_lbrc_combo[] = {KC_H, KC_COMM, COMBO_END};     // H+, = [ or { (layer-specific)
-const uint16_t PROGMEM rbkt_rbrc_combo[] = {KC_COMM, KC_DOT, COMBO_END};   // ,+. = ] or } (layer-specific)
+const uint16_t PROGMEM del_combo[] = {KC_U, KC_Y, COMBO_END};
+const uint16_t PROGMEM lprn_lt_combo[] = {HRM_N, HRM_E, COMBO_END};
+const uint16_t PROGMEM rprn_gt_combo[] = {HRM_E, HRM_I, COMBO_END};
+const uint16_t PROGMEM lbkt_lbrc_combo[] = {KC_H, KC_COMM, COMBO_END};
+const uint16_t PROGMEM rbkt_rbrc_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 
-// urob's vertical symbol combos (left hand) - using homerow mod keycodes
-const uint16_t PROGMEM at_combo[] = {KC_Q, HRM_A, COMBO_END};         // Q+A = @
-const uint16_t PROGMEM hash_combo[] = {KC_W, HRM_R, COMBO_END};       // W+R = #
-const uint16_t PROGMEM dollar_combo[] = {KC_F, HRM_S, COMBO_END};     // F+S = $
-const uint16_t PROGMEM percent_combo[] = {KC_P, HRM_T, COMBO_END};    // P+T = %
-const uint16_t PROGMEM grave_combo[] = {HRM_A, KC_Z, COMBO_END};      // A+Z = `
-const uint16_t PROGMEM backslash_combo[] = {HRM_R, KC_X, COMBO_END};  // R+X = backslash
-const uint16_t PROGMEM equals_combo[] = {HRM_S, KC_C, COMBO_END};     // S+C = =
-const uint16_t PROGMEM tilde_combo[] = {HRM_T, KC_D, COMBO_END};      // T+D = ~
+// urob's vertical symbol combos (left hand)
+const uint16_t PROGMEM at_combo[] = {KC_W, HRM_R, COMBO_END};
+const uint16_t PROGMEM hash_combo[] = {KC_F, HRM_S, COMBO_END};
+const uint16_t PROGMEM dollar_combo[] = {KC_P, HRM_T, COMBO_END};
+const uint16_t PROGMEM percent_combo[] = {KC_B, KC_G, COMBO_END};
+const uint16_t PROGMEM grave_combo[] = {HRM_R, KC_X, COMBO_END};
+const uint16_t PROGMEM backslash_combo[] = {HRM_S, KC_C, COMBO_END};
+const uint16_t PROGMEM equals_combo[] = {HRM_T, KC_D, COMBO_END};
+const uint16_t PROGMEM tilde_combo[] = {KC_G, KC_V, COMBO_END};
 
-// urob's vertical symbol combos (right hand) - using homerow mod keycodes
-const uint16_t PROGMEM caret_combo[] = {KC_J, KC_M, COMBO_END};       // J+M = ^ (RT0+RM0)
-const uint16_t PROGMEM plus_combo[] = {KC_L, HRM_N, COMBO_END};       // L+N = + (RT1+RM1)
-const uint16_t PROGMEM star_combo[] = {KC_U, HRM_E, COMBO_END};       // U+E = * (RT2+RM2)
-const uint16_t PROGMEM amper_combo[] = {KC_Y, HRM_I, COMBO_END};      // Y+I = & (RT3+RM3)
-const uint16_t PROGMEM underscore_combo[] = {KC_M, KC_K, COMBO_END};  // M+K = _ (RM0+RB0)
-const uint16_t PROGMEM minus_combo[] = {HRM_N, KC_H, COMBO_END};      // N+H = - (RM1+RB1)
-const uint16_t PROGMEM slash_combo[] = {HRM_E, KC_COMM, COMBO_END};   // E+, = / (RM2+RB2)
-const uint16_t PROGMEM pipe_combo[] = {HRM_I, KC_DOT, COMBO_END};     // I+. = | (RM3+RB3)
+// urob's vertical symbol combos (right hand)
+const uint16_t PROGMEM caret_combo[] = {KC_J, KC_M, COMBO_END};
+const uint16_t PROGMEM plus_combo[] = {KC_L, HRM_N, COMBO_END};
+const uint16_t PROGMEM star_combo[] = {KC_U, HRM_E, COMBO_END};
+const uint16_t PROGMEM amper_combo[] = {KC_Y, HRM_I, COMBO_END};
+const uint16_t PROGMEM underscore_combo[] = {KC_M, KC_K, COMBO_END};
+const uint16_t PROGMEM minus_combo[] = {HRM_N, KC_H, COMBO_END};
+const uint16_t PROGMEM slash_combo[] = {HRM_E, KC_COMM, COMBO_END};
+const uint16_t PROGMEM pipe_combo[] = {HRM_I, KC_DOT, COMBO_END};
 
-// Define what each combo does - urob's complete symbol system
 combo_t key_combos[] = {
-    // Navigation combos
-    [ESC_COMBO] = COMBO(esc_combo, KC_ESC),                         // W+F = Escape
-    [BSPC_COMBO] = COMBO(bspc_combo, KC_BSPC),                      // L+U = Backspace
-    [LEADER_COMBO] = COMBO(leader_combo, LEADER),                   // R+S = Leader key
-    [LEADER_SFT_COMBO] = COMBO(leader_sft_combo, LSA(KC_NO)),       // A+R+S = Shift+Ctrl+Alt modifier
-    [MOUSE_COMBO] = COMBO(mouse_combo, SMART_MOUSE),                // F+P = Smart Mouse toggle
+    [ESC_COMBO] = COMBO(esc_combo, KC_ESC),
+    [BSPC_COMBO] = COMBO(bspc_combo, KC_BSPC),
+    [LEADER_COMBO] = COMBO(leader_combo, LEADER),
+    [LEADER_SFT_COMBO] = COMBO(leader_sft_combo, LSA(KC_NO)),
+    [MOUSE_COMBO] = COMBO(mouse_combo, SMART_MOUSE),
 
-    // urob's horizontal combos (left hand)
-    [TAB_COMBO] = COMBO(tab_combo, KC_TAB),                // A+R = Tab
-    [CUT_COMBO] = COMBO(cut_combo, LGUI(KC_X)),            // Z+C = Cut
-    [COPY_COMBO] = COMBO(copy_combo, LGUI(KC_C)),          // Z+X = Copy
-    [PASTE_COMBO] = COMBO(paste_combo, LGUI(KC_V)),        // X+C = Paste
+    [TAB_COMBO] = COMBO(tab_combo, KC_TAB),
+    [CUT_COMBO] = COMBO(cut_combo, LGUI(KC_X)),
+    [COPY_COMBO] = COMBO(copy_combo, LGUI(KC_C)),
+    [PASTE_COMBO] = COMBO(paste_combo, LGUI(KC_V)),
 
-    // urob's horizontal combos (right hand) - layer-specific variants
-    [DEL_COMBO] = COMBO(del_combo, KC_DEL),                // U+Y = Delete
-    [LPRN_LT_COMBO] = COMBO_ACTION(lprn_lt_combo),         // N+E = ( or < (shift-modified)
-    [RPRN_GT_COMBO] = COMBO_ACTION(rprn_gt_combo),         // E+I = ) or > (shift-modified)
-    [LBKT_LBRC_COMBO] = COMBO_ACTION(lbkt_lbrc_combo),     // H+, = [ on DEF/NUM, { on NAV
-    [RBKT_RBRC_COMBO] = COMBO_ACTION(rbkt_rbrc_combo),     // ,+. = ] on DEF/NUM, } on NAV
+    [DEL_COMBO] = COMBO(del_combo, KC_DEL),
+    [LPRN_LT_COMBO] = COMBO_ACTION(lprn_lt_combo),
+    [RPRN_GT_COMBO] = COMBO_ACTION(rprn_gt_combo),
+    [LBKT_LBRC_COMBO] = COMBO_ACTION(lbkt_lbrc_combo),
+    [RBKT_RBRC_COMBO] = COMBO_ACTION(rbkt_rbrc_combo),
 
-    // urob's vertical symbol combos (left hand)
-    [AT_COMBO] = COMBO(at_combo, KC_AT),                   // Q+A = @
-    [HASH_COMBO] = COMBO(hash_combo, KC_HASH),             // W+R = #
-    [DOLLAR_COMBO] = COMBO(dollar_combo, KC_DLR),          // F+S = $
-    [PERCENT_COMBO] = COMBO(percent_combo, KC_PERC),       // P+T = %
-    [GRAVE_COMBO] = COMBO(grave_combo, KC_GRV),            // A+Z = `
-    [BACKSLASH_COMBO] = COMBO(backslash_combo, KC_BSLS),   // R+X = backslash
-    [EQUALS_COMBO] = COMBO(equals_combo, KC_EQL),          // S+C = =
-    [TILDE_COMBO] = COMBO(tilde_combo, KC_TILD),           // T+D = ~
+    [AT_COMBO] = COMBO(at_combo, KC_AT),
+    [HASH_COMBO] = COMBO(hash_combo, KC_HASH),
+    [DOLLAR_COMBO] = COMBO(dollar_combo, KC_DLR),
+    [PERCENT_COMBO] = COMBO(percent_combo, KC_PERC),
+    [GRAVE_COMBO] = COMBO(grave_combo, KC_GRV),
+    [BACKSLASH_COMBO] = COMBO(backslash_combo, KC_BSLS),
+    [EQUALS_COMBO] = COMBO(equals_combo, KC_EQL),
+    [TILDE_COMBO] = COMBO(tilde_combo, KC_TILD),
 
-    // urob's vertical symbol combos (right hand)
-    [CARET_COMBO] = COMBO(caret_combo, KC_CIRC),           // J+M = ^
-    [PLUS_COMBO] = COMBO(plus_combo, KC_PLUS),             // L+N = +
-    [STAR_COMBO] = COMBO(star_combo, KC_ASTR),             // U+E = *
-    [AMPER_COMBO] = COMBO(amper_combo, KC_AMPR),           // Y+I = &
-    [UNDERSCORE_COMBO] = COMBO(underscore_combo, KC_UNDS), // M+K = _
-    [MINUS_COMBO] = COMBO(minus_combo, KC_MINS),           // N+H = -
-    [SLASH_COMBO] = COMBO(slash_combo, KC_SLSH),           // E+, = /
-    [PIPE_COMBO] = COMBO(pipe_combo, KC_PIPE),             // I+. = |
-
+    [CARET_COMBO] = COMBO(caret_combo, KC_CIRC),
+    [PLUS_COMBO] = COMBO(plus_combo, KC_PLUS),
+    [STAR_COMBO] = COMBO(star_combo, KC_ASTR),
+    [AMPER_COMBO] = COMBO(amper_combo, KC_AMPR),
+    [UNDERSCORE_COMBO] = COMBO(underscore_combo, KC_UNDS),
+    [MINUS_COMBO] = COMBO(minus_combo, KC_MINS),
+    [SLASH_COMBO] = COMBO(slash_combo, KC_SLSH),
+    [PIPE_COMBO] = COMBO(pipe_combo, KC_PIPE),
 };
 
 /* ╔═════════════════════════════════════════════════════════════════════════════╗
@@ -206,42 +199,36 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case ESC_COMBO:
         case BSPC_COMBO:
         case MOUSE_COMBO:
-            return 15;  // Fast navigation and mouse combos
+            return 15;
 
         case LEADER_SFT_COMBO:
-            return 25;  // Slightly longer for 3-key combo
+            return 25;
 
-        // Combos involving homerow mods need longer timing
-        case HASH_COMBO:        // W+R = #
-        case DOLLAR_COMBO:      // F+S = $
-        case PERCENT_COMBO:     // P+T = %
-        case PLUS_COMBO:        // L+N = +
-        case STAR_COMBO:        // U+E = *
-        case AMPER_COMBO:       // Y+I = &
-            return 30;          // Longer timing for homerow conflicts
+        case HASH_COMBO:
+        case DOLLAR_COMBO:
+        case PERCENT_COMBO:
+        case PLUS_COMBO:
+        case STAR_COMBO:
+        case AMPER_COMBO:
+            return 30;
 
         default:
-            return COMBO_TERM;  // Default 18ms for safe combos
+            return COMBO_TERM;
     }
 }
 
-// Layer-specific combo restrictions (like urob's ZMK layer filters)
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     uint8_t current_layer = get_highest_layer(layer_state);
 
-    // Disable all combos on gaming layer
     if (get_highest_layer(default_layer_state) == _GAMING) {
         return false;
     }
 
-    // Layer-specific combo restrictions to match urob's ZMK config
     switch (combo_index) {
-        // Bracket combos: available on both DEF/NUM and NAV (layer-specific output)
         case LBKT_LBRC_COMBO:
         case RBKT_RBRC_COMBO:
             return (current_layer == _DEF || current_layer == _NUM || current_layer == _NAV);
 
-        // Parenthesis/angle combos: handled in process_combo_event
         case LPRN_LT_COMBO:
         case RPRN_GT_COMBO:
             return true;
@@ -258,8 +245,6 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
     uint8_t current_layer = get_highest_layer(layer_state);
-
-    // Get both regular and oneshot mods to check for shift
     uint8_t saved_mods = get_mods();
     uint8_t oneshot_mods = get_oneshot_mods();
     bool shift_held = (saved_mods | oneshot_mods) & MOD_MASK_SHIFT;
@@ -268,23 +253,15 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case LPRN_LT_COMBO:
             if (pressed) {
                 if (current_layer == _NAV) {
-                    // NAV layer: always output <
                     tap_code16(KC_LT);
                 } else {
-                    // DEF/NUM layer: check for real shift (not homerow mod shift)
-                    // Clear all mods temporarily to prevent homerow mod interference
                     clear_mods();
                     clear_oneshot_mods();
-
                     if (shift_held) {
-                        // With shift: output <
                         tap_code16(KC_LT);
                     } else {
-                        // Without shift: output (
                         tap_code16(KC_LPRN);
                     }
-
-                    // Restore mods
                     set_mods(saved_mods);
                     set_oneshot_mods(oneshot_mods);
                 }
@@ -294,23 +271,15 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case RPRN_GT_COMBO:
             if (pressed) {
                 if (current_layer == _NAV) {
-                    // NAV layer: always output >
                     tap_code16(KC_GT);
                 } else {
-                    // DEF/NUM layer: check for real shift (not homerow mod shift)
-                    // Clear all mods temporarily to prevent homerow mod interference
                     clear_mods();
                     clear_oneshot_mods();
-
                     if (shift_held) {
-                        // With shift: output >
                         tap_code16(KC_GT);
                     } else {
-                        // Without shift: output )
                         tap_code16(KC_RPRN);
                     }
-
-                    // Restore mods
                     set_mods(saved_mods);
                     set_oneshot_mods(oneshot_mods);
                 }
@@ -320,10 +289,8 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case LBKT_LBRC_COMBO:
             if (pressed) {
                 if (current_layer == _NAV) {
-                    // NAV layer: output {
                     tap_code16(KC_LCBR);
                 } else {
-                    // DEF/NUM layer: output [
                     tap_code16(KC_LBRC);
                 }
             }
@@ -332,10 +299,8 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case RBKT_RBRC_COMBO:
             if (pressed) {
                 if (current_layer == _NAV) {
-                    // NAV layer: output }
                     tap_code16(KC_RCBR);
                 } else {
-                    // DEF/NUM layer: output ]
                     tap_code16(KC_RBRC);
                 }
             }

@@ -190,8 +190,12 @@ static bool handle_magic_shift_key(uint16_t keycode, keyrecord_t *record) {
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 static bool handle_leader_key(uint16_t keycode, keyrecord_t *record) {
-    if (keycode == LEADER) {
+    if (keycode == LEADER || keycode == LEADER_SFT) {
         if (record->event.pressed) {
+            // If LEADER_SFT, activate one-shot shift first
+            if (keycode == LEADER_SFT) {
+                add_oneshot_mods(MOD_BIT(KC_LSFT));
+            }
             leader_active = true;
             leader_timer = timer_read();
             leader_sequence_count = 0;

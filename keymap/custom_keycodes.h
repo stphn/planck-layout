@@ -42,6 +42,7 @@ enum planck_keycodes {
     NAV_DEL,      // urob's smart delete
     SMART_MOUSE,  // urob's smart mouse toggle
     LEADER,       // Leader key for umlauts and special chars
+    LEADER_SFT,   // Leader with sticky shift (urob's leader_sft)
     ALT_TAB_FWD,  // Alt+Tab swapper (forward)
     ALT_TAB_REV,  // Alt+Shift+Tab swapper (reverse)
     DSK_PREV,     // Previous desktop

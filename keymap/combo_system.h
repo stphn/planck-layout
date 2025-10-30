@@ -156,7 +156,7 @@ combo_t key_combos[] = {
     [ESC_COMBO] = COMBO(esc_combo, KC_ESC),
     [BSPC_COMBO] = COMBO(bspc_combo, KC_BSPC),
     [LEADER_COMBO] = COMBO(leader_combo, LEADER),
-    [LEADER_SFT_COMBO] = COMBO(leader_sft_combo, LSA(KC_NO)),
+    [LEADER_SFT_COMBO] = COMBO(leader_sft_combo, LEADER_SFT),
     [MOUSE_COMBO] = COMBO(mouse_combo, SMART_MOUSE),
 
     [TAB_COMBO] = COMBO(tab_combo, KC_TAB),

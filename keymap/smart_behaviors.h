@@ -62,8 +62,6 @@ static void handle_num_word_logic(uint16_t keycode, keyrecord_t *record) {
                           (keycode == NUM_6) ||                      // Homerow mod 6 (Ctrl/6)
                           (keycode == KC_BSPC) ||                    // Backspace
                           (keycode == KC_DEL) ||                     // Delete
-                          (keycode == NAV_BSPC) ||                   // NAV layer backspace
-                          (keycode == NAV_DEL) ||                    // NAV layer delete
                           (keycode == SMART_NUM) ||                  // The trigger key itself
                           (keycode == KC_NO) || (keycode == KC_TRNS);  // Layer passthroughs
 
@@ -708,11 +706,105 @@ static bool handle_smart_spc_key(uint16_t keycode, keyrecord_t *record) {
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║  SOCD CLEANING (SIMULTANEOUS OPPOSITE CARDINAL DIRECTIONS)                                        ║
+ * ║  Last Input Priority (LIP) for W/A/S/D - prevents impossible inputs in competitive games           ║
+ * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+static void handle_socd_cleaning(uint16_t keycode, keyrecord_t *record) {
+    // Only apply SOCD cleaning on gaming layer
+    if (get_highest_layer(default_layer_state) != _GAMING) {
+        return;
+    }
+
+    // Vertical axis (W/S)
+    if (keycode == KC_W) {
+        if (record->event.pressed) {
+            socd_w_pressed = true;
+            socd_last_vertical = KC_W;
+            // If S is held, release it (Last Input Priority)
+            if (socd_s_pressed) {
+                unregister_code(KC_S);
+            }
+            register_code(KC_W);
+        } else {
+            socd_w_pressed = false;
+            unregister_code(KC_W);
+            // If S was being held, re-register it
+            if (socd_s_pressed) {
+                register_code(KC_S);
+            }
+        }
+    } else if (keycode == KC_S) {
+        if (record->event.pressed) {
+            socd_s_pressed = true;
+            socd_last_vertical = KC_S;
+            // If W is held, release it (Last Input Priority)
+            if (socd_w_pressed) {
+                unregister_code(KC_W);
+            }
+            register_code(KC_S);
+        } else {
+            socd_s_pressed = false;
+            unregister_code(KC_S);
+            // If W was being held, re-register it
+            if (socd_w_pressed) {
+                register_code(KC_W);
+            }
+        }
+    }
+
+    // Horizontal axis (A/D)
+    if (keycode == KC_A) {
+        if (record->event.pressed) {
+            socd_a_pressed = true;
+            socd_last_horizontal = KC_A;
+            // If D is held, release it (Last Input Priority)
+            if (socd_d_pressed) {
+                unregister_code(KC_D);
+            }
+            register_code(KC_A);
+        } else {
+            socd_a_pressed = false;
+            unregister_code(KC_A);
+            // If D was being held, re-register it
+            if (socd_d_pressed) {
+                register_code(KC_D);
+            }
+        }
+    } else if (keycode == KC_D) {
+        if (record->event.pressed) {
+            socd_d_pressed = true;
+            socd_last_horizontal = KC_D;
+            // If A is held, release it (Last Input Priority)
+            if (socd_a_pressed) {
+                unregister_code(KC_A);
+            }
+            register_code(KC_D);
+        } else {
+            socd_d_pressed = false;
+            unregister_code(KC_D);
+            // If A was being held, re-register it
+            if (socd_a_pressed) {
+                register_code(KC_A);
+            }
+        }
+    }
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  MAIN SMART BEHAVIOR PROCESSOR                                                                     ║
  * ║  Central dispatch function for all intelligent behaviors                                           ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
 bool process_smart_behaviors(uint16_t keycode, keyrecord_t *record) {
+    // Handle SOCD cleaning for gaming layer (must be first to intercept W/A/S/D)
+    if (get_highest_layer(default_layer_state) == _GAMING) {
+        if (keycode == KC_W || keycode == KC_A || keycode == KC_S || keycode == KC_D) {
+            handle_socd_cleaning(keycode, record);
+            return false;  // SOCD handler manages the keycode completely
+        }
+    }
+
     // Handle Alt+Tab swapper first (affects global modifiers)
     if (!handle_alt_tab_swapper(keycode, record)) return false;
 

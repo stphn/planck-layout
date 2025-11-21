@@ -120,10 +120,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_NAV] = LAYOUT_planck_grid(
-    LALT(KC_F4)  , _______      , ALT_TAB_REV  , ALT_TAB_FWD  , _______ , _______ , _______ , KC_PGUP , NAV_BSPC, KC_UP   , NAV_DEL , _______,
-    OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , _______ , _______ , KC_PGDN , KC_LEFT , KC_DOWN , KC_RGHT , KC_ENT,
-    _______      , _______      , _______      , _______      , _______ , _______ , _______ , KC_INS  , KC_TAB  , _______ , _______ , _______,
-    _______      , _______      , _______      , _______      , _______ , _______ , KC_CNCL , _______ , _______ , _______ , _______ , _______
+    // NAV layer with urobs-style hold-tap arrows (tap=arrow, hold=Home/End/etc)
+    // Matches Corne behavior: tap for movement, hold for jumps
+    LALT(KC_F4)  , _______      , S(KC_TAB)    , ALT_TAB_FWD  , _______ , _______ , _______, KC_PGUP, U_NAV_BS, U_NAV_U , U_NAV_DEL, _______,
+    OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , _______ , _______, KC_PGDN, U_NAV_L , U_NAV_D , U_NAV_R  , KC_ENT,
+    _______      , _______      , _______      , _______      , _______ , _______ , _______, KC_INS , KC_TAB  , _______,  _______  , _______,
+    _______      , _______      , _______      , _______      , _______ , _______ , KC_CNCL, _______, _______,  _______,  _______  , _______
 ),
 
 [_MOUSE] = LAYOUT_planck_grid(
@@ -152,6 +154,25 @@ float mario_game_over[][2] = SONG(MARIO_GAMEOVER);
 float midi_layer_on[][2]  = SONG(MIDI_ON_SOUND);
 float midi_layer_off[][2] = SONG(MIDI_OFF_SOUND);
 #endif
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════════
+ * UROB-STYLE NAVIGATION HOLD-TAPS - State and Forward Declaration
+ * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+typedef struct {
+    uint16_t keycode;
+    uint16_t timer;
+    uint16_t last_release_timer;
+    bool is_pressed;
+    bool is_hold_activated;
+    bool other_key_pressed;
+    bool is_streak;  // Are we in rapid-tap mode?
+} nav_holdtap_state_t;
+
+static nav_holdtap_state_t nav_state = {0};
+bool process_record_user_nav_holdtap(uint16_t keycode, keyrecord_t *record);
+
+#define STREAK_TIMEOUT 150  // If you press again within 150ms, it's a streak
 
 // Keep animations dynamic: only tri-layer logic here.
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -185,6 +206,14 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Track if other keys are pressed while nav hold-tap is active
+    if (nav_state.is_pressed && record->event.pressed) {
+        // Another key was pressed while nav key is held
+        if (keycode != nav_state.keycode) {
+            nav_state.other_key_pressed = true;
+        }
+    }
+
     // Handle smart behaviors first
     if (!process_smart_behaviors(keycode, record)) {
         return false;
@@ -359,30 +388,107 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             else                        unregister_code(KC_RSFT);
             return false;
 
-        case NAV_BSPC:
-            if (record->event.pressed) {
-                register_code(KC_BSPC);
-            } else {
-                unregister_code(KC_BSPC);
-            }
-            return false;
-
-        case NAV_DEL:
-            if (record->event.pressed) {
-                register_code(KC_DEL);
-            } else {
-                unregister_code(KC_DEL);
-            }
-            return false;
-
         case PSWD:
             if (record->event.pressed) {
                 SEND_STRING(PASSWORD_STRING);
             }
             return false;
+
+        // Proper urob-style navigation hold-taps
+        case U_NAV_U:
+        case U_NAV_D:
+        case U_NAV_L:
+        case U_NAV_R:
+        case U_NAV_BS:
+        case U_NAV_DEL:
+            return process_record_user_nav_holdtap(keycode, record);
     }
 
     return true;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════════
+ * UROB-STYLE NAVIGATION HOLD-TAPS - Implementation
+ * Proper tap/hold implementation matching Corne behavior
+ * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+bool process_record_user_nav_holdtap(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        // Key pressed
+
+        // Check if this is a streak (rapid re-press of same key)
+        if (keycode == nav_state.keycode &&
+            timer_elapsed(nav_state.last_release_timer) < STREAK_TIMEOUT) {
+            // This is a streak! Enter repeating mode
+            nav_state.is_streak = true;
+        } else {
+            // New press or different key - reset streak
+            nav_state.is_streak = false;
+        }
+
+        nav_state.keycode = keycode;
+        nav_state.timer = timer_read();
+        nav_state.is_pressed = true;
+        nav_state.is_hold_activated = false;
+        nav_state.other_key_pressed = false;
+
+        // Only send the key immediately if we're in streak mode
+        if (nav_state.is_streak) {
+            switch (keycode) {
+                case U_NAV_U:   register_code(KC_UP);   break;
+                case U_NAV_D:   register_code(KC_DOWN); break;
+                case U_NAV_L:   register_code(KC_LEFT); break;
+                case U_NAV_R:   register_code(KC_RGHT); break;
+                case U_NAV_BS:  register_code(KC_BSPC); break;
+                case U_NAV_DEL: register_code(KC_DEL);  break;
+            }
+        }
+        // Otherwise, DON'T send anything - wait to see if it's tap or hold
+
+    } else {
+        // Key released
+        uint16_t elapsed = timer_elapsed(nav_state.timer);
+
+        // Unregister if we were in streak mode
+        if (nav_state.is_streak) {
+            switch (keycode) {
+                case U_NAV_U:   unregister_code(KC_UP);   break;
+                case U_NAV_D:   unregister_code(KC_DOWN); break;
+                case U_NAV_L:   unregister_code(KC_LEFT); break;
+                case U_NAV_R:   unregister_code(KC_RGHT); break;
+                case U_NAV_BS:  unregister_code(KC_BSPC); break;
+                case U_NAV_DEL: unregister_code(KC_DEL);  break;
+            }
+            // In streak mode, NO hold action ever triggers
+        } else {
+            // Not in streak mode
+            if (elapsed < TAPPING_TERM || nav_state.other_key_pressed) {
+                // Was a tap - send the tap action now
+                switch (keycode) {
+                    case U_NAV_U:   tap_code(KC_UP);   break;
+                    case U_NAV_D:   tap_code(KC_DOWN); break;
+                    case U_NAV_L:   tap_code(KC_LEFT); break;
+                    case U_NAV_R:   tap_code(KC_RGHT); break;
+                    case U_NAV_BS:  tap_code(KC_BSPC); break;
+                    case U_NAV_DEL: tap_code(KC_DEL);  break;
+                }
+            } else {
+                // Was a hold - send the hold action
+                switch (keycode) {
+                    case U_NAV_U:   tap_code16(C(KC_HOME)); break;  // Ctrl+Home
+                    case U_NAV_D:   tap_code16(C(KC_END));  break;  // Ctrl+End
+                    case U_NAV_L:   tap_code(KC_HOME);      break;  // Home
+                    case U_NAV_R:   tap_code(KC_END);       break;  // End
+                    case U_NAV_BS:  tap_code16(C(KC_BSPC)); break;  // Ctrl+Backspace
+                    case U_NAV_DEL: tap_code16(C(KC_DEL));  break;  // Ctrl+Delete
+                }
+            }
+        }
+
+        nav_state.is_pressed = false;
+        nav_state.last_release_timer = timer_read();
+    }
+    return false;
 }
 
 /* ───────────────────────── Encoder fun (optional) ─────────────────────── */
@@ -423,4 +529,8 @@ bool dip_switch_update_user(uint8_t index, bool active) {
         }
     }
     return true;
+}
+
+void matrix_scan_user(void) {
+    // Matrix scan tasks (if needed in future)
 }

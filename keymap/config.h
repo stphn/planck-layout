@@ -16,24 +16,42 @@
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
  * BILATERAL HOMEROW MODS CONFIGURATION
  * Based on urob's timeless homerow mod concepts
+ *
+ * Strategy: Minimize false mod triggers through bilateral combinations (opposite hands)
+ * - Left hand mods: A=Gui, R=Alt, S=Shift, T=Ctrl
+ * - Right hand mods: N=Ctrl, E=Shift, I=Alt, O=Gui
+ *
+ * Key principle: When you press a mod on one hand, then a key on the OTHER hand,
+ * the mod activates immediately. Same-hand combinations require full timeout (280ms).
+ *
+ * Differences from urobs' ZMK config:
+ * - ZMK has "require-prior-idle-ms" (150ms) - QMK doesn't have direct equivalent
+ * - We use QUICK_TAP_TERM (150ms) + disabled RETRO_TAPPING as closest approximation
+ * - PERMISSIVE_HOLD + HOLD_ON_OTHER_KEY_PRESS enable bilateral behavior
  * ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 // Urob's timing approach - 280ms base, same as ZMK config
+// Large tapping term reduces timing sensitivity
 #define TAPPING_TERM 280
 
 // Enable per-key configuration
 #define TAPPING_TERM_PER_KEY
 
-// Aggressive hold behavior for bilateral combinations
+// Aggressive hold behavior for bilateral (opposite-hand) combinations
+// When you press a homerow mod on left hand, then a key on right hand,
+// the left hand key immediately becomes a hold (doesn't wait for timeout)
 #define PERMISSIVE_HOLD
 #define PERMISSIVE_HOLD_PER_KEY
 
 // Immediate hold when another key is pressed (crucial for bilateral mods)
+// Similar to urobs' positional hold-tap behavior
 #define HOLD_ON_OTHER_KEY_PRESS
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
-// Quick tap term matching urob's 175ms
-#define QUICK_TAP_TERM 175
+// Quick tap term - closest QMK equivalent to urobs' require-prior-idle-ms (150ms)
+// Prevents repeated taps of same key from triggering hold
+// Reduced from 175ms to 150ms to better match urobs' fast typing handling
+#define QUICK_TAP_TERM 150
 #define QUICK_TAP_TERM_PER_KEY
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════
@@ -52,7 +70,7 @@
 #define TAPPING_TOGGLE 2
 
 // Smart Combos - urob's symbol system (Colemak optimized) - using urob's fast timing
-#define COMBO_COUNT 30
+#define COMBO_COUNT 32  // 30 base combos + 2 NAV layer versions (BSPC_NAV, DEL_NAV)
 #define COMBO_TERM 18           // 18ms like urob's fast combos
 #define COMBO_MUST_HOLD_MODS    // Don't interfere with homerow mods
 #define COMBO_HOLD_TERM 150     // Hold time for combo holds
@@ -103,7 +121,8 @@
 
 // Enable advanced features that make bilateral homerow mods work
 // IGNORE_MOD_TAP_INTERRUPT is now default behavior in QMK and should not be defined
-#define RETRO_TAPPING            // Tap on release if no other key pressed
+// RETRO_TAPPING is DISABLED to match urobs' behavior and prevent accidental mod triggers
+// #define RETRO_TAPPING            // DISABLED: Can cause unexpected taps after holds
 
 // RGB Matrix integration for homerow mod feedback
 #ifdef RGB_MATRIX_ENABLE

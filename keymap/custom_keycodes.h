@@ -38,8 +38,6 @@ enum planck_keycodes {
     SMART_NUM,    // urob's smart num behavior
     MAGIC_SHIFT,  // urob's magic shift behavior
     SMART_SPC,    // urob's smart space behavior (lt_spc)
-    NAV_BSPC,     // urob's smart backspace
-    NAV_DEL,      // urob's smart delete
     SMART_MOUSE,  // urob's smart mouse toggle
     LEADER,       // Leader key for umlauts and special chars
     LEADER_SFT,   // Leader with sticky shift (urob's leader_sft)
@@ -50,6 +48,13 @@ enum planck_keycodes {
     PIN_WIN,      // Pin window across desktops
     PIN_APP,      // Pin application across desktops
     DSK_MGR,      // Desktop manager
+    // Proper urob-style navigation hold-taps (matching Corne exactly)
+    U_NAV_U,      // Tap: Up, Hold: Ctrl+Home (doc start)
+    U_NAV_D,      // Tap: Down, Hold: Ctrl+End (doc end)
+    U_NAV_L,      // Tap: Left, Hold: Home
+    U_NAV_R,      // Tap: Right, Hold: End
+    U_NAV_BS,     // Tap: Backspace, Hold: Ctrl+Backspace
+    U_NAV_DEL,    // Tap: Delete, Hold: Ctrl+Delete
 };
 
 /* ╔══════════════════════════════════════════════════════════╗

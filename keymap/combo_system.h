@@ -9,6 +9,7 @@
 
 #include QMK_KEYBOARD_H
 #include "bilateral_mods.h"
+#include "custom_keycodes.h"  // For U_NAV_* keycodes
 
 /* ╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  SMART COMBOS - UROB'S POSITIONAL SYSTEM                                                          ║
@@ -41,6 +42,10 @@ enum combo_events {
     RPRN_GT_COMBO,   // E+I = ) or > (RM2+RM3, shift-modified, like urob's rpar_gt)
     LBKT_LBRC_COMBO, // H+, = [ on DEF/NUM, { on NAV (layer-specific)
     RBKT_RBRC_COMBO, // ,+. = ] on DEF/NUM, } on NAV (layer-specific)
+
+    // NAV layer versions (same physical positions, different keycodes)
+    BSPC_COMBO_NAV,  // U_NAV_BS+U_NAV_U = Backspace (same as L+U on base layer)
+    DEL_COMBO_NAV,   // U_NAV_U+U_NAV_DEL = Delete (same as U+Y on base layer)
 
     // urob's vertical symbol combos (left hand)
     AT_COMBO,        // W+R = @ (urob's LT3+LM3)
@@ -83,6 +88,10 @@ extern const uint16_t PROGMEM lprn_lt_combo[];
 extern const uint16_t PROGMEM rprn_gt_combo[];
 extern const uint16_t PROGMEM lbkt_lbrc_combo[];
 extern const uint16_t PROGMEM rbkt_rbrc_combo[];
+
+// NAV layer versions
+extern const uint16_t PROGMEM bspc_combo_nav[];
+extern const uint16_t PROGMEM del_combo_nav[];
 
 // urob's vertical symbol combos (left hand)
 extern const uint16_t PROGMEM at_combo[];
@@ -132,6 +141,10 @@ const uint16_t PROGMEM rprn_gt_combo[] = {HRM_E, HRM_I, COMBO_END};
 const uint16_t PROGMEM lbkt_lbrc_combo[] = {KC_H, KC_COMM, COMBO_END};
 const uint16_t PROGMEM rbkt_rbrc_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 
+// NAV layer versions (same physical positions, U_NAV_* keycodes)
+const uint16_t PROGMEM bspc_combo_nav[] = {U_NAV_BS, U_NAV_U, COMBO_END};
+const uint16_t PROGMEM del_combo_nav[] = {U_NAV_U, U_NAV_DEL, COMBO_END};
+
 // urob's vertical symbol combos (left hand)
 const uint16_t PROGMEM at_combo[] = {KC_W, HRM_R, COMBO_END};
 const uint16_t PROGMEM hash_combo[] = {KC_F, HRM_S, COMBO_END};
@@ -170,6 +183,10 @@ combo_t key_combos[] = {
     [LBKT_LBRC_COMBO] = COMBO_ACTION(lbkt_lbrc_combo),
     [RBKT_RBRC_COMBO] = COMBO_ACTION(rbkt_rbrc_combo),
 
+    // NAV layer versions (trigger combos even when hold-tap keys are in those positions)
+    [BSPC_COMBO_NAV] = COMBO(bspc_combo_nav, KC_BSPC),
+    [DEL_COMBO_NAV] = COMBO(del_combo_nav, KC_DEL),
+
     [AT_COMBO] = COMBO(at_combo, KC_AT),
     [HASH_COMBO] = COMBO(hash_combo, KC_HASH),
     [DOLLAR_COMBO] = COMBO(dollar_combo, KC_DLR),
@@ -198,6 +215,7 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     switch (index) {
         case ESC_COMBO:
         case BSPC_COMBO:
+        case BSPC_COMBO_NAV:  // NAV layer version needs same fast timing
         case MOUSE_COMBO:
             return 15;
 
@@ -213,7 +231,7 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
             return 30;
 
         default:
-            return COMBO_TERM;
+            return COMBO_TERM;  // DEL_COMBO_NAV uses default 18ms
     }
 }
 
@@ -225,6 +243,16 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
     }
 
     switch (combo_index) {
+        // Base layer combos - don't trigger on NAV layer (NAV versions will handle it)
+        case BSPC_COMBO:
+        case DEL_COMBO:
+            return current_layer != _NAV;
+
+        // NAV layer combos - only trigger on NAV layer
+        case BSPC_COMBO_NAV:
+        case DEL_COMBO_NAV:
+            return current_layer == _NAV;
+
         case LBKT_LBRC_COMBO:
         case RBKT_RBRC_COMBO:
             return (current_layer == _DEF || current_layer == _NUM || current_layer == _NAV);

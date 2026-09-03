@@ -7,7 +7,7 @@ layout:
 
 layers:
   DEF:
-    - [Q, W, F, P, B, "COPY\nCUT", BSPC, J, L, U, Y, ";"]
+    - [Q, W, F, P, B, "PSCR\n⇧PSCR", BSPC, J, L, U, Y, ";"]
     - ["A\nGUI", "R\nALT", "S\nSFT", "T\nCTL", G, "UNDO\nCmd+Z", "REDO\nCmd+⇧Z", M, "N\nCTL", "E\nSFT", "I\nALT", "O\nGUI"]
     - [Z, X, C, D, V, "SAVE\nCmd+S", "FIND\nCmd+F", K, H, ",", ".", "?"]
     - [PSWD, HYPR, "", GUI, "SPC\nNAV", "ENT\nFN", NUM, SHFT, MOUS, "", MIDI, GAME]
@@ -26,21 +26,21 @@ layers:
 
   FN:
     - ["F12", "F7", "F8", "F9", "", "", "", "", PREV, "VOL+", NEXT, ""]
-    - ["F11\nGUI", "F4\nALT", "F5\nSFT", "F6\nCTL", "", "", "", "", "DSK◄", "VOL-\nSFT", "DSK►", ""]
-    - [F10, F1, F2, F3, "", "", "", "", PIN, PIN, DSKM, ""]
+    - ["F10\nGUI", "F4\nALT", "F5\nSFT", "F6\nCTL", "", "", "", "", "DSK◄", "VOL-\nSFT", "DSK►", ""]
+    - [F11, F1, F2, F3, "", "", "", "", PIN, PIN, DSKM, ""]
     - ["", "", "", "", "", "", MUTE, PLAY, "", "", "", ""]
 
   SYS:
-    - [AU_ON, AU_OFF, "", "", "", RGB, "", "", NEXT, "HUE+", "SAT+", "VAL+"]
-    - [MU_ON, MU_OFF, "", "", "", BOOT, BOOT, "", PREV, "HUE-", "SAT-", "VAL-"]
-    - [MI_ON, MI_OFF, "", "", "", ECLR, ECLR, "", "", "", "", ""]
-    - [AU_PR, AU_NX, "", "", "", DEF, GAME, MIDI, "", "", "", DBUG]
+    - [AU_ON, AU_OFF, "", DEF, "", RGB, "", "", NEXT, "HUE+", "SAT+", "VAL+"]
+    - [MU_ON, MU_OFF, "", GAME, "", BOOT, BOOT, "", PREV, "HUE-", "SAT-", "VAL-"]
+    - [MI_ON, MI_OFF, "", MIDI, "", ECLR, ECLR, "", "", "", "", ""]
+    - [AU_PR, AU_NX, "", "", "", "", "", "", "", "", "", DBUG]
 
   NAV:
     - ["ALT\nF4", "", "TAB◄", "TAB►", "", "", "", PGUP, BSPC, "↑", DEL, ""]
     - [oGUI, oALT, oSFT, oCTL, "", "", "", PGDN, "←", "↓", "→", ENT]
-    - ["", "", "", "", "", "", "", INS, TAB, "", "", ""]
-    - ["", "", "", "", "", "", ESC, "", "", "", "", ""]
+    - ["", "", "", "", "", "", "", INS, "", "", "", ""]
+    - ["", "", "", "", "", "", CNCL, "", "", "", "", ""]
 
   MOUSE:
     - ["", "", "", "", "", "", "", "", PGUP, "M↑", PGDN, ""]

@@ -87,8 +87,9 @@ python3 draw_layout.py _DEF _NUM
 
 - `config.yaml` - keymap-drawer configuration
 - `generate.sh` - Script to generate diagrams
-- `keymap.yaml` - Manual keymap definition (committed)
-- `*.svg` - Generated SVG diagrams (git-ignored)
+- `keymap.yaml` - Manual keymap definition (committed) - kept in sync by hand;
+  `generate.sh` draws directly from this file rather than parsing keymap.c
+- `*.svg` - Generated SVG diagrams (**committed** - see `draw/.gitignore`)
 - `*.png` - Generated PNG diagrams (git-ignored)
 
 ## Tips

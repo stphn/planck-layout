@@ -10,12 +10,13 @@ parse_config:
   raw_binding_map:
     # Smart behaviors (urob-inspired)
     SMART_SPC: { t: "SPC", h: "NAV", type: "hold" }
+    SMART_ENT: { t: "ENT", h: "FN", type: "hold" }
     SMART_NUM: { t: "NUM", type: "hold" }
     MAGIC_SHIFT: { t: "SHFT", type: "magic" }
     SMART_MOUSE: { t: "MOUS", type: "toggle" }
 
     # Tap-dance
-    COPY_CUT: { t: "COPY", h: "CUT", type: "tap_dance" }
+    TD_PRINT: { t: "PSCR", h: "⇧PSCR", type: "tap_dance" }
 
     # Custom shortcuts
     NAV_BSPC: { t: "BSPC", type: "nav" }

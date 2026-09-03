@@ -34,6 +34,16 @@
 #define NUM_5 LSFT_T(KC_5)
 #define NUM_6 LCTL_T(KC_6)
 
+// Number layer plain digits (7, 8, 9, 1, 2, 3) - off the home row, no mod-tap.
+// Aliased under the same NUM_ prefix purely so the _NUM keymap array in
+// keymap.c reads uniformly as NUM_0..NUM_9; these resolve to plain keycodes.
+#define NUM_1 KC_1
+#define NUM_2 KC_2
+#define NUM_3 KC_3
+#define NUM_7 KC_7
+#define NUM_8 KC_8
+#define NUM_9 KC_9
+
 /* ╔═════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  BILATERAL HOMEROW MODS CONFIGURATION FUNCTIONS                                                     ║
  * ╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
@@ -79,6 +89,18 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
         case NUM_4:
         case NUM_5:
         case NUM_6:
+        // FN layer mod-taps (F4/F5/F6/F10) and volume-down shift-tap -
+        // same fast-resolve treatment as the homerow mods above, so
+        // holding one as a modifier and tapping another key registers
+        // immediately instead of waiting out the full TAPPING_TERM.
+        case LALT_T(KC_F4):
+        case LSFT_T(KC_F5):
+        case LCTL_T(KC_F6):
+        case LGUI_T(KC_F10):
+        case RSFT_T(KC_VOLD):
+        // Gaming layer's system-layer access - same rationale, and
+        // consistent with that layer's "zero input lag" design goal.
+        case GAME_ESC:
             return true;
         default:
             return false;

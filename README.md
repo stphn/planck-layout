@@ -170,7 +170,7 @@ Based on urob's [timeless homerow mods](https://github.com/urob/zmk-config#timel
 **Applied to:**
 - Base layer: A(GUI), R(ALT), S(SFT), T(CTL) | N(CTL), E(SFT), I(ALT), O(GUI)
 - Number layer: 0(GUI), 4(ALT), 5(SFT), 6(CTL)
-- Function layer: F11(GUI), F4(ALT), F5(SFT), F6(CTL)
+- Function layer: F10(GUI), F4(ALT), F5(SFT), F6(CTL)
 
 ---
 

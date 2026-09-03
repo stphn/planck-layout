@@ -88,13 +88,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    PRINT,          KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_QUOT,
     HRM_A, HRM_R,  HRM_S,   HRM_T,  KC_G,    LGUI(KC_Z),     SGUI(KC_Z),        KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
     KC_Z,  KC_X,   KC_C,    KC_D,   KC_V,    LGUI(KC_S),     LGUI(KC_F),        KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
-    PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, LT(_FN, KC_ENT), SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
+    PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, SMART_ENT, SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
 ),
 
 [_NUM] = LAYOUT_planck_grid(
-    _______ , KC_7    , KC_8    , KC_9    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    _______ , NUM_7   , NUM_8   , NUM_9   , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     NUM_0   , NUM_4   , NUM_5   , NUM_6   , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
-    _______ , KC_1    , KC_2    , KC_3    , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
+    _______ , NUM_1   , NUM_2   , NUM_3   , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______,
     _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______
 ),
 
@@ -107,8 +107,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FN] = LAYOUT_planck_grid(
     KC_F12        , KC_F7        , KC_F8        , KC_F9        , _______ , _______ , _______ , _______ , KC_MPRV , KC_VOLU        , KC_MNXT , _______,
-    LGUI_T(KC_F11), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______,
-    KC_F10        , KC_F1        , KC_F2        , KC_F3        , _______ , _______ , _______ , _______ , PIN_APP , PIN_WIN        , DSK_MGR , _______,
+    LGUI_T(KC_F10), LALT_T(KC_F4), LSFT_T(KC_F5), LCTL_T(KC_F6), _______ , _______ , _______ , _______ , DSK_PREV, RSFT_T(KC_VOLD), DSK_NEXT, _______,
+    KC_F11        , KC_F1        , KC_F2        , KC_F3        , _______ , _______ , _______ , _______ , PIN_APP , PIN_WIN        , DSK_MGR , _______,
     _______       , _______      , _______      , _______      , _______ , _______ , KC_MUTE , KC_MPLY , _______ , _______        , _______ , _______
 ),
 
@@ -124,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Matches Corne behavior: tap for movement, hold for jumps
     LALT(KC_F4)  , _______      , S(KC_TAB)    , ALT_TAB_FWD  , _______ , _______ , _______, KC_PGUP, U_NAV_BS, U_NAV_U , U_NAV_DEL, _______,
     OSM(MOD_LGUI), OSM(MOD_LALT), OSM(MOD_LSFT), OSM(MOD_LCTL), _______ , _______ , _______, KC_PGDN, U_NAV_L , U_NAV_D , U_NAV_R  , KC_ENT,
-    _______      , _______      , _______      , _______      , _______ , _______ , _______, KC_INS , KC_TAB  , _______,  _______  , _______,
+    _______      , _______      , _______      , _______      , _______ , _______ , _______, KC_INS , _______ , _______,  _______  , _______,
     _______      , _______      , _______      , _______      , _______ , _______ , KC_CNCL, _______, _______,  _______,  _______  , _______
 ),
 
@@ -176,7 +176,13 @@ bool process_record_user_nav_holdtap(uint16_t keycode, keyrecord_t *record);
 
 // Keep animations dynamic: only tri-layer logic here.
 layer_state_t layer_state_set_user(layer_state_t state) {
-    state = update_tri_layer_state(state, _FN, _NUM, _SYS);
+    // FN+NUM tri-layer only applies outside Gaming: _FN isn't reachable from
+    // the Gaming layer at all, so update_tri_layer_state would otherwise
+    // unconditionally clear _SYS's bit every time - including when it was
+    // set directly by Gaming's own MO(_SYS) key, making that key a no-op.
+    if (get_highest_layer(default_layer_state) != _GAMING) {
+        state = update_tri_layer_state(state, _FN, _NUM, _SYS);
+    }
 
     static bool midi_was_on = false;
     bool midi_is_on = layer_state_cmp(state, _MIDI);
@@ -240,17 +246,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // Handle enhanced MIDI keycodes
     if (keycode >= MIDI_OCT_DN2 && keycode <= MIDI_CONFIG) {
         if (!record->event.pressed) return false;  // Only process on press
-        
+
         switch (keycode) {
             // Octave controls
             case MIDI_OCT_DN2: midi_update_octave(-2); return false;
             case MIDI_OCT_DN1: midi_update_octave(-1); return false;
             case MIDI_OCT_UP1: midi_update_octave(1); return false;
             case MIDI_OCT_UP2: midi_update_octave(2); return false;
-            case MIDI_OCT_RESET: 
-                midi_state.current_octave = MIDI_OCT_DEFAULT; 
+            case MIDI_OCT_RESET:
+                midi_state.current_octave = MIDI_OCT_DEFAULT;
                 return false;
-                
+
             // Velocity controls
             case MIDI_VEL_DN: midi_update_velocity(-1); return false;
             case MIDI_VEL_UP: midi_update_velocity(1); return false;
@@ -261,18 +267,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case MIDI_VEL_5: midi_set_velocity_level(MIDI_VEL_MF); return false;
             case MIDI_VEL_6: midi_set_velocity_level(MIDI_VEL_F); return false;
             case MIDI_VEL_7: midi_set_velocity_level(MIDI_VEL_FF); return false;
-            
+
             // Transpose controls
-            case MIDI_TRNS_DN: 
+            case MIDI_TRNS_DN:
                 if (midi_state.transpose_offset > -12) midi_state.transpose_offset--;
                 return false;
-            case MIDI_TRNS_UP: 
+            case MIDI_TRNS_UP:
                 if (midi_state.transpose_offset < 12) midi_state.transpose_offset++;
                 return false;
-            case MIDI_TRNS_RST: 
+            case MIDI_TRNS_RST:
                 midi_state.transpose_offset = 0;
                 return false;
-                
+
             // Instrument controls
             case MIDI_INST_PREV:
                 if (midi_state.instrument_id > 0) {
@@ -284,7 +290,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     midi_send_instrument_change(midi_state.instrument_id + 1);
                 }
                 return false;
-                
+
             // Channel controls
             case MIDI_CHAN_PREV:
                 if (midi_state.channel_focus > 0) {
@@ -296,26 +302,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     midi_send_channel_focus(midi_state.channel_focus + 1);
                 }
                 return false;
-                
+
             // Transport controls
             case MIDI_REC_TOGGLE: midi_transport_record_toggle(); return false;
             case MIDI_PLAY_PAUSE: midi_transport_play_pause(); return false;
             case MIDI_TRANSPORT_STOP: midi_transport_stop(); return false;
-            
+
             // Pattern controls
-            case MIDI_PAT_PREV: 
+            case MIDI_PAT_PREV:
                 #ifdef MIDI_ENABLE
                     midi_send_cc(&midi_device, midi_config.channel, 0x79, 0);
                 #endif
                 return false;
-            case MIDI_PAT_NEXT: 
+            case MIDI_PAT_NEXT:
                 #ifdef MIDI_ENABLE
                     midi_send_cc(&midi_device, midi_config.channel, 0x79, 1);
                 #endif
                 return false;
             case MIDI_NOTE_OFF: midi_pattern_insert_note_off(); return false;
             case MIDI_NOTE_REL: midi_pattern_insert_note_release(); return false;
-            
+
             // Effect controls
             case MIDI_EFF_VOL: midi_send_effect(0, midi_state.effect_param); return false;
             case MIDI_EFF_PAN: midi_send_effect(1, midi_state.effect_param); return false;
@@ -323,26 +329,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case MIDI_EFF_ARPEG: midi_send_effect(3, midi_state.effect_param); return false;
             case MIDI_EFF_VIBR: midi_send_effect(4, midi_state.effect_param); return false;
             case MIDI_EFF_TREM: midi_send_effect(5, midi_state.effect_param); return false;
-            
+
             // Mode toggles
-            case MIDI_CHORD_TOG: 
+            case MIDI_CHORD_TOG:
                 midi_state.chord_mode = !midi_state.chord_mode;
                 return false;
-            case MIDI_SUST_TOG: 
+            case MIDI_SUST_TOG:
                 midi_state.sustain_active = !midi_state.sustain_active;
                 #ifdef MIDI_ENABLE
-                    midi_send_cc(&midi_device, midi_config.channel, 0x40, 
+                    midi_send_cc(&midi_device, midi_config.channel, 0x40,
                                 midi_state.sustain_active ? 127 : 0);
                 #endif
                 #ifdef CONSOLE_ENABLE
                     uprintf("MIDI Sustain: %s\n", midi_state.sustain_active ? "ON" : "OFF");
                 #endif
                 return false;
-                
+
             // Utility
             case MIDI_PANIC: midi_panic_all_notes_off(); return false;
             case MIDI_LEARN: midi_enter_learn_mode(); return false;
-            case MIDI_CONFIG: 
+            case MIDI_CONFIG:
                 #ifdef CONSOLE_ENABLE
                     uprintf("MIDI Config requested\n");
                 #endif
@@ -351,16 +357,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     switch (keycode) {
-        case LT(0, KC_ENT):
-            if (record->tap.count && record->event.pressed) {
-                tap_code(KC_ENT);  // Tap: Enter
-            } else if (record->event.pressed) {
-                register_code(KC_LALT);  // Hold: Alt
-            } else if (!record->tap.count) {
-                unregister_code(KC_LALT);  // Release hold
-            }
-            return false;
-
         case DEF:
             if (record->event.pressed) set_single_persistent_default_layer(_DEF);
             return false;

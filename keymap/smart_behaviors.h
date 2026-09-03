@@ -30,6 +30,7 @@ uint8_t leader_sequence_count = 0;
 bool smart_mouse_active = false;
 uint16_t smart_mouse_tap_timer = 0;
 uint16_t smart_spc_timer = 0;
+uint16_t smart_ent_timer = 0;
 bool alt_tab_active = false;
 
 // SOCD cleaning variables for gaming layer
@@ -706,6 +707,33 @@ static bool handle_smart_spc_key(uint16_t keycode, keyrecord_t *record) {
 }
 
 /* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║  SMART_ENT KEY BEHAVIOR (LT_ENT)                                                                  ║
+ * ║  Tap = Enter, Hold = FN layer                                                                      ║
+ * ║  Custom keycode instead of QMK's native LT() so the layer activates instantly on press,            ║
+ * ║  bypassing tap-hold resolution (which isn't fast here - see get_permissive_hold in                 ║
+ * ║  bilateral_mods.h, which doesn't cover this key, and get_hold_on_other_key_press,                  ║
+ * ║  which isn't implemented at all).                                                                  ║
+ * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+static bool handle_smart_ent_key(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == SMART_ENT) {
+        if (record->event.pressed) {
+            smart_ent_timer = timer_read();
+            layer_on(_FN);  // Activate FN layer immediately on hold
+        } else {
+            layer_off(_FN);  // Deactivate FN layer on release
+
+            // Check if it was a tap (not a hold)
+            if (timer_elapsed(smart_ent_timer) < TAPPING_TERM) {
+                tap_code(KC_ENT);
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
  * ║  SOCD CLEANING (SIMULTANEOUS OPPOSITE CARDINAL DIRECTIONS)                                        ║
  * ║  Last Input Priority (LIP) for W/A/S/D - prevents impossible inputs in competitive games           ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
@@ -813,6 +841,9 @@ bool process_smart_behaviors(uint16_t keycode, keyrecord_t *record) {
 
     // Handle smart space key (lt_spc behavior)
     if (!handle_smart_spc_key(keycode, record)) return false;
+
+    // Handle smart enter key (lt_ent behavior)
+    if (!handle_smart_ent_key(keycode, record)) return false;
 
     // Handle num-word logic first (affects layer state)
     handle_num_word_logic(keycode, record);

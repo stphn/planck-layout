@@ -38,6 +38,7 @@ enum planck_keycodes {
     SMART_NUM,    // urob's smart num behavior
     MAGIC_SHIFT,  // urob's magic shift behavior
     SMART_SPC,    // urob's smart space behavior (lt_spc)
+    SMART_ENT,    // smart enter behavior (lt_ent) - tap: Enter, hold: FN layer
     SMART_MOUSE,  // urob's smart mouse toggle
     LEADER,       // Leader key for umlauts and special chars
     LEADER_SFT,   // Leader with sticky shift (urob's leader_sft)

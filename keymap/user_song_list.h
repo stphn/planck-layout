@@ -20,9 +20,11 @@
 
 #include "musical_notes.h"
 
-#if __has_include("user_song_list.h")
-#    include "user_song_list.h"
-#endif // if file exists
+// NOTE: this file previously self-included via `#if __has_include("user_song_list.h")`,
+// copied verbatim from QMK's quantum/audio/song_list.h template (where that pattern lets
+// a *keymap-level* file of the same name override the built-in one). Since this already
+// IS that keymap-level file, the block was a no-op (harmless only because of #pragma once
+// above) - removed.
 
 #define NO_SOUND
 

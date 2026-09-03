@@ -48,28 +48,11 @@
  * ║  BILATERAL HOMEROW MODS CONFIGURATION FUNCTIONS                                                     ║
  * ╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 
-// Per-key tapping term - urob's approach uses consistent 280ms
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        // Homerow mods - base layer
-        case HRM_A:
-        case HRM_R:
-        case HRM_S:
-        case HRM_T:
-        case HRM_N:
-        case HRM_E:
-        case HRM_I:
-        case HRM_O:
-        // Number layer homerow mods
-        case NUM_0:
-        case NUM_4:
-        case NUM_5:
-        case NUM_6:
-            return TAPPING_TERM;  // Same 280ms as urob
-        default:
-            return TAPPING_TERM;
-    }
-}
+// No custom get_tapping_term() here: every key on this board uses the same
+// 280ms TAPPING_TERM (urob's approach), so there's nothing for a per-key
+// override to differentiate. TAPPING_TERM_PER_KEY stays defined in config.h
+// for future use, but QMK's own weak default (plain TAPPING_TERM) already
+// does exactly what a uniform override would - no need to duplicate it here.
 
 // Bilateral combinations - only apply permissive hold to opposite hand combinations
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {

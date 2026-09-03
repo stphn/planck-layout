@@ -71,8 +71,6 @@ extern midi_state_t midi_state;
 // Pattern editing
 #define MIDI_PAT_PREV   (SAFE_RANGE + 0x140)  // Previous pattern
 #define MIDI_PAT_NEXT   (SAFE_RANGE + 0x141)  // Next pattern
-#define MIDI_ROW_PREV   (SAFE_RANGE + 0x142)  // Previous row
-#define MIDI_ROW_NEXT   (SAFE_RANGE + 0x143)  // Next row
 #define MIDI_NOTE_OFF   (SAFE_RANGE + 0x144)  // Insert note off
 #define MIDI_NOTE_REL   (SAFE_RANGE + 0x145)  // Insert note release
 
@@ -87,7 +85,6 @@ extern midi_state_t midi_state;
 // Mode toggles
 #define MIDI_CHORD_TOG  (SAFE_RANGE + 0x160)  // Toggle chord mode
 #define MIDI_SUST_TOG   (SAFE_RANGE + 0x161)  // Toggle sustain
-#define MIDI_MONO_TOG   (SAFE_RANGE + 0x162)  // Toggle mono mode
 
 // Utility
 #define MIDI_PANIC      (SAFE_RANGE + 0x170)  // All notes off + reset

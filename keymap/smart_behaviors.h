@@ -571,7 +571,7 @@ static bool handle_smart_mouse_key(uint16_t keycode, keyrecord_t *record) {
                            (keycode == KC_PGUP || keycode == KC_PGDN) ||
                            (keycode == KC_LGUI || keycode == KC_LALT ||
                             keycode == KC_LSFT || keycode == KC_LCTL ||
-                            keycode == SMART_MOUSE || keycode == MOUSE);
+                            keycode == SMART_MOUSE);
 
         if (!is_mouse_key) {
             smart_mouse_active = false;

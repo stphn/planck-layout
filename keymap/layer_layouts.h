@@ -11,8 +11,8 @@
  * ║  COLEMAK DH with BILATERAL HOMEROW MODS (EXPERIMENTAL)                         ║
  * ╠════════════════════════════════════════════════════════════════════════════════╣
  * ║  Key Innovation: Homerow mods use bilateral combinations (opposite hands)      ║
- * ║  Left hand:  A=Cmd  R=Alt  S=Ctrl  T=Shift                                     ║
- * ║  Right hand: N=Shift E=Ctrl I=Alt   O=Cmd                                      ║
+ * ║  Left hand:  A=Cmd  R=Alt  S=Shift  T=Ctrl                                     ║
+ * ║  Right hand: N=Ctrl E=Shift I=Alt   O=Cmd                                      ║
  * ║  This eliminates timing issues - when you press A+N it triggers immediately    ║
  * ╚════════════════════════════════════════════════════════════════════════════════╝
  *
@@ -21,7 +21,7 @@
  * ╞═════╤═════╤═════╤═════╤═════════╤════════╦══════╤══════╤═════╤═════╤═════╤═════╡
  * │ Tab │  Q  │  W  │  F  │    P    │  B     ║   J  │  L   │  U  │  Y  │  ;: │Bksp │
  * ╞═════╪═════╪═════╪═════╪═════════╪════════╬══════╪══════╪═════╪═════╪═════╪═════╡
- * │ Esc │A/Cmd│R/Alt│S/Ctl│  T/Sft  │  G     ║   M  │N/Sft │E/Ctl│I/Alt│O/Cmd│ '"  │
+ * │ Esc │A/Cmd│R/Alt│S/Sft│  T/Ctl  │  G     ║   M  │N/Ctl │E/Sft│I/Alt│O/Cmd│ '"  │
  * ╞═════╪═════╪═════╪═════╪═════════╪════════╬══════╪══════╪═════╪═════╪═════╪═════╡
  * │Shift│  Z  │  X  │  C  │    D    │  V     ║   K  │  H   │ ,<  │ .>  │ ?/  │Shift│
  * ╞═════╪═════╪═════╪═════╪═════════╪════════╬══════╪══════╪═════╪═════╪═════╪═════╡

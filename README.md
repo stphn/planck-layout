@@ -177,9 +177,8 @@ Based on urob's [timeless homerow mods](https://github.com/urob/zmk-config#timel
 ## 🎨 Smart Behaviors
 
 ### SMART_NUM (urob's smart-num)
-- **Tap:** Activate NUM layer momentarily
-- **Hold:** Lock NUM layer
-- **Tap again:** Release layer
+- **Tap:** Activate "Numword" — NUM layer stays active until you press a non-number key (anything besides 0-9, backspace, or delete), which auto-releases it
+- **Hold:** Momentary NUM layer — active only while held, releases as soon as you let go
 
 ### MAGIC_SHIFT (urob's magic-shift)
 - **Tap:** Sticky shift (one-shot)
@@ -240,12 +239,14 @@ Middle column productivity shortcuts use **Cmd** instead of Ctrl:
 
 | Key | Action | Shortcut |
 |-----|--------|----------|
-| Row 1 Left | Copy/Cut (tap-dance) | Cmd+C / Cmd+X |
+| Row 1 Left | Print Screen (tap-dance) | PSCR / Shift+PSCR |
 | Row 1 Right | Backspace/Delete | BSPC / Shift→DEL |
 | Row 2 Left | Undo | Cmd+Z |
 | Row 2 Right | Redo | Cmd+Shift+Z |
 | Row 3 Left | Save | Cmd+S |
 | Row 3 Right | Find | Cmd+F |
+
+Copy/Cut/Paste aren't on the middle column at all — they're bottom-row combos: `X+D`=Cut, `X+C`=Copy, `C+D`=Paste (see [Combos](#-combos)).
 
 ---
 

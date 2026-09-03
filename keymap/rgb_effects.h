@@ -59,17 +59,20 @@ static inline void set_group_hsv(const uint8_t *grp, uint8_t cnt, uint8_t h, uin
  * ║  Visual feedback for active layers and modes                                                       ║
  * ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝ */
 bool rgb_matrix_indicators_user(void) {
+    // NOTE: the bool this function returns isn't actually consumed anywhere in this
+    // build - rgb_matrix_indicators() (quantum/rgb_matrix/rgb_matrix.c) is void and
+    // discards it. It only exists to satisfy the expected signature; `return false`
+    // below has no behavioral effect one way or the other.
+
     // Gaming layer visual feedback - subtle red corner indicators only
     if (get_highest_layer(default_layer_state) == _GAMING) {
-        // Red indicators in corners only, allowing RGB effects to continue
         set_group_color(LED_LEFT, ARRAY_SIZE(LED_LEFT), 255, 0, 0);   // Left corners
         set_group_color(LED_RIGHT, ARRAY_SIZE(LED_RIGHT), 255, 0, 0); // Right corners
-        return false; // allow RGB effects to continue
+        return false;
     }
 
-    // Layer-specific lighting disabled as requested
-    // RGB matrix effects (RM_NEXT, etc.) still work
-    return false; // keep animations
+    // No other layer-specific lighting - RGB matrix effects (RM_NEXT, etc.) run untouched
+    return false;
 }
 
 // Built-in RGB matrix effects are enabled and will be accessible via RM_NEXT

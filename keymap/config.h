@@ -76,6 +76,9 @@
 #define COMBO_HOLD_TERM 150     // Hold time for combo holds
 #define COMBO_STRICT_TIMER      // More precise timing - start timer on first key
 #define COMBO_TERM_PER_COMBO    // Allow per-combo timing configuration
+#define COMBO_SHOULD_TRIGGER    // Required for combo_should_trigger() in combo_system.h to run -
+                                // without this, its layer-gating logic (Gaming disable, NAV-only
+                                // combos, etc.) is silently never called by QMK.
 
 // One shot settings
 #define ONESHOT_TAP_TOGGLE 2
@@ -107,7 +110,7 @@
 // Debug options (comment out for production)
 // #define DEBUG_MATRIX_SCAN_RATE
 
-// Memory optimization - 8 layers (COLEMAK, QWERTY, NUM, SYM, FN, ADJUST, NAV, MIDI)
+// Memory optimization - 8 layers (_DEF, _NUM, _GAMING, _FN, _SYS, _NAV, _MOUSE, _MIDI)
 #define LAYER_STATE_8BIT  // Use 8-bit layer state for <=8 layers
 
 // Firmware size optimization

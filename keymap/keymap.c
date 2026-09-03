@@ -225,23 +225,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
-    #ifdef CONSOLE_ENABLE
-        if (record->event.pressed) {
-            uint8_t r = record->event.key.row;
-            uint8_t c = record->event.key.col;
-
-        if (r < MATRIX_ROWS && c < MATRIX_COLS) {
-            uint8_t led = g_led_config.matrix_co[r][c];   // key -> LED index
-            if (led != NO_LED) {
-                uprintf("Key r=%u c=%u -> led=%u\n", r, c, led);
-            } else {
-                uprintf("Key r=%u c=%u -> led=NO_LED\n", r, c);
-            }
-        } else {
-            uprintf("Key r=%u c=%u out of range\n", r, c);
-        }
-    }
-    #endif
+    // NOTE: this used to unconditionally uprintf() the row/col -> LED mapping for every
+    // single keypress whenever CONSOLE_ENABLE was on - leftover from debugging the LED
+    // layout, not something worth paying for on every keystroke in daily use. Removed.
+    // CONSOLE_ENABLE stays on for the MIDI state/leader-sequence debug prints elsewhere.
 
         // Handle enhanced MIDI keycodes
     if (keycode >= MIDI_OCT_DN2 && keycode <= MIDI_CONFIG) {

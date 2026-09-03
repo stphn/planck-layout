@@ -42,6 +42,10 @@ jobs:
     - name: Run tests
       run: |
         cd qmk && make test:basic
+      # NOTE: test:basic currently fails to even compile on Apple Clang (macOS) due to a
+      # strict-prototypes error in QMK core's process_space_cadet.c (`void reset_space_cadet()`
+      # without `(void)`), unrelated to this keymap. continue-on-error stays on until that's
+      # fixed upstream or pinned around, to avoid CI going red on unverified Ubuntu behavior.
       continue-on-error: true
 
     - name: Build firmware

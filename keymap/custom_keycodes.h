@@ -71,13 +71,11 @@ enum {
  * ╚══════════════════════════════════════════════════════════╝ */
 
 #define NUM      MO(_NUM)
-#define SYM      MO(_GAMING)  // SYM key now accesses gaming layer
-#define FN       MO(_FN)
-#define NAV      MO(_NAV)
-#define MOUSE    TG(_MOUSE)   // Mouse layer toggle
 #define MIDI     TG(_MIDI)
-#define CTRL_ESC LCTL_T(KC_ESC)
 #define GAME_ESC LT(_SYS, KC_ESC)  // Gaming layer escape with system access
+// NOTE: SYM, FN, NAV, MOUSE, and CTRL_ESC aliases were removed - none were
+// ever placed on any layer. _FN/_NAV/_MOUSE are all reached through their
+// own dedicated smart behaviors (SMART_ENT, SMART_SPC, SMART_MOUSE) instead.
 #define PRINT TD(TD_PRINT)   // Tap: Print Screen | Double-tap: Shift+Print Screen
 
 /* ╔══════════════════════════════════════════════════════════════════════╗

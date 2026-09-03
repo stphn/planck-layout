@@ -19,7 +19,7 @@
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 typedef struct {
-    uint8_t current_octave;      // Current octave offset (-2 to +2)
+    int8_t  current_octave;      // Current octave offset (-2 to +2) - signed, holds negatives
     uint8_t velocity_level;      // Current velocity (0-127)
     uint8_t instrument_id;       // Current instrument (0-255)
     uint8_t channel_focus;       // Focused channel (0-15)
@@ -27,7 +27,7 @@ typedef struct {
     bool chord_mode;             // Chord input mode
     bool record_mode;            // Pattern recording mode
     uint8_t effect_param;        // Current effect parameter value
-    uint8_t transpose_offset;    // Global transpose offset
+    int8_t  transpose_offset;    // Global transpose offset (-12 to +12) - signed, holds negatives
 } midi_state_t;
 
 extern midi_state_t midi_state;

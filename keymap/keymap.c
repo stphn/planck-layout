@@ -88,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_Q,  KC_W,   KC_F,    KC_P,   KC_B,    PRINT,          KC_BSPC,           KC_J, KC_L,    KC_U,    KC_Y,    KC_QUOT,
     HRM_A, HRM_R,  HRM_S,   HRM_T,  KC_G,    LGUI(KC_Z),     SGUI(KC_Z),        KC_M, HRM_N,   HRM_E,   HRM_I,   HRM_O,
     KC_Z,  KC_X,   KC_C,    KC_D,   KC_V,    LGUI(KC_S),     LGUI(KC_F),        KC_K, KC_H,    KC_COMM, KC_DOT,  KC_QUES,
-    PSWD,  HYPR(KC_NO), _______, KC_LGUI, SMART_SPC, SMART_ENT, SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
+    KC_LGUI, PSWD, _______, KC_LGUI, SMART_SPC, SMART_ENT, SMART_NUM, MAGIC_SHIFT, SMART_MOUSE, _______, MIDI, GAMING
 ),
 
 [_NUM] = LAYOUT_planck_grid(
